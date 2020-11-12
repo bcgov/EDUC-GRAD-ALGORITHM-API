@@ -1,7 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.repository.GraduationStatusRepository;
-import ca.bc.gov.educ.api.gradalgorithm.repository.StudentReportRepository;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
@@ -22,12 +20,6 @@ public class GradAlgorithmService {
 
 	@Autowired
 	RestTemplate restTemplate;
-
-    @Autowired
-	GraduationStatusRepository graduationStatusRepository;
-
-    @Autowired
-	StudentReportRepository studentReportRepository;
 
     @Autowired
 	GradStudent gradStudent;

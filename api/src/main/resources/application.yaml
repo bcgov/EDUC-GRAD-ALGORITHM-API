@@ -84,7 +84,7 @@ endpoint:
       url: https://gradstudent-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/gradstudent
   student-course-api:
     get-student-course-by-pen:
-      url: https://student-course-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentcourse
+      url: https://student-course-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentcourse/pen
   student-assessment-api:
     get-student-assessment-by-pen:
       url: https://student-assessment-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1
