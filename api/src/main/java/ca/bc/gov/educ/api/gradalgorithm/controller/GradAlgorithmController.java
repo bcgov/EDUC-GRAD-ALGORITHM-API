@@ -1,0 +1,35 @@
+package ca.bc.gov.educ.api.gradalgorithm.controller;
+
+import java.util.List;
+
+import ca.bc.gov.educ.api.gradalgorithm.endpoint.GradAlgorithmEndpoint;
+import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@Slf4j
+public class GradAlgorithmController implements GradAlgorithmEndpoint {
+
+    private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmEndpoint.class);
+
+    @Autowired
+    GradAlgorithmService gradAlgorithmService;
+
+    public GradStudent graduateStudent(@PathVariable String pen){
+
+        return gradAlgorithmService.graduateStudent(pen);
+    }
+
+    public List<GradStudent> graduateStudents(@RequestParam List<String> penList){
+
+        return null;
+    }
+}
