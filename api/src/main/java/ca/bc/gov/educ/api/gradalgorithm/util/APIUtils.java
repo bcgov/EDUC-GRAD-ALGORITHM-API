@@ -10,6 +10,7 @@ public class APIUtils {
         String basicAuth = Base64.encodeBase64String((username + ":" + secret).getBytes());
 
         HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Type", "application/json");
         httpHeaders.add("Authorization", "Basic " + basicAuth);
         return httpHeaders;
     }

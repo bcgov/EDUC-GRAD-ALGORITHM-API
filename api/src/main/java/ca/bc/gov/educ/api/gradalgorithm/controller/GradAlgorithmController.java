@@ -14,22 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
 @Slf4j
+@RestController
 public class GradAlgorithmController implements GradAlgorithmEndpoint {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmController.class);
 
     @Autowired
     GradAlgorithmService gradAlgorithmService;
 
     public GradStudent graduateStudent(@PathVariable String pen){
-
+        logger.debug("**** GRAD ALGORITHM Started ****");
         return gradAlgorithmService.graduateStudent(pen);
     }
 
-    public List<GradStudent> graduateStudents(@RequestParam List<String> penList){
-
-        return null;
-    }
+    //public List<GradStudent> graduateStudents(@RequestParam List<String> penList){
+    //    return null;
+    //}
 }

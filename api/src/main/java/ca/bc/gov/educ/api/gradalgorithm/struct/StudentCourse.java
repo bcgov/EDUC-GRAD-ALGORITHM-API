@@ -29,6 +29,9 @@ public class StudentCourse {
 	private String relatedCourse;
 	private String relatedLevel;
 	private String hasRelatedCourse;
+	private boolean isNotCompleted;
+	private boolean isFailed;
+	private boolean isDuplicate;
 	
 	@Override
 	public String toString() {

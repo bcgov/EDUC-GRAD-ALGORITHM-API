@@ -50,7 +50,7 @@ logging:
         gov:
           educ:
             api:
-              gradalgorithm: ${APP_LOG_LEVEL}
+              gradstudent: ${APP_LOG_LEVEL}
     org:
       springframework:
         web: ${SPRING_WEB_LOG_LEVEL}
@@ -65,7 +65,7 @@ server:
     threads:
       worker: 128
       io: 16
-  port: ${HTTP_PORT}
+  #port: ${HTTP_PORT}
 
 #API Documentation
 springdoc:
@@ -95,6 +95,10 @@ endpoint:
     country:
       country-by-country-code:
         url: https://educ-grad-code-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/code/country/%s
+      all-countries:
+        url: https://educ-grad-code-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/code/country
     province:
       province-by-prov-code:
         url: https://educ-grad-code-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/code/province/%s
+      all-provinces:
+        url: https://educ-grad-code-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/code/province

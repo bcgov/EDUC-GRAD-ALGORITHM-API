@@ -8,9 +8,9 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public interface GradAlgorithmEndpoint {
 
-    @GetMapping("/graduate-student/{pen}")
+    @GetMapping("/graduatestudent/{pen}")
     public GradStudent graduateStudent(@PathVariable String pen);
 
-    @PostMapping("/graduate-students")
-    public List<GradStudent> graduateStudents(@RequestParam List<String> penList);
+    //@PostMapping("/graduate-students")
+    //public List<GradStudent> graduateStudents(@RequestParam List<String> penList);
 }
