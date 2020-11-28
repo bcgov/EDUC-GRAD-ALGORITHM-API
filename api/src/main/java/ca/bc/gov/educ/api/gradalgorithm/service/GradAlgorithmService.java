@@ -87,7 +87,7 @@ public class GradAlgorithmService {
 
 		//Get All Program Sets for a given Grad Program
 		gradProgramSets = restTemplate.exchange(
-				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/programsets"
+				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/programsets"
 						+ "/" + gradProgram, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradProgramSets.class).getBody();
 
