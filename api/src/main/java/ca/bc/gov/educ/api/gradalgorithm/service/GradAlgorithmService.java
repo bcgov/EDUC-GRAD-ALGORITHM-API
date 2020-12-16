@@ -1,9 +1,11 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.*;
-import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramSet;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramSets;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramRules;
+import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramSets;
+import ca.bc.gov.educ.api.gradalgorithm.struct.Student;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourses;
+import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 
 @Service
 public class GradAlgorithmService {
@@ -53,22 +65,16 @@ public class GradAlgorithmService {
     @Autowired
 	CourseRequirements courseRequirements;
 
-	@Value("${spring.security.user.name}")
-	private String username;
-
-	@Value("${spring.security.user.password}")
-	private String secret;
-
 	@Value("${endpoint.grad-student-api.get-student-by-pen.url}")
 	private String GET_GRADSTUDENT_BY_PEN_URL;
 
 	@Value("${endpoint.student-course-api.get-student-course-by-pen.url}")
 	private String GET_STUDENT_COURSES_BY_PEN_URL;
 
-	public GradStudent graduateStudent(String pen) {
+	public GraduationStatus graduateStudent(String pen, String accessToken) {
 		logger.debug("\n************* Graduation Algorithm START  ************");
 
-		HttpHeaders httpHeaders = APIUtils.getHeaders(username, secret);
+		HttpHeaders httpHeaders = APIUtils.getHeaders(accessToken);
 
 		logger.debug("**** PEN: ****" + pen.substring(5));
 
@@ -245,6 +251,20 @@ public class GradAlgorithmService {
 		//7. Populate Report template data
 		//8. Call report API
 
-		return gradStudent;
+		
+		GraduationStatus course = restTemplate.getForObject(String.format("https://educ-grad-graduation-status-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/gradstatus/pen/%s", pen), GraduationStatus.class);
+		course.setGraduationDate("2021-04-01");
+		course.setHonoursFlag("Y");
+		Student student = new Student(pen);
+        student.setGradMessages(new ArrayList<String>());
+        student.setRequirementsMet(new ArrayList<String>());
+        student.setRequirementsNotMet(new ArrayList<String>());
+		try {
+			course.getStudentGradData().append(new ObjectMapper().writeValueAsString(student));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return course;
 	}
 }
