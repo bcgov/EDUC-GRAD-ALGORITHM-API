@@ -12,7 +12,7 @@ spring:
   datasource:
     hikari:
       pool-name: gradstudent-api-cp
-      maximum-pool-size: ${MAXIMUM_POOL_SIZE}
+      maximum-pool-size: ${MAX_POOL_SIZE}
       connection-timeout: ${CONNECTION_TIMEOUT}
       max-lifetime: ${MAX_LIFETIME}
     url: ${JDBC_URL}
@@ -26,13 +26,13 @@ spring:
       ddl-auto: none
   mvc:
     log-request-details: ${SPRING_SHOW_REQUEST_DETAILS}
-  jackson:
-    deserialization:
-      fail-on-unknown-properties: true
-  security:
-    user:
-      name: ${API_USERNAME}
-      password: ${API_PASSWORD}
+#  jackson:
+#    deserialization:
+#      fail-on-unknown-properties: true
+#  security:
+#    user:
+#      name: ${API_USERNAME}
+#      password: ${API_PASSWORD}
 
 #Logging properties
 logging:
@@ -50,7 +50,7 @@ logging:
         gov:
           educ:
             api:
-              gradstudent: ${APP_LOG_LEVEL}
+              gradalgorithm: ${APP_LOG_LEVEL}
     org:
       springframework:
         web: ${SPRING_WEB_LOG_LEVEL}
@@ -102,3 +102,6 @@ endpoint:
         url: https://educ-grad-code-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/code/province/%s
       all-provinces:
         url: https://educ-grad-code-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/code/province
+  program-rule:
+    get-program-rules:
+      url: https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/program-rules

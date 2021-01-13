@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class MinCreditRuleData {
+public class MinElectiveCreditRuleData {
     private ProgramRule programRule;
     private StudentCourses studentCourses;
     private int acquiredCredits;
