@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@EnableResourceServer
 public class GradAlgorithmController implements GradAlgorithmEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmController.class);
