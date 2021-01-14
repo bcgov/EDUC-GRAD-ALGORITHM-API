@@ -18,8 +18,6 @@ public class GradProgram {
 	private String programCode; 
 	private String programName; 
 	private String programType;	
-	private Date programStartDate;	
-	private Date programEndDate;
 	private String createdBy;	
 	private Date createdTimestamp;
 	private String updatedBy;	
@@ -29,8 +27,7 @@ public class GradProgram {
 	@Override
 	public String toString() {
 		return "GradProgram [programCode=" + programCode + ", programName=" + programName + ", programType="
-				+ programType + ", programStartDate=" + programStartDate + ", programEndDate=" + programEndDate
-				+ ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy=" + updatedBy
+				+ programType + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy=" + updatedBy
 				+ ", updatedTimestamp=" + updatedTimestamp + "]";
 	}
 	

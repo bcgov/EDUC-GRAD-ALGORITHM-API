@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RequestMapping ("/api/v1")
-@EnableResourceServer
 @OpenAPIDefinition(info = @Info(title = "API for GRAD Algorithm", description = "This API is for running the grad algorithm for one or more students", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"RUN_GRAD_ALGORITHM"})})
 public interface GradAlgorithmEndpoint {
 
