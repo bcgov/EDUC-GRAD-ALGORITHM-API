@@ -5,19 +5,22 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Data
 @Component
 @AllArgsConstructor
 @Builder
 public class GraduationData {
     private GradStudent gradStudent;
-    private StudentGradStatus gradStatus;
+    private GradAlgorithmGraduationStatus gradStatus;
     private School school;
     private StudentCourses studentCourses;
     //Student Assessments
     //Student Exams
-    //Non-Grad Reasons
-    //Requirements Met
+    List<String> nonGradReasons;
+    List<String> requirementsMet;
     //Grad Message
     //Student Career Programs
+    boolean isGraduated;
 }
