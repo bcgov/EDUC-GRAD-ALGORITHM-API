@@ -20,6 +20,8 @@ public class GradProgramSet {
 	private String programSet;
 	private String programSetName;	
 	private String gradProgramCode;	
+	private String programSetStartDate;	
+	private String programSetEndDate;
 	private String createdBy;	
 	private Date createdTimestamp;	
 	private String updatedBy;	

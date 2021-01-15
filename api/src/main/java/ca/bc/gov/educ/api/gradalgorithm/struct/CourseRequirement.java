@@ -28,4 +28,16 @@ public class CourseRequirement {
                 ", ruleCode=" + ruleCode +
                 "}";
     }
+
+    public String getCourseCode() {
+        if (courseCode != null)
+            courseCode = courseCode.trim();
+        return courseCode;
+    }
+
+    public String getCourseLevel() {
+        if (courseLevel != null)
+            courseLevel = courseLevel.trim();
+        return courseLevel;
+    }
 }
