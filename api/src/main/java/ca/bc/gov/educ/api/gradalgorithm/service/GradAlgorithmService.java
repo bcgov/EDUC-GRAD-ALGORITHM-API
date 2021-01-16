@@ -182,9 +182,6 @@ public class GradAlgorithmService {
 		return graduationData;
 	}
 
-
-
-
 	/*
 	********************************************************************************************************************
 	Utility Methods
