@@ -62,9 +62,11 @@ public class GradAlgorithmService {
 	@Value("${endpoint.student-course-api.get-student-course-by-pen.url}")
 	private String GET_STUDENT_COURSES_BY_PEN_URL;
 
+	boolean isGraduated = true;
+
 	HttpHeaders httpHeaders;
 
-	public GraduationData graduateStudent(String pen, String gradProgram, String accessToken) {
+	public GraduationData graduateStudent(String pen, String accessToken) {
 		logger.debug("\n************* Graduation Algorithm START  ************");
 
 		httpHeaders = APIUtils.getHeaders(accessToken);
@@ -75,13 +77,13 @@ public class GradAlgorithmService {
 		gradStudent = getStudentDemographics(pen);
 		graduationData.setGradStudent(gradStudent);
 
-		logger.debug("**** Grad Requirement Year: " + gradProgram);
+		logger.debug("**** Grad Requirement Year: " + gradStudent.getGradRequirementYear());
 
 		//Get All Courses for a Student
 		studentCourseArray = getAllCoursesForAStudent(pen);
 
 		//Get All Program Sets for a given Grad Program
-		gradProgramSets = getProgramSets(gradProgram);
+		gradProgramSets = getProgramSets("" + gradStudent.getGradRequirementYear());
 
 		//Get All Program Rules for a given list of ProgramSetIDs
 		programRules = getProgramRules(gradProgramSets);
@@ -121,6 +123,7 @@ public class GradAlgorithmService {
 		else {
 			logger.debug("Min Credits rule Failed! - Required: "
 					+ minCreditRuleData.getRequiredCredits() + " Has: " + minCreditRuleData.getAcquiredCredits());
+			isGraduated = false;
 		}
 
 		uniqueStudentCourses = minCreditRuleData.getStudentCourses();
@@ -138,6 +141,7 @@ public class GradAlgorithmService {
 		}
 		else {
 			logger.debug("One or More Match rules Failed!");
+			isGraduated = false;
 		}
 
 		//Run Min Elective Credits rule
@@ -155,15 +159,28 @@ public class GradAlgorithmService {
 		else {
 			logger.debug("Min Elective Credits rule Failed! - Required: "
 					+ minElectiveCreditRuleData.getRequiredCredits() + " Has: " + minElectiveCreditRuleData.getAcquiredCredits());
+			isGraduated = false;
 		}
 
 		graduationData.setStudentCourses(minElectiveCreditRuleData.getStudentCourses());
 
+		//Populate Grad Status Details
+		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
+		gradStatus.setPen(pen);
+		gradStatus.setGradProgram(gradStudent.getGradRequirementYear() + "");
+		gradStatus.setGraduationDate(gradStudent.getGradDate());
+		gradStatus.setStudentGradeAtGraduation("TBD");
+		gradStatus.setGpa("TBD");
+		gradStatus.setHonoursFlag("TBD");
+		gradStatus.setSchoolOfRecord(gradStudent.getSchoolName());
+		gradStatus.setStudentGrade("TBD");
+
+		graduationData.setGradStatus(gradStatus);
+
+		graduationData.setGraduated(isGraduated);
+
 		return graduationData;
 	}
-
-
-
 
 	/*
 	********************************************************************************************************************

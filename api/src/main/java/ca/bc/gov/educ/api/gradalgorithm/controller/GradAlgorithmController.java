@@ -25,12 +25,12 @@ public class GradAlgorithmController implements GradAlgorithmEndpoint {
     @Autowired
     GradAlgorithmService gradAlgorithmService;
 
-    public GraduationData graduateStudent(@PathVariable String pen, String gradProgram){
+    public GraduationData graduateStudent(@PathVariable String pen){
         logger.debug("**** GRAD ALGORITHM Started ****");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
         String accessToken = details.getTokenValue();
-        return gradAlgorithmService.graduateStudent(pen, gradProgram, accessToken);
+        return gradAlgorithmService.graduateStudent(pen, accessToken);
     }
 
     //public List<GradStudent> graduateStudents(@RequestParam List<String> penList){
