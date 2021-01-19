@@ -170,8 +170,8 @@ public class GradAlgorithmService {
 		gradStatus.setGradProgram(gradStudent.getGradRequirementYear() + "");
 		gradStatus.setGraduationDate(null);//setting to null till the logic is implemented
 		gradStatus.setStudentGradeAtGraduation("TBD");
-		gradStatus.setGpa("TBD");
-		gradStatus.setHonoursFlag("TBD");
+		gradStatus.setGpa("0.0000");
+		gradStatus.setHonoursFlag("U");
 		gradStatus.setSchoolOfRecord(gradStudent.getSchoolName());
 		gradStatus.setStudentGrade("TBD");
 
