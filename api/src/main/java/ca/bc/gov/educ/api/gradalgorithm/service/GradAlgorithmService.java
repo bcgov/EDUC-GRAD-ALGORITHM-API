@@ -1,25 +1,40 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.*;
-import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramSet;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramSets;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.MatchRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.MinCreditRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.MinElectiveCreditRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramRule;
+import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramRules;
+import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramSets;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourses;
+import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 
 @Service
 public class GradAlgorithmService {
@@ -28,9 +43,6 @@ public class GradAlgorithmService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-
-	@Autowired
-	private RestTemplateBuilder restTemplateBuilder;
 
 	@Autowired
 	GraduationData graduationData;
@@ -167,9 +179,8 @@ public class GradAlgorithmService {
 		//Populate Grad Status Details
 		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
 		gradStatus.setPen(pen);
-		gradStatus.setGradProgram(gradStudent.getGradRequirementYear() + "");
-		gradStatus.setGraduationDate(null);//setting to null till the logic is implemented
-		gradStatus.setStudentGradeAtGraduation("TBD");
+		gradStatus.setProgram(gradStudent.getGradRequirementYear() + "");
+		gradStatus.setProgramCompletionDate(null);//setting to null till the logic is implemented
 		gradStatus.setGpa("0.0000");
 		gradStatus.setHonoursFlag("U");
 		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
