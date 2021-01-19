@@ -172,7 +172,7 @@ public class GradAlgorithmService {
 		gradStatus.setStudentGradeAtGraduation("TBD");
 		gradStatus.setGpa("0.0000");
 		gradStatus.setHonoursFlag("U");
-		gradStatus.setSchoolOfRecord(gradStudent.getSchoolName());
+		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
 		gradStatus.setStudentGrade("TBD");
 
 		graduationData.setGradStatus(gradStatus);
