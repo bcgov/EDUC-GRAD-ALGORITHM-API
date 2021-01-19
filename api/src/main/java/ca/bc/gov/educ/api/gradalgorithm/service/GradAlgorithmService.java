@@ -168,7 +168,7 @@ public class GradAlgorithmService {
 		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
 		gradStatus.setPen(pen);
 		gradStatus.setGradProgram(gradStudent.getGradRequirementYear() + "");
-		gradStatus.setGraduationDate(gradStudent.getGradDate());
+		gradStatus.setGraduationDate(null);//setting to null till the logic is implemented
 		gradStatus.setStudentGradeAtGraduation("TBD");
 		gradStatus.setGpa("TBD");
 		gradStatus.setHonoursFlag("TBD");
