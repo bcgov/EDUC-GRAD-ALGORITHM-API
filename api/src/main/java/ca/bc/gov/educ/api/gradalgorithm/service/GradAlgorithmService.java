@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import ca.bc.gov.educ.api.gradalgorithm.struct.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRequirements;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmGraduationStatus;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramSet;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramSets;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MatchRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MinCreditRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MinElectiveCreditRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramRule;
-import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramRules;
-import ca.bc.gov.educ.api.gradalgorithm.struct.ProgramSets;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourses;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 
 @Service
@@ -57,6 +43,12 @@ public class GradAlgorithmService {
 	StudentCourses studentCourses;
 
     @Autowired
+	StudentAssessment[] studentAssessmentArray;
+
+    @Autowired
+	StudentAssessments studentAssessments;
+
+    @Autowired
 	GradLetterGrades gradLetterGrades;
 
     @Autowired
@@ -78,7 +70,7 @@ public class GradAlgorithmService {
 
 	HttpHeaders httpHeaders;
 
-	public GraduationData graduateStudent(String pen, String accessToken) {
+	public GraduationData graduateStudent(String pen, String gradProgram, String accessToken) {
 		logger.debug("\n************* Graduation Algorithm START  ************");
 
 		httpHeaders = APIUtils.getHeaders(accessToken);
@@ -89,13 +81,18 @@ public class GradAlgorithmService {
 		gradStudent = getStudentDemographics(pen);
 		graduationData.setGradStudent(gradStudent);
 
-		logger.debug("**** Grad Requirement Year: " + gradStudent.getGradRequirementYear());
+		logger.debug("**** Grad Program: " + gradProgram);
 
 		//Get All Courses for a Student
 		studentCourseArray = getAllCoursesForAStudent(pen);
 
+		//Get All Assessments for a Student
+		studentAssessmentArray = getAllAssessmentsForAStudent(pen);
+		studentAssessments.setStudentAssessmentList(Arrays.asList(studentAssessmentArray));
+		graduationData.setStudentAssessments(studentAssessments);
+
 		//Get All Program Sets for a given Grad Program
-		gradProgramSets = getProgramSets("" + gradStudent.getGradRequirementYear());
+		gradProgramSets = getProgramSets(gradProgram);
 
 		//Get All Program Rules for a given list of ProgramSetIDs
 		programRules = getProgramRules(gradProgramSets);
@@ -211,6 +208,16 @@ public class GradAlgorithmService {
 		StudentCourse[] result = restTemplate.exchange(GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentCourse[].class).getBody();
 		logger.debug("**** # of courses: " + result.length);
+
+		return result;
+	}
+
+	private StudentAssessment[] getAllAssessmentsForAStudent(String pen) {
+		StudentAssessment[] result = restTemplate.exchange(
+				"https://student-assessment-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentassessment/pen"
+						+ "/" + pen, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), StudentAssessment[].class).getBody();
+		logger.debug("**** # of Assessments: " + result.length);
 
 		return result;
 	}

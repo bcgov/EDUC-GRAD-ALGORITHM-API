@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @Component
 public class GradProgramSets {
-    List<GradProgramSet> gradProgramSetList;
+    private List<GradProgramSet> gradProgramSetList;
 }

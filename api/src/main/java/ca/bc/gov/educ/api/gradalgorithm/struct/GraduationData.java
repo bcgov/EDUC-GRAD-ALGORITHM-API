@@ -18,7 +18,7 @@ public class GraduationData {
     private GradAlgorithmGraduationStatus gradStatus;
     private School school;
     private StudentCourses studentCourses;
-    //Student Assessments
+    private StudentAssessments studentAssessments;
     //Student Exams
     private List<String> nonGradReasons;
     private List<String> requirementsMet;
