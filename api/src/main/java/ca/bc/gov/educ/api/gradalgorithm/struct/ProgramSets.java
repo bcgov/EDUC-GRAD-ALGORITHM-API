@@ -11,5 +11,5 @@ import java.util.UUID;
 @Data
 @Component
 public class ProgramSets {
-    List<UUID> programSetIDs;
+    private List<UUID> programSetIDs;
 }

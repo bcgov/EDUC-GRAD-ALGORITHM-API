@@ -11,6 +11,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramRules {
-    private List<ProgramRule> programRuleList;
+public class StudentAssessments {
+    private List<StudentAssessment> studentAssessmentList;
 }
