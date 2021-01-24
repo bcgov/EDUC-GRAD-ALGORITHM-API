@@ -1,25 +1,26 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import ca.bc.gov.educ.api.gradalgorithm.struct.*;
-import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 
 @Service
 public class GradAlgorithmService {
@@ -28,9 +29,6 @@ public class GradAlgorithmService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-
-	@Autowired
-	private RestTemplateBuilder restTemplateBuilder;
 
 	@Autowired
 	GraduationData graduationData;
@@ -43,6 +41,12 @@ public class GradAlgorithmService {
 
     @Autowired
 	StudentCourses studentCourses;
+
+    @Autowired
+	StudentAssessment[] studentAssessmentArray;
+
+    @Autowired
+	StudentAssessments studentAssessments;
 
     @Autowired
 	GradLetterGrades gradLetterGrades;
@@ -66,7 +70,7 @@ public class GradAlgorithmService {
 
 	HttpHeaders httpHeaders;
 
-	public GraduationData graduateStudent(String pen, String accessToken) {
+	public GraduationData graduateStudent(String pen, String gradProgram, String accessToken) {
 		logger.debug("\n************* Graduation Algorithm START  ************");
 
 		httpHeaders = APIUtils.getHeaders(accessToken);
@@ -77,13 +81,18 @@ public class GradAlgorithmService {
 		gradStudent = getStudentDemographics(pen);
 		graduationData.setGradStudent(gradStudent);
 
-		logger.debug("**** Grad Requirement Year: " + gradStudent.getGradRequirementYear());
+		logger.debug("**** Grad Program: " + gradProgram);
 
 		//Get All Courses for a Student
 		studentCourseArray = getAllCoursesForAStudent(pen);
 
+		//Get All Assessments for a Student
+		studentAssessmentArray = getAllAssessmentsForAStudent(pen);
+		studentAssessments.setStudentAssessmentList(Arrays.asList(studentAssessmentArray));
+		graduationData.setStudentAssessments(studentAssessments);
+
 		//Get All Program Sets for a given Grad Program
-		gradProgramSets = getProgramSets("" + gradStudent.getGradRequirementYear());
+		gradProgramSets = getProgramSets(gradProgram);
 
 		//Get All Program Rules for a given list of ProgramSetIDs
 		programRules = getProgramRules(gradProgramSets);
@@ -167,12 +176,11 @@ public class GradAlgorithmService {
 		//Populate Grad Status Details
 		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
 		gradStatus.setPen(pen);
-		gradStatus.setGradProgram(gradStudent.getGradRequirementYear() + "");
-		gradStatus.setGraduationDate(gradStudent.getGradDate());
-		gradStatus.setStudentGradeAtGraduation("TBD");
-		gradStatus.setGpa("TBD");
-		gradStatus.setHonoursFlag("TBD");
-		gradStatus.setSchoolOfRecord(gradStudent.getSchoolName());
+		gradStatus.setProgram(gradStudent.getGradRequirementYear() + "");
+		gradStatus.setProgramCompletionDate(null);//setting to null till the logic is implemented
+		gradStatus.setGpa("0.0000");
+		gradStatus.setHonoursFlag("U");
+		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
 		gradStatus.setStudentGrade("TBD");
 
 		graduationData.setGradStatus(gradStatus);
@@ -200,6 +208,16 @@ public class GradAlgorithmService {
 		StudentCourse[] result = restTemplate.exchange(GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentCourse[].class).getBody();
 		logger.debug("**** # of courses: " + result.length);
+
+		return result;
+	}
+
+	private StudentAssessment[] getAllAssessmentsForAStudent(String pen) {
+		StudentAssessment[] result = restTemplate.exchange(
+				"https://student-assessment-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentassessment/pen"
+						+ "/" + pen, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), StudentAssessment[].class).getBody();
+		logger.debug("**** # of Assessments: " + result.length);
 
 		return result;
 	}
