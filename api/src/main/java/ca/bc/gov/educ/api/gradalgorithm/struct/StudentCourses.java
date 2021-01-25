@@ -1,12 +1,16 @@
 package ca.bc.gov.educ.api.gradalgorithm.struct;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Data
 @Component
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentCourses {
     private List<StudentCourse> studentCourseList;
 
