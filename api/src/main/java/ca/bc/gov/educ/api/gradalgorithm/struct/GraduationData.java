@@ -19,7 +19,7 @@ public class GraduationData {
     private School school;
     private StudentCourses studentCourses;
     private StudentAssessments studentAssessments;
-    //Student Exams
+    private StudentExams studentExams;
     private List<String> nonGradReasons;
     private List<String> requirementsMet;
     //Grad Message

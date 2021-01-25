@@ -43,10 +43,10 @@ public class GradAlgorithmService {
 	StudentCourses studentCourses;
 
     @Autowired
-	StudentAssessment[] studentAssessmentArray;
+	StudentAssessments studentAssessments;
 
     @Autowired
-	StudentAssessments studentAssessments;
+	StudentExams studentExams;
 
     @Autowired
 	GradLetterGrades gradLetterGrades;
@@ -87,9 +87,12 @@ public class GradAlgorithmService {
 		studentCourseArray = getAllCoursesForAStudent(pen);
 
 		//Get All Assessments for a Student
-		studentAssessmentArray = getAllAssessmentsForAStudent(pen);
-		studentAssessments.setStudentAssessmentList(Arrays.asList(studentAssessmentArray));
+		studentAssessments = getAllAssessmentsForAStudent(pen);
 		graduationData.setStudentAssessments(studentAssessments);
+
+		//Get All Exams for a Student
+		studentExams = getAllExamsForAStudent(pen);
+		graduationData.setStudentExams(studentExams);
 
 		//Get All Program Sets for a given Grad Program
 		gradProgramSets = getProgramSets(gradProgram);
@@ -212,14 +215,28 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private StudentAssessment[] getAllAssessmentsForAStudent(String pen) {
+	private StudentAssessments getAllAssessmentsForAStudent(String pen) {
 		StudentAssessment[] result = restTemplate.exchange(
 				"https://student-assessment-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentassessment/pen"
 						+ "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentAssessment[].class).getBody();
 		logger.debug("**** # of Assessments: " + result.length);
 
-		return result;
+		this.studentAssessments.setStudentAssessmentList(Arrays.asList(result.clone()));
+
+		return studentAssessments;
+	}
+
+	private StudentExams getAllExamsForAStudent(String pen) {
+		StudentExam[] result = restTemplate.exchange(
+				"https://student-exam-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentexam/pen"
+						+ "/" + pen, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), StudentExam[].class).getBody();
+		logger.debug("**** # of Exams: " + result.length);
+
+		this.studentExams.setStudentExamList(Arrays.asList(result.clone()));
+
+		return studentExams;
 	}
 
 	private GradProgramSets getProgramSets(String gradProgram) {
@@ -265,14 +282,7 @@ public class GradAlgorithmService {
 	}
 
 	private StudentCourses processCoursesForNotCompleted(StudentCourses studentCourses) {
-		ObjectMapper mapper = new ObjectMapper();
-		String json = "";
-
-		try {
-			json = mapper.writeValueAsString(studentCourses);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		String json = getJSONStringFromObject(studentCourses);
 
 		StudentCourses result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/find-not-completed", HttpMethod.POST,
@@ -289,14 +299,7 @@ public class GradAlgorithmService {
 	}
 
 	private StudentCourses processCoursesForFailed(StudentCourses studentCourses) {
-		ObjectMapper mapper = new ObjectMapper();
-		String json = "";
-
-		try {
-			json = mapper.writeValueAsString(studentCourses);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		String json = getJSONStringFromObject(studentCourses);
 
 		StudentCourses result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/find-failed", HttpMethod.POST,
@@ -313,14 +316,7 @@ public class GradAlgorithmService {
 	}
 
 	private StudentCourses processCoursesForDuplicates(StudentCourses studentCourses) {
-		ObjectMapper mapper = new ObjectMapper();
-		String json = "";
-
-		try {
-			json = mapper.writeValueAsString(studentCourses);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		String json = getJSONStringFromObject(studentCourses);
 
 		StudentCourses result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/find-duplicates", HttpMethod.POST,
@@ -368,44 +364,26 @@ public class GradAlgorithmService {
 	private MinCreditRuleData hasMinCredits(ProgramRule minCreditRule, StudentCourses uniqueStudentCourses){
 		MinCreditRuleData minCreditRuleData = new MinCreditRuleData(minCreditRule, uniqueStudentCourses,
 				0, 0, false);
-		ObjectMapper mapper = new ObjectMapper();
-		String json = "";
-
-		try {
-			json = mapper.writeValueAsString(minCreditRuleData);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		String json = getJSONStringFromObject(minCreditRuleData);
 
 		logger.debug("**** Running Rule Engine Min Credits Rule");
-		//logger.debug(json);
 
 		MinCreditRuleData result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-mincredits", HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinCreditRuleData.class).getBody();
-		//logger.debug("**** Min Credits Rule passed?: " + result);
 
 		return result;
 	}
 
 	private MatchRuleData runMatchRules(ProgramRules matchRules, StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements) {
 		MatchRuleData matchRuleData = new MatchRuleData(matchRules, uniqueStudentCourses, courseRequirements);
-		ObjectMapper mapper = new ObjectMapper();
-		String json = "";
-
-		try {
-			json = mapper.writeValueAsString(matchRuleData);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		String json = getJSONStringFromObject(matchRuleData);
 
 		logger.debug("**** Running Rule Engine Match Rules");
-		//logger.debug(json);
 
 		MatchRuleData result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-matchrules", HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MatchRuleData.class).getBody();
-		//logger.debug("**** All Match Rules passed?: " + result);
 
 		return result;
 	}
@@ -413,22 +391,13 @@ public class GradAlgorithmService {
 	private MinElectiveCreditRuleData hasMinElectiveCredits(ProgramRule minElectiveCreditRule, StudentCourses uniqueStudentCourses){
 		MinElectiveCreditRuleData minElectiveCreditRuleData = new MinElectiveCreditRuleData(minElectiveCreditRule,
 				uniqueStudentCourses, 0, 0, false);
-		ObjectMapper mapper = new ObjectMapper();
-		String json = "";
-
-		try {
-			json = mapper.writeValueAsString(minElectiveCreditRuleData);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		String json = getJSONStringFromObject(minElectiveCreditRuleData);
 
 		logger.debug("**** Running Rule Engine Min Elective Credits Rule");
-		//logger.debug(json);
 
 		MinElectiveCreditRuleData result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-minelectivecredits", HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinElectiveCreditRuleData.class).getBody();
-		//logger.debug("**** Min Elective Credits Rule passed?: " + result);
 
 		return result;
 	}
