@@ -20,8 +20,8 @@ public class GraduationData {
     private StudentCourses studentCourses;
     private StudentAssessments studentAssessments;
     private StudentExams studentExams;
-    private List<String> nonGradReasons;
-    private List<String> requirementsMet;
+    private List<GradRequirement> nonGradReasons;
+    private List<GradRequirement> requirementsMet;
     //Grad Message
     //Student Career Programs
     private boolean isGraduated;

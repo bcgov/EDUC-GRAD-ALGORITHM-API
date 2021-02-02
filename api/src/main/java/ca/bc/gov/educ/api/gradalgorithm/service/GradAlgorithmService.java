@@ -187,8 +187,29 @@ public class GradAlgorithmService {
 		gradStatus.setStudentGrade("TBD");
 
 		graduationData.setGradStatus(gradStatus);
-
 		graduationData.setGraduated(isGraduated);
+		graduationData.setSchool(getSchool(gradStudent.getMincode()));
+
+		List<GradRequirement> reqMet = new ArrayList<>();
+		List<GradRequirement> reqNotMet = new ArrayList<>();
+
+		reqMet = matchRuleData.getPassMessages();
+		reqNotMet  = matchRuleData.getFailMessages();
+
+		if (!minCreditRuleData.isPassed()) {
+			reqNotMet.add(new GradRequirement(
+					minCreditRuleData.getProgramRule().getCode(),
+					minCreditRuleData.getProgramRule().getNotMetDescription()));
+		}
+
+		if (!minElectiveCreditRuleData.isPassed()) {
+			reqNotMet.add(new GradRequirement(
+					minElectiveCreditRuleData.getProgramRule().getCode(),
+					minElectiveCreditRuleData.getProgramRule().getNotMetDescription()));
+		}
+
+		graduationData.setRequirementsMet(reqMet);
+		graduationData.setNonGradReasons(reqNotMet);
 
 		return graduationData;
 	}
@@ -398,6 +419,15 @@ public class GradAlgorithmService {
 		MinElectiveCreditRuleData result = restTemplate.exchange(
 				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-minelectivecredits", HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinElectiveCreditRuleData.class).getBody();
+
+		return result;
+	}
+
+	private School getSchool(String minCode){
+
+		School result = restTemplate.exchange(
+				"https://educ-grad-school-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), School.class).getBody();
 
 		return result;
 	}
