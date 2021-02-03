@@ -28,9 +28,9 @@ public class GradStudent {
     private String postalCode;
     private String studBirth;
     private String studSex;
-    private String studentCitizenship;
-    private String studentGrade;
     private String mincode;
+    /*private String studentCitizenship;
+    private String studentGrade;
     private String studentLocalId;
     private String studTrueNo;
     private String studSin;
@@ -67,7 +67,7 @@ public class GradStudent {
     private String frenchCert;
     private String englishCertDate;
     private String frenchCertDate;
-
+*/
     private String schoolName;
     private String countryName;
     private String provinceName;

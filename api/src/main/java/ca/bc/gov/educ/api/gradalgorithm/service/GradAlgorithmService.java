@@ -179,7 +179,7 @@ public class GradAlgorithmService {
 		//Populate Grad Status Details
 		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
 		gradStatus.setPen(pen);
-		gradStatus.setProgram(gradStudent.getGradRequirementYear() + "");
+		gradStatus.setProgram(gradProgram);
 		gradStatus.setProgramCompletionDate(null);//setting to null till the logic is implemented
 		gradStatus.setGpa("0.0000");
 		gradStatus.setHonoursFlag("U");
