@@ -67,8 +67,10 @@ public class GradStudent {
     private String frenchCert;
     private String englishCertDate;
     private String frenchCertDate;
-*/
+
     private String schoolName;
     private String countryName;
     private String provinceName;
+
+     */
 }
