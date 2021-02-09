@@ -19,8 +19,8 @@ public class MatchRuleData {
     private List<GradRequirement> passMessages;
     private List<GradRequirement> failMessages;
 
-    public MatchRuleData (GradProgramRules programRules, StudentCourses studentCourses, CourseRequirements courseRequirements) {
-        this.gradProgramRules = programRules;
+    public MatchRuleData (GradProgramRules gradProgramRules, StudentCourses studentCourses, CourseRequirements courseRequirements) {
+        this.gradProgramRules = gradProgramRules;
         this.studentCourses = studentCourses;
         this.courseRequirements = courseRequirements;
     }
