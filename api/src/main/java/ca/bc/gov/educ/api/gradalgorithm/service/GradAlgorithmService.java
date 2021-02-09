@@ -11,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -55,7 +57,7 @@ public class GradAlgorithmService {
 	GradProgramSets gradProgramSets;
 
     @Autowired
-	ProgramRules programRules;
+	GradProgramRules gradProgramRules;
 
     @Autowired
 	CourseRequirements courseRequirements;
@@ -95,10 +97,10 @@ public class GradAlgorithmService {
 		graduationData.setStudentExams(studentExams);
 
 		//Get All Program Sets for a given Grad Program
-		gradProgramSets = getProgramSets(gradProgram);
+		//gradProgramSets = getProgramSets(gradProgram);
 
 		//Get All Program Rules for a given list of ProgramSetIDs
-		programRules = getProgramRules(gradProgramSets);
+		//gradProgramRules = getProgramRules(gradProgram, null);
 
 		//Get All course Requirements
 		courseRequirements = getAllCourseRequirements();
@@ -121,10 +123,7 @@ public class GradAlgorithmService {
 		StudentCourses uniqueStudentCourses = getUniqueStudentCourses(studentCourses);
 
 		//Run Min Credits Rule
-		ProgramRule minCreditRule = programRules.getProgramRuleList()
-				.stream()
-				.filter(pr -> pr.getRequirementType().compareTo("MC") == 0)
-				.collect(Collectors.toList()).get(0);
+		GradProgramRule minCreditRule = getProgramRules(gradProgram, "MC").get(0);
 
 		//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
 		MinCreditRuleData minCreditRuleData = hasMinCredits(minCreditRule, uniqueStudentCourses);
@@ -141,13 +140,10 @@ public class GradAlgorithmService {
 		uniqueStudentCourses = minCreditRuleData.getStudentCourses();
 
 		//Run Match Credits rules
-		List<ProgramRule> matchRulesList = programRules.getProgramRuleList()
-				.stream()
-				.filter(pr -> pr.getRequirementType().compareTo("M") == 0)
-				.collect(Collectors.toList());
+		List<GradProgramRule> matchRulesList = getProgramRules(gradProgram, "M");
 
 		//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
-		MatchRuleData matchRuleData = runMatchRules(new ProgramRules(matchRulesList), uniqueStudentCourses, courseRequirements);
+		MatchRuleData matchRuleData = runMatchRules(new GradProgramRules(matchRulesList), uniqueStudentCourses, courseRequirements);
 		if (matchRuleData.isPassed()) {
 			logger.debug("All Match rules Passed!");
 		}
@@ -157,10 +153,7 @@ public class GradAlgorithmService {
 		}
 
 		//Run Min Elective Credits rule
-		ProgramRule minElectiveCreditsRule = programRules.getProgramRuleList()
-				.stream()
-				.filter(pr -> pr.getRequirementType().compareTo("MCE") == 0)
-				.collect(Collectors.toList()).get(0);
+		GradProgramRule minElectiveCreditsRule = getProgramRules(gradProgram, "MCE").get(0);
 
 		//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
 		MinElectiveCreditRuleData minElectiveCreditRuleData = hasMinElectiveCredits(minElectiveCreditsRule, matchRuleData.getStudentCourses());
@@ -198,14 +191,14 @@ public class GradAlgorithmService {
 
 		if (!minCreditRuleData.isPassed()) {
 			reqNotMet.add(new GradRequirement(
-					minCreditRuleData.getProgramRule().getCode(),
-					minCreditRuleData.getProgramRule().getNotMetDescription()));
+					minCreditRuleData.getGradProgramRule().getRuleCode(),
+					minCreditRuleData.getGradProgramRule().getNotMetDesc()));
 		}
 
 		if (!minElectiveCreditRuleData.isPassed()) {
 			reqNotMet.add(new GradRequirement(
-					minElectiveCreditRuleData.getProgramRule().getCode(),
-					minElectiveCreditRuleData.getProgramRule().getNotMetDescription()));
+					minElectiveCreditRuleData.getGradProgramRule().getRuleCode(),
+					minElectiveCreditRuleData.getGradProgramRule().getNotMetDesc()));
 		}
 
 		graduationData.setRequirementsMet(reqMet);
@@ -271,7 +264,7 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private ProgramRules getProgramRules(GradProgramSets gradProgramSets) {
+	/*private ProgramRules getProgramRules(GradProgramSets gradProgramSets) {
 		List<UUID> programSetIds = new ArrayList<UUID>();
 		ProgramSets programSets = new ProgramSets();
 
@@ -289,6 +282,16 @@ public class GradAlgorithmService {
 				"https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/program-rules/program-set", HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), ProgramRules.class).getBody();
 		logger.debug("**** # of Program Rules: " + result.getProgramRuleList().size());
+
+		return result;
+	}*/
+
+	private List<GradProgramRule> getProgramRules(String programCode, String requirementType) {
+		List<GradProgramRule> result = restTemplate.exchange(
+				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/" +
+						"programrules?programCode=" + programCode + "&requirementType=" + requirementType, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {}).getBody();
+		logger.debug("**** # of Program Rules: " + result.size());
 
 		return result;
 	}
@@ -382,7 +385,7 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private MinCreditRuleData hasMinCredits(ProgramRule minCreditRule, StudentCourses uniqueStudentCourses){
+	private MinCreditRuleData hasMinCredits(GradProgramRule minCreditRule, StudentCourses uniqueStudentCourses){
 		MinCreditRuleData minCreditRuleData = new MinCreditRuleData(minCreditRule, uniqueStudentCourses,
 				0, 0, false);
 		String json = getJSONStringFromObject(minCreditRuleData);
@@ -396,7 +399,7 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private MatchRuleData runMatchRules(ProgramRules matchRules, StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements) {
+	private MatchRuleData runMatchRules(GradProgramRules matchRules, StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements) {
 		MatchRuleData matchRuleData = new MatchRuleData(matchRules, uniqueStudentCourses, courseRequirements);
 		String json = getJSONStringFromObject(matchRuleData);
 
@@ -409,7 +412,7 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private MinElectiveCreditRuleData hasMinElectiveCredits(ProgramRule minElectiveCreditRule, StudentCourses uniqueStudentCourses){
+	private MinElectiveCreditRuleData hasMinElectiveCredits(GradProgramRule minElectiveCreditRule, StudentCourses uniqueStudentCourses){
 		MinElectiveCreditRuleData minElectiveCreditRuleData = new MinElectiveCreditRuleData(minElectiveCreditRule,
 				uniqueStudentCourses, 0, 0, false);
 		String json = getJSONStringFromObject(minElectiveCreditRuleData);

@@ -12,15 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MatchRuleData {
-    private ProgramRules programRules;
+    private GradProgramRules gradProgramRules;
     private StudentCourses studentCourses;
     private CourseRequirements courseRequirements;
     private boolean passed = false;
     private List<GradRequirement> passMessages;
     private List<GradRequirement> failMessages;
 
-    public MatchRuleData (ProgramRules programRules, StudentCourses studentCourses, CourseRequirements courseRequirements) {
-        this.programRules = programRules;
+    public MatchRuleData (GradProgramRules programRules, StudentCourses studentCourses, CourseRequirements courseRequirements) {
+        this.gradProgramRules = programRules;
         this.studentCourses = studentCourses;
         this.courseRequirements = courseRequirements;
     }
