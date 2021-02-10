@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -225,6 +226,10 @@ public class GradAlgorithmService {
 		StudentCourse[] result = restTemplate.exchange(GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentCourse[].class).getBody();
 		logger.debug("**** # of courses: " + result.length);
+
+		for (int i = 0; i < result.length; i++) {
+			result[i].setGradReqMet("");
+		}
 
 		return result;
 	}
