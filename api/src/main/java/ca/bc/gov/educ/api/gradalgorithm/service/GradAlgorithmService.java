@@ -1,10 +1,10 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import ca.bc.gov.educ.api.gradalgorithm.struct.*;
@@ -174,8 +174,10 @@ public class GradAlgorithmService {
 		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
 		gradStatus.setPen(pen);
 		gradStatus.setProgram(gradProgram);
-		gradStatus.setProgramCompletionDate(null);//setting to null till the logic is implemented
-		gradStatus.setGpa("0.0000");
+		gradStatus.setProgramCompletionDate(getGradDate(graduationData.getStudentCourses().getStudentCourseList(),
+				graduationData.getStudentAssessments().getStudentAssessmentList()));
+		gradStatus.setGpa(getGPA(graduationData.getStudentCourses().getStudentCourseList(),
+				graduationData.getStudentAssessments().getStudentAssessmentList()));
 		gradStatus.setHonoursFlag("U");
 		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
 		gradStatus.setStudentGrade("TBD");
@@ -190,13 +192,23 @@ public class GradAlgorithmService {
 		reqMet = matchRuleData.getPassMessages();
 		reqNotMet  = matchRuleData.getFailMessages();
 
-		if (!minCreditRuleData.isPassed()) {
+		if (minCreditRuleData.isPassed()) {
+			reqMet.add(new GradRequirement(
+					minCreditRuleData.getGradProgramRule().getRuleCode(),
+					minCreditRuleData.getGradProgramRule().getRequirementName()));
+		}
+		else {
 			reqNotMet.add(new GradRequirement(
 					minCreditRuleData.getGradProgramRule().getRuleCode(),
 					minCreditRuleData.getGradProgramRule().getNotMetDesc()));
 		}
 
-		if (!minElectiveCreditRuleData.isPassed()) {
+		if (minElectiveCreditRuleData.isPassed()) {
+			reqMet.add(new GradRequirement(
+					minElectiveCreditRuleData.getGradProgramRule().getRuleCode(),
+					minElectiveCreditRuleData.getGradProgramRule().getRequirementName()));
+		}
+		else {
 			reqNotMet.add(new GradRequirement(
 					minElectiveCreditRuleData.getGradProgramRule().getRuleCode(),
 					minElectiveCreditRuleData.getGradProgramRule().getNotMetDesc()));
@@ -207,6 +219,7 @@ public class GradAlgorithmService {
 
 		return graduationData;
 	}
+
 
 	/*
 	********************************************************************************************************************
@@ -370,6 +383,13 @@ public class GradAlgorithmService {
 		return result;
 	}
 
+	private String getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList) {
+
+
+
+		return "4.0";
+	}
+
 	private StudentCourses getUniqueStudentCourses(StudentCourses studentCourses){
 		List<StudentCourse> uniqueStudentCourseList = new ArrayList<StudentCourse>();
 
@@ -429,6 +449,37 @@ public class GradAlgorithmService {
 				new HttpEntity<>(json, httpHeaders), MinElectiveCreditRuleData.class).getBody();
 
 		return result;
+	}
+
+	private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
+
+		Date gradDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+
+		try {
+			gradDate = dateFormat.parse("170001");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		studentCourses = studentCourses
+				.stream()
+				.filter(sc -> sc.isUsed())
+				.collect(Collectors.toList());
+
+		dateFormat = new SimpleDateFormat("yyyy/MM");
+
+		for (StudentCourse studentCourse : studentCourses) {
+			try {
+				if (dateFormat.parse(studentCourse.getSessionDate()).compareTo(gradDate) > 0) {
+					gradDate = dateFormat.parse(studentCourse.getSessionDate());
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return dateFormat.format(gradDate).toString();
 	}
 
 	private School getSchool(String minCode){
