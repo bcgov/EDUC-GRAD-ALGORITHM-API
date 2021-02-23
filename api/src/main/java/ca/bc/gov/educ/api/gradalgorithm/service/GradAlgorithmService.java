@@ -454,10 +454,10 @@ public class GradAlgorithmService {
 	private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
 		Date gradDate = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
 		try {
-			gradDate = dateFormat.parse("170001");
+			gradDate = dateFormat.parse("17000101");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -467,17 +467,18 @@ public class GradAlgorithmService {
 				.filter(sc -> sc.isUsed())
 				.collect(Collectors.toList());
 
-		dateFormat = new SimpleDateFormat("yyyy/MM");
+		dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
 		for (StudentCourse studentCourse : studentCourses) {
 			try {
-				if (dateFormat.parse(studentCourse.getSessionDate()).compareTo(gradDate) > 0) {
+				if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
 					gradDate = dateFormat.parse(studentCourse.getSessionDate());
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		return dateFormat.format(gradDate).toString();
 	}
