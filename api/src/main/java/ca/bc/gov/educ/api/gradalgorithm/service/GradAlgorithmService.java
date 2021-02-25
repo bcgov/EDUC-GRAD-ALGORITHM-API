@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import ca.bc.gov.educ.api.gradalgorithm.struct.*;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,6 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
+
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradAlgorithmService {
@@ -36,55 +38,49 @@ public class GradAlgorithmService {
 	@Autowired
 	GraduationData graduationData;
 
-    @Autowired
+	@Autowired
 	GradStudent gradStudent;
 
-    @Autowired
+	@Autowired
 	StudentCourse[] studentCourseArray;
 
-    @Autowired
+	@Autowired
 	StudentCourses studentCourses;
 
-    @Autowired
+	@Autowired
 	StudentAssessments studentAssessments;
 
-    @Autowired
+	@Autowired
 	StudentExams studentExams;
 
-    @Autowired
+	@Autowired
 	GradLetterGrades gradLetterGrades;
 
-    @Autowired
+	@Autowired
 	GradProgramSets gradProgramSets;
 
-    @Autowired
+	@Autowired
 	GradProgramRules gradProgramRules;
 
-    @Autowired
+	@Autowired
 	CourseRequirements courseRequirements;
-
-	@Value("${endpoint.grad-student-api.get-student-by-pen.url}")
-	private String GET_GRADSTUDENT_BY_PEN_URL;
-
-	@Value("${endpoint.student-course-api.get-student-course-by-pen.url}")
-	private String GET_STUDENT_COURSES_BY_PEN_URL;
 
 	boolean isGraduated = true;
 
 	HttpHeaders httpHeaders;
 
-	public GraduationData graduateStudent(String pen, String gradProgram, String accessToken) {
-		logger.debug("\n************* Graduation Algorithm START  ************");
+	public GraduationData graduateStudent(String pen, String gradProgram, boolean projected, String accessToken) {
+		logger.info("\n************* Graduation Algorithm START  ************");
 
 		httpHeaders = APIUtils.getHeaders(accessToken);
 
-		logger.debug("**** PEN: ****" + pen.substring(5));
+		logger.info("**** PEN: ****" + pen.substring(5));
 
 		//Get Student Demographics
 		gradStudent = getStudentDemographics(pen);
 		graduationData.setGradStudent(gradStudent);
 
-		logger.debug("**** Grad Program: " + gradProgram);
+		logger.info("**** Grad Program: " + gradProgram);
 
 		//Get All Courses for a Student
 		studentCourseArray = getAllCoursesForAStudent(pen);
@@ -111,6 +107,9 @@ public class GradAlgorithmService {
 		//Find Not Completed Courses
 		studentCourses = processCoursesForNotCompleted(studentCourses);
 
+		//Find Registered Courses only if the flag is Y
+		studentCourses = processCoursesForProjected(studentCourses);
+
 		//Find Failed Courses
 		studentCourses = processCoursesForFailed(studentCourses);
 
@@ -121,7 +120,7 @@ public class GradAlgorithmService {
 		//gradLetterGrades = getAllLetterGrades();
 
 		//Get Unique student courses
-		StudentCourses uniqueStudentCourses = getUniqueStudentCourses(studentCourses);
+		StudentCourses uniqueStudentCourses = getUniqueStudentCourses(studentCourses, projected);
 
 		//Run Min Credits Rule
 		GradProgramRule minCreditRule = getProgramRules(gradProgram, "MC").get(0);
@@ -129,11 +128,11 @@ public class GradAlgorithmService {
 		//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
 		MinCreditRuleData minCreditRuleData = hasMinCredits(minCreditRule, uniqueStudentCourses);
 		if (minCreditRuleData.isPassed()) {
-			logger.debug("Min Credits rule Passed! - Required: "
+			logger.info("Min Credits rule Passed! - Required: "
 					+ minCreditRuleData.getRequiredCredits() + " Has: " + minCreditRuleData.getAcquiredCredits());
 		}
 		else {
-			logger.debug("Min Credits rule Failed! - Required: "
+			logger.info("Min Credits rule Failed! - Required: "
 					+ minCreditRuleData.getRequiredCredits() + " Has: " + minCreditRuleData.getAcquiredCredits());
 			isGraduated = false;
 		}
@@ -146,10 +145,10 @@ public class GradAlgorithmService {
 		//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
 		MatchRuleData matchRuleData = runMatchRules(new GradProgramRules(matchRulesList), uniqueStudentCourses, courseRequirements);
 		if (matchRuleData.isPassed()) {
-			logger.debug("All Match rules Passed!");
+			logger.info("All Match rules Passed!");
 		}
 		else {
-			logger.debug("One or More Match rules Failed!");
+			logger.info("One or More Match rules Failed!");
 			isGraduated = false;
 		}
 
@@ -159,11 +158,11 @@ public class GradAlgorithmService {
 		//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
 		MinElectiveCreditRuleData minElectiveCreditRuleData = hasMinElectiveCredits(minElectiveCreditsRule, matchRuleData.getStudentCourses());
 		if (minElectiveCreditRuleData.isPassed()) {
-			logger.debug("Min Elective Credits rule Passed! - Required: "
+			logger.info("Min Elective Credits rule Passed! - Required: "
 					+ minElectiveCreditRuleData.getRequiredCredits() + " Has: " + minElectiveCreditRuleData.getAcquiredCredits());
 		}
 		else {
-			logger.debug("Min Elective Credits rule Failed! - Required: "
+			logger.info("Min Elective Credits rule Failed! - Required: "
 					+ minElectiveCreditRuleData.getRequiredCredits() + " Has: " + minElectiveCreditRuleData.getAcquiredCredits());
 			isGraduated = false;
 		}
@@ -227,7 +226,8 @@ public class GradAlgorithmService {
 	********************************************************************************************************************
 	 */
 	private GradStudent getStudentDemographics(String pen) {
-		GradStudent result = restTemplate.exchange(GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
+		GradStudent result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
 
 		logger.debug(result.getStudSurname().trim() + ", " + result.getStudGiven().trim());
@@ -236,9 +236,10 @@ public class GradAlgorithmService {
 	}
 
 	private StudentCourse[] getAllCoursesForAStudent(String pen) {
-		StudentCourse[] result = restTemplate.exchange(GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen, HttpMethod.GET,
+		StudentCourse[] result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentCourse[].class).getBody();
-		logger.debug("**** # of courses: " + result.length);
+		logger.info("**** # of courses: " + result.length);
 
 		for (int i = 0; i < result.length; i++) {
 			result[i].setGradReqMet("");
@@ -252,7 +253,7 @@ public class GradAlgorithmService {
 				"https://student-assessment-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentassessment/pen"
 						+ "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentAssessment[].class).getBody();
-		logger.debug("**** # of Assessments: " + result.length);
+		logger.info("**** # of Assessments: " + result.length);
 
 		this.studentAssessments.setStudentAssessmentList(Arrays.asList(result.clone()));
 
@@ -264,7 +265,7 @@ public class GradAlgorithmService {
 				"https://student-exam-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentexam/pen"
 						+ "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentExam[].class).getBody();
-		logger.debug("**** # of Exams: " + result.length);
+		logger.info("**** # of Exams: " + result.length);
 
 		this.studentExams.setStudentExamList(Arrays.asList(result.clone()));
 
@@ -277,7 +278,7 @@ public class GradAlgorithmService {
 						+ "/" + gradProgram, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradProgramSets.class).getBody();
 
-		logger.debug("**** # of Sub Programs: " + result.getGradProgramSetList().size());
+		logger.info("**** # of Sub Programs: " + result.getGradProgramSetList().size());
 
 		return result;
 	}
@@ -309,7 +310,7 @@ public class GradAlgorithmService {
 				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/" +
 						"programrules?programCode=" + programCode + "&requirementType=" + requirementType, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {}).getBody();
-		logger.debug("**** # of Program Rules: " + result.size());
+		logger.info("**** # of Program Rules: " + result.size());
 
 		return result;
 	}
@@ -318,7 +319,7 @@ public class GradAlgorithmService {
 		CourseRequirements result = restTemplate.exchange(
 				"https://grad-course-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/course/course-requirement", HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), CourseRequirements.class).getBody();
-		logger.debug("**** # of Course Requirements: " + result.getCourseRequirementList().size());
+		logger.info("**** # of Course Requirements: " + result.getCourseRequirementList().size());
 
 		return result;
 	}
@@ -327,13 +328,32 @@ public class GradAlgorithmService {
 		String json = getJSONStringFromObject(studentCourses);
 
 		StudentCourses result = restTemplate.exchange(
-				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/find-not-completed", HttpMethod.POST,
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_NOT_COMPLETED, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
 
-		logger.debug("**** Rule Engine # of Not Completed Courses: " +
+		logger.info("**** Rule Engine # of Not Completed Courses: " +
 				result.getStudentCourseList()
 						.stream()
 						.filter(sc -> sc.isNotCompleted())
+						.collect(Collectors.toList())
+						.size());
+
+		return result;
+	}
+
+	private StudentCourses processCoursesForProjected(StudentCourses studentCourses) {
+		String json = getJSONStringFromObject(studentCourses);
+
+		StudentCourses result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+					+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_PROJECTED, HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
+
+		logger.info("**** Rule Engine # of Projected Courses: " +
+				result.getStudentCourseList()
+						.stream()
+						.filter(sc -> sc.isProjected())
 						.collect(Collectors.toList())
 						.size());
 
@@ -344,10 +364,11 @@ public class GradAlgorithmService {
 		String json = getJSONStringFromObject(studentCourses);
 
 		StudentCourses result = restTemplate.exchange(
-				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/find-failed", HttpMethod.POST,
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_FAILED, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
 
-		logger.debug("**** Rule Engine # of Failed Courses: " +
+		logger.info("**** Rule Engine # of Failed Courses: " +
 				result.getStudentCourseList()
 						.stream()
 						.filter(sc -> sc.isFailed())
@@ -361,10 +382,11 @@ public class GradAlgorithmService {
 		String json = getJSONStringFromObject(studentCourses);
 
 		StudentCourses result = restTemplate.exchange(
-				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/find-duplicates", HttpMethod.POST,
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_DUPLICATES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
 
-		logger.debug("**** Rule Engine # of Duplicate Courses: " +
+		logger.info("**** Rule Engine # of Duplicate Courses: " +
 				result.getStudentCourseList()
 						.stream()
 						.filter(sc -> sc.isDuplicate())
@@ -378,7 +400,7 @@ public class GradAlgorithmService {
 		GradLetterGrades result = restTemplate.exchange(
 				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradLetterGrades.class).getBody();
-		logger.debug("**** # of Letter Grades: " + result.getGradLetterGradeList().size());
+		logger.info("**** # of Letter Grades: " + result.getGradLetterGradeList().size());
 
 		return result;
 	}
@@ -390,7 +412,7 @@ public class GradAlgorithmService {
 		return "4.0";
 	}
 
-	private StudentCourses getUniqueStudentCourses(StudentCourses studentCourses){
+	private StudentCourses getUniqueStudentCourses(StudentCourses studentCourses, boolean projected){
 		List<StudentCourse> uniqueStudentCourseList = new ArrayList<StudentCourse>();
 
 		uniqueStudentCourseList = studentCourses.getStudentCourseList()
@@ -404,6 +426,16 @@ public class GradAlgorithmService {
 				.filter(sc -> !sc.isFailed())
 				.collect(Collectors.toList());
 
+		if (!projected) {
+			logger.info("Excluding Registrations!");
+			uniqueStudentCourseList = uniqueStudentCourseList
+					.stream()
+					.filter(sc -> !sc.isProjected())
+					.collect(Collectors.toList());
+		}
+		else
+			logger.info("Including Registrations!");
+
 		StudentCourses result = new StudentCourses();
 		result.setStudentCourseList(uniqueStudentCourseList);
 
@@ -415,10 +447,11 @@ public class GradAlgorithmService {
 				0, 0, false);
 		String json = getJSONStringFromObject(minCreditRuleData);
 
-		logger.debug("**** Running Rule Engine Min Credits Rule");
+		logger.info("**** Running Rule Engine Min Credits Rule");
 
 		MinCreditRuleData result = restTemplate.exchange(
-				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-mincredits", HttpMethod.POST,
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinCreditRuleData.class).getBody();
 
 		return result;
@@ -428,10 +461,11 @@ public class GradAlgorithmService {
 		MatchRuleData matchRuleData = new MatchRuleData(matchRules, uniqueStudentCourses, courseRequirements);
 		String json = getJSONStringFromObject(matchRuleData);
 
-		logger.debug("**** Running Rule Engine Match Rules");
+		logger.info("**** Running Rule Engine Match Rules");
 
 		MatchRuleData result = restTemplate.exchange(
-				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-matchrules", HttpMethod.POST,
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MatchRuleData.class).getBody();
 
 		return result;
@@ -442,10 +476,11 @@ public class GradAlgorithmService {
 				uniqueStudentCourses, 0, 0, false);
 		String json = getJSONStringFromObject(minElectiveCreditRuleData);
 
-		logger.debug("**** Running Rule Engine Min Elective Credits Rule");
+		logger.info("**** Running Rule Engine Min Elective Credits Rule");
 
 		MinElectiveCreditRuleData result = restTemplate.exchange(
-				"https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/rule-engine/run-minelectivecredits", HttpMethod.POST,
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinElectiveCreditRuleData.class).getBody();
 
 		return result;
@@ -454,10 +489,10 @@ public class GradAlgorithmService {
 	private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
 		Date gradDate = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
 		try {
-			gradDate = dateFormat.parse("17000101");
+			gradDate = dateFormat.parse("1700/01/01");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -467,12 +502,10 @@ public class GradAlgorithmService {
 				.filter(sc -> sc.isUsed())
 				.collect(Collectors.toList());
 
-		dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
 		for (StudentCourse studentCourse : studentCourses) {
 			try {
 				if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
-					gradDate = dateFormat.parse(studentCourse.getSessionDate());
+					gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();

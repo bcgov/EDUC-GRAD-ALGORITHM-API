@@ -105,3 +105,17 @@ endpoint:
   program-rule:
     get-program-rules:
       url: https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/program-rules
+  rule-engine-api:
+    base-domain: https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca
+    api-keyword: api
+    version: v1
+    root: rule-engine
+    base-url: ${endpoint.rule-engine-api.base-domain}/${endpoint.rule-engine-api.api-keyword}/${endpoint.rule-engine-api.version}/${endpoint.rule-engine-api.root}
+    endpoints:
+      find-not-completed: find-not-completed
+      find-projected: find-projected
+      find-failed: find-failed
+      find-duplicates: find-duplicates
+      run-min-credits-rules: run-min-credits-rules
+      run-match-rules: run-match-rules
+      run-min-elective-credits-rules: run-min-elective-credits-rules
