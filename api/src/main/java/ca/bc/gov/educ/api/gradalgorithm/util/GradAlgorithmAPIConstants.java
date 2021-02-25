@@ -1,9 +1,11 @@
 package ca.bc.gov.educ.api.gradalgorithm.util;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class GradAlgorithmAPIConstants {
     //API end-point Mapping constants
     public static final String API_ROOT_MAPPING = "";
