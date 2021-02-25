@@ -16,7 +16,8 @@ public interface GradAlgorithmEndpoint {
     @GetMapping("/graduatestudent")
     @PreAuthorize("#oauth2.hasScope('RUN_GRAD_ALGORITHM')")
     public GraduationData graduateStudent(@RequestParam(name = "pen") String pen,
-                                          @RequestParam(name = "gradProgram") String gradProgram);
+                                          @RequestParam(name = "gradProgram") String gradProgram,
+                                          @RequestParam(required = false) boolean projected);
 
     //@PostMapping("/graduate-students")
     //public List<GradStudent> graduateStudents(@RequestParam List<String> penList);
