@@ -226,6 +226,7 @@ public class GradAlgorithmService {
 	********************************************************************************************************************
 	 */
 	private GradStudent getStudentDemographics(String pen) {
+		logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen);
 		GradStudent result = restTemplate.exchange(
 				GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
