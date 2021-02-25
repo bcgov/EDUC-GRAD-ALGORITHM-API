@@ -25,11 +25,12 @@ public class StudentCourse {
 	private Double interimPercent;
 	private String interimLetterGrade;
 	private Integer credits;
-	private Integer creditsUsedForGrad;	
+	private Integer creditsUsedForGrad;
 	private String relatedCourse;
 	private String relatedLevel;
 	private String hasRelatedCourse;
 	private boolean isNotCompleted;
+	private boolean isProjected;
 	private boolean isFailed;
 	private boolean isDuplicate;
 	private boolean isUsed;
