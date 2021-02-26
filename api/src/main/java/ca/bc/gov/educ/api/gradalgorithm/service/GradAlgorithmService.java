@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -12,7 +12,6 @@ import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,8 +23,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
-
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradAlgorithmService {
@@ -55,12 +52,6 @@ public class GradAlgorithmService {
 
 	@Autowired
 	GradLetterGrades gradLetterGrades;
-
-	@Autowired
-	GradProgramSets gradProgramSets;
-
-	@Autowired
-	GradProgramRules gradProgramRules;
 
 	@Autowired
 	CourseRequirements courseRequirements;
@@ -513,12 +504,12 @@ public class GradAlgorithmService {
 		return dateFormat.format(gradDate).toString();
 	}
 
-	private float getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList,
+	private String getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList,
 						 List<GradLetterGrade> gradLetterGradesList) {
 
 		studentCourseList = studentCourseList.stream().filter(sc -> sc.isUsed()).collect(Collectors.toList());
-		int totalCredits = studentCourseList.stream().filter(sc -> sc.isUsed()).mapToInt(sc -> sc.getCreditsUsedForGrad()).sum();
-		int acquiredCredits = 0;
+		float totalCredits = studentCourseList.stream().filter(sc -> sc.isUsed()).mapToInt(sc -> sc.getCreditsUsedForGrad()).sum();
+		float acquiredCredits = 0;
 		String tempGpaMV = "0";
 
 		for (StudentCourse sc : studentCourseList) {
@@ -543,12 +534,14 @@ public class GradAlgorithmService {
 
 		float finalGPA = acquiredCredits / totalCredits;
 
-		return finalGPA;
+		DecimalFormat df = new DecimalFormat("0.00");
+
+		return df.format(finalGPA);
 	}
 
-	private boolean getHonoursFlag(float GPA) {
+	private boolean getHonoursFlag(String GPA) {
 
-		if (GPA > 3)
+		if (Float.valueOf(GPA) > 3)
 			return true;
 		else
 			return false;
