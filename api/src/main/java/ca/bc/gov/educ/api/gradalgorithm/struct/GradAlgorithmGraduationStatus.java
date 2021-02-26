@@ -11,7 +11,7 @@ public class GradAlgorithmGraduationStatus {
 	private String pen;
     private String program;
     private String programCompletionDate;
-    private float gpa;
+    private String gpa;
     private boolean honoursFlag;
     private String certificateType1;
     private String certificateType2;
