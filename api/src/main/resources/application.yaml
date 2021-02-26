@@ -106,7 +106,7 @@ endpoint:
     get-program-rules:
       url: https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/program-rules
   rule-engine-api:
-    base-domain: https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca
+    base-domain: https://rule-engine-api-wbmfsf-dev.pathfinder.gov.bc.ca
     api-keyword: api
     version: v1
     root: rule-engine
