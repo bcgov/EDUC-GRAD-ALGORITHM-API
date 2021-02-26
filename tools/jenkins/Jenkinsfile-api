@@ -56,7 +56,6 @@ pipeline{
       PROD_HOST_ROUTE = "${APP_NAME}-${PROD}.${APP_DOMAIN}"
   }
   stages{
-    stage('Unit Tests') {
     /*stage('Unit Tests') {
       steps {
         script {
@@ -71,7 +70,6 @@ pipeline{
           """
         }
       }
-    }
     }*/
     stage('Build App') {
       steps {
@@ -175,4 +173,3 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv, String 
     }
   }
 }
-
