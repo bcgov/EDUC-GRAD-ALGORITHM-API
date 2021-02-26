@@ -117,7 +117,7 @@ public class GradAlgorithmService {
 		studentCourses = processCoursesForDuplicates(studentCourses);
 
 		//Get All Grad Letter Grades
-		//gradLetterGrades = getAllLetterGrades();
+		gradLetterGrades = getAllLetterGrades();
 
 		//Get Unique student courses
 		StudentCourses uniqueStudentCourses = getUniqueStudentCourses(studentCourses, projected);
@@ -173,11 +173,14 @@ public class GradAlgorithmService {
 		GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
 		gradStatus.setPen(pen);
 		gradStatus.setProgram(gradProgram);
-		gradStatus.setProgramCompletionDate(getGradDate(graduationData.getStudentCourses().getStudentCourseList(),
-				graduationData.getStudentAssessments().getStudentAssessmentList()));
+		if (isGraduated) {
+			gradStatus.setProgramCompletionDate(getGradDate(graduationData.getStudentCourses().getStudentCourseList(),
+					graduationData.getStudentAssessments().getStudentAssessmentList()));
+		}
 		gradStatus.setGpa(getGPA(graduationData.getStudentCourses().getStudentCourseList(),
-				graduationData.getStudentAssessments().getStudentAssessmentList()));
-		gradStatus.setHonoursFlag("U");
+				graduationData.getStudentAssessments().getStudentAssessmentList(),
+				gradLetterGrades.getGradLetterGradeList()));
+		gradStatus.setHonoursFlag(getHonoursFlag(gradStatus.getGpa()));
 		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
 		gradStatus.setStudentGrade("TBD");
 
@@ -406,13 +409,6 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private String getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList) {
-
-
-
-		return "4.0";
-	}
-
 	private StudentCourses getUniqueStudentCourses(StudentCourses studentCourses, boolean projected){
 		List<StudentCourse> uniqueStudentCourseList = new ArrayList<StudentCourse>();
 
@@ -515,6 +511,47 @@ public class GradAlgorithmService {
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		return dateFormat.format(gradDate).toString();
+	}
+
+	private float getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList,
+						 List<GradLetterGrade> gradLetterGradesList) {
+
+		studentCourseList = studentCourseList.stream().filter(sc -> sc.isUsed()).collect(Collectors.toList());
+		int totalCredits = studentCourseList.stream().filter(sc -> sc.isUsed()).mapToInt(sc -> sc.getCreditsUsedForGrad()).sum();
+		int acquiredCredits = 0;
+		String tempGpaMV = "0";
+
+		for (StudentCourse sc : studentCourseList) {
+			tempGpaMV = "0";
+
+			GradLetterGrade letterGrade = gradLetterGradesList
+					.stream()
+					.filter(lg -> lg.getLetterGrade().compareToIgnoreCase(sc.getInterimLetterGrade()) == 0)
+					.findFirst().orElse(null);
+
+			if (letterGrade != null) {
+				tempGpaMV = letterGrade.getGpaMarkValue();
+			}
+
+			float gpaMarkValue = Float.valueOf(tempGpaMV);
+
+			acquiredCredits += (gpaMarkValue * sc.getCreditsUsedForGrad());
+
+			logger.debug("Letter Grade: " + letterGrade + " | GPA Mark Value: " + gpaMarkValue
+					+ " | Acquired Credits: " + acquiredCredits + " | Total Credits: " + totalCredits);
+		}
+
+		float finalGPA = acquiredCredits / totalCredits;
+
+		return finalGPA;
+	}
+
+	private boolean getHonoursFlag(float GPA) {
+
+		if (GPA > 3)
+			return true;
+		else
+			return false;
 	}
 
 	private School getSchool(String minCode){
