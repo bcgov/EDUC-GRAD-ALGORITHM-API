@@ -116,6 +116,8 @@ endpoint:
       find-projected: find-projected
       find-failed: find-failed
       find-duplicates: find-duplicates
+      find-cp: find-cp
+      find-ld: find-ld
       run-min-credits-rules: run-min-credits-rules
       run-match-rules: run-match-rules
       run-min-elective-credits-rules: run-min-elective-credits-rules

@@ -19,6 +19,8 @@ public class GradAlgorithmAPIConstants {
     public static String RULE_ENGINE_API_ENDPOINT_FIND_PROJECTED;
     public static String RULE_ENGINE_API_ENDPOINT_FIND_FAILED;
     public static String RULE_ENGINE_API_ENDPOINT_FIND_DUPLICATES;
+    public static String RULE_ENGINE_API_ENDPOINT_FIND_CP;
+    public static String RULE_ENGINE_API_ENDPOINT_FIND_LD;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES;
@@ -75,6 +77,16 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.rule-engine-api.endpoints.find-duplicates}")
     public void setRuleEngineApiEndpointFindDuplicates(String ruleEngineApiEndpointFindDuplicates) {
         RULE_ENGINE_API_ENDPOINT_FIND_DUPLICATES = ruleEngineApiEndpointFindDuplicates;
+    }
+
+    @Value("${endpoint.rule-engine-api.endpoints.find-cp}")
+    public void setRuleEngineApiEndpointFindCp(String ruleEngineApiEndpointFindCp) {
+        RULE_ENGINE_API_ENDPOINT_FIND_CP = ruleEngineApiEndpointFindCp;
+    }
+
+    @Value("${endpoint.rule-engine-api.endpoints.find-ld}")
+    public void setRuleEngineApiEndpointFindLd(String ruleEngineApiEndpointFindLd) {
+        RULE_ENGINE_API_ENDPOINT_FIND_LD = ruleEngineApiEndpointFindLd;
     }
 
     @Value("${endpoint.rule-engine-api.endpoints.run-min-credits-rules}")

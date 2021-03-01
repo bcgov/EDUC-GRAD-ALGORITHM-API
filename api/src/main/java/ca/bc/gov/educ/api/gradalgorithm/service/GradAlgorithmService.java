@@ -107,6 +107,12 @@ public class GradAlgorithmService {
 		//Find Duplicate Courses
 		studentCourses = processCoursesForDuplicates(studentCourses);
 
+		//Find Career Preparation Courses
+		studentCourses = processCoursesForCP(studentCourses);
+
+		//Find Locally Developed Courses
+		studentCourses = processCoursesForLD(studentCourses);
+
 		//Get All Grad Letter Grades
 		gradLetterGrades = getAllLetterGrades();
 
@@ -173,7 +179,6 @@ public class GradAlgorithmService {
 				gradLetterGrades.getGradLetterGradeList()));
 		gradStatus.setHonoursFlag(getHonoursFlag(gradStatus.getGpa()));
 		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
-		gradStatus.setStudentGrade("TBD");
 
 		graduationData.setGradStatus(gradStatus);
 		graduationData.setGraduated(isGraduated);
@@ -212,7 +217,6 @@ public class GradAlgorithmService {
 
 		return graduationData;
 	}
-
 
 	/*
 	********************************************************************************************************************
@@ -391,6 +395,42 @@ public class GradAlgorithmService {
 		return result;
 	}
 
+	private StudentCourses processCoursesForCP(StudentCourses studentCourses) {
+		String json = getJSONStringFromObject(studentCourses);
+
+		StudentCourses result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_CP, HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
+
+		logger.info("**** Rule Engine # of Career Program Courses: " +
+				result.getStudentCourseList()
+						.stream()
+						.filter(sc -> sc.isCareerPrep())
+						.collect(Collectors.toList())
+						.size());
+
+		return result;
+	}
+
+	private StudentCourses processCoursesForLD(StudentCourses studentCourses) {
+		String json = getJSONStringFromObject(studentCourses);
+
+		StudentCourses result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_LD, HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
+
+		logger.info("**** Rule Engine # of Locally Developed Courses: " +
+				result.getStudentCourseList()
+						.stream()
+						.filter(sc -> sc.isLocallyDeveloped())
+						.collect(Collectors.toList())
+						.size());
+
+		return result;
+	}
+
 	private GradLetterGrades getAllLetterGrades(){
 		GradLetterGrades result = restTemplate.exchange(
 				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
@@ -405,13 +445,11 @@ public class GradAlgorithmService {
 
 		uniqueStudentCourseList = studentCourses.getStudentCourseList()
 				.stream()
-				.filter(sc -> !sc.isNotCompleted())
-				.collect(Collectors.toList())
-				.stream()
-				.filter(sc -> !sc.isDuplicate())
-				.collect(Collectors.toList())
-				.stream()
-				.filter(sc -> !sc.isFailed())
+				.filter(sc -> !sc.isNotCompleted()
+							&& !sc.isDuplicate()
+							&& !sc.isFailed()
+							&& !sc.isCareerPrep()
+							&& !sc.isLocallyDeveloped())
 				.collect(Collectors.toList());
 
 		if (!projected) {
