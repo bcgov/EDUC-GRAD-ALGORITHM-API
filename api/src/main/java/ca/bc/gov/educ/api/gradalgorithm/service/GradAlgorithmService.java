@@ -242,6 +242,7 @@ public class GradAlgorithmService {
 
 		for (int i = 0; i < result.length; i++) {
 			result[i].setGradReqMet("");
+			result[i].setGradReqMetDetail("");
 		}
 
 		return result;
