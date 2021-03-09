@@ -16,6 +16,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -224,7 +225,7 @@ public class GradAlgorithmService {
 	********************************************************************************************************************
 	 */
 	private GradStudent getStudentDemographics(String pen) {
-		logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen);
+		logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/*****" + pen.substring(5));
 		GradStudent result = restTemplate.exchange(
 				GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
@@ -235,9 +236,15 @@ public class GradAlgorithmService {
 	}
 
 	private StudentCourse[] getAllCoursesForAStudent(String pen) {
-		StudentCourse[] result = restTemplate.exchange(
+		ResponseEntity<StudentCourse[]> response = restTemplate.exchange(
 				GradAlgorithmAPIConstants.GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen, HttpMethod.GET,
-				new HttpEntity<>(httpHeaders), StudentCourse[].class).getBody();
+				new HttpEntity<>(httpHeaders), StudentCourse[].class);
+
+		StudentCourse[] result = new StudentCourse[0];
+
+		if (response.getStatusCode().value() != 204)
+			result = response.getBody();
+
 		logger.info("**** # of courses: " + result.length);
 
 		for (int i = 0; i < result.length; i++) {
@@ -249,10 +256,17 @@ public class GradAlgorithmService {
 	}
 
 	private StudentAssessments getAllAssessmentsForAStudent(String pen) {
-		StudentAssessment[] result = restTemplate.exchange(
+
+		ResponseEntity<StudentAssessment[]> response = restTemplate.exchange(
 				"https://student-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentassessment/pen"
 						+ "/" + pen, HttpMethod.GET,
-				new HttpEntity<>(httpHeaders), StudentAssessment[].class).getBody();
+				new HttpEntity<>(httpHeaders), StudentAssessment[].class);
+
+		StudentAssessment[] result = new StudentAssessment[0];
+
+		if (response.getStatusCode().value() != 204)
+			result = response.getBody();
+
 		logger.info("**** # of Assessments: " + result.length);
 
 		this.studentAssessments.setStudentAssessmentList(Arrays.asList(result.clone()));
@@ -261,10 +275,16 @@ public class GradAlgorithmService {
 	}
 
 	private StudentExams getAllExamsForAStudent(String pen) {
-		StudentExam[] result = restTemplate.exchange(
+		ResponseEntity<StudentExam[]> response = restTemplate.exchange(
 				"https://student-exam-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentexam/pen"
 						+ "/" + pen, HttpMethod.GET,
-				new HttpEntity<>(httpHeaders), StudentExam[].class).getBody();
+				new HttpEntity<>(httpHeaders), StudentExam[].class);
+
+		StudentExam[] result = new StudentExam[0];
+
+		if (response.getStatusCode().value() !=204)
+			result = response.getBody();
+
 		logger.info("**** # of Exams: " + result.length);
 
 		this.studentExams.setStudentExamList(Arrays.asList(result.clone()));
