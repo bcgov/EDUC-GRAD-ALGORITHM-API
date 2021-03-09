@@ -102,7 +102,7 @@ endpoint:
         url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/province/%s
       all-provinces:
         url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/province
-  program-rule:
+  program-rule-api:
     get-program-rules:
       url: https://program-rule-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program-rules
   rule-engine-api:
@@ -121,4 +121,3 @@ endpoint:
       run-min-credits-rules: run-min-credits-rules
       run-match-rules: run-match-rules
       run-min-elective-credits-rules: run-min-elective-credits-rules
-
