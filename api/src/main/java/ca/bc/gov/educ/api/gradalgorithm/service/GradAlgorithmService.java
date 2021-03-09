@@ -250,7 +250,7 @@ public class GradAlgorithmService {
 
 	private StudentAssessments getAllAssessmentsForAStudent(String pen) {
 		StudentAssessment[] result = restTemplate.exchange(
-				"https://student-assessment-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentassessment/pen"
+				"https://student-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentassessment/pen"
 						+ "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentAssessment[].class).getBody();
 		logger.info("**** # of Assessments: " + result.length);
@@ -262,7 +262,7 @@ public class GradAlgorithmService {
 
 	private StudentExams getAllExamsForAStudent(String pen) {
 		StudentExam[] result = restTemplate.exchange(
-				"https://student-exam-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/studentexam/pen"
+				"https://student-exam-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentexam/pen"
 						+ "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), StudentExam[].class).getBody();
 		logger.info("**** # of Exams: " + result.length);
@@ -274,7 +274,7 @@ public class GradAlgorithmService {
 
 	private GradProgramSets getProgramSets(String gradProgram) {
 		GradProgramSets result = restTemplate.exchange(
-				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/programsets"
+				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/programsets"
 						+ "/" + gradProgram, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradProgramSets.class).getBody();
 
@@ -298,7 +298,7 @@ public class GradAlgorithmService {
 		logger.debug("**** " + programSetIds.size() + " ProgramRuleSetIDs: " + json);
 
 		ProgramRules result = restTemplate.exchange(
-				"https://program-rule-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/program-rules/program-set", HttpMethod.POST,
+				"https://program-rule-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program-rules/program-set", HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), ProgramRules.class).getBody();
 		logger.debug("**** # of Program Rules: " + result.getProgramRuleList().size());
 
@@ -307,7 +307,7 @@ public class GradAlgorithmService {
 
 	private List<GradProgramRule> getProgramRules(String programCode, String requirementType) {
 		List<GradProgramRule> result = restTemplate.exchange(
-				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/" +
+				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
 						"programrules?programCode=" + programCode + "&requirementType=" + requirementType, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {}).getBody();
 		logger.info("**** # of Program Rules: " + result.size());
@@ -317,7 +317,7 @@ public class GradAlgorithmService {
 
 	private CourseRequirements getAllCourseRequirements() {
 		CourseRequirements result = restTemplate.exchange(
-				"https://grad-course-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/course/course-requirement", HttpMethod.GET,
+				"https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement", HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), CourseRequirements.class).getBody();
 		logger.info("**** # of Course Requirements: " + result.getCourseRequirementList().size());
 
@@ -434,7 +434,7 @@ public class GradAlgorithmService {
 
 	private GradLetterGrades getAllLetterGrades(){
 		GradLetterGrades result = restTemplate.exchange(
-				"https://educ-grad-program-management-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
+				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradLetterGrades.class).getBody();
 		logger.info("**** # of Letter Grades: " + result.getGradLetterGradeList().size());
 
@@ -589,7 +589,7 @@ public class GradAlgorithmService {
 	private School getSchool(String minCode){
 
 		School result = restTemplate.exchange(
-				"https://educ-grad-school-api-wbmfsf-dev.pathfinder.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
+				"https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), School.class).getBody();
 
 		return result;
