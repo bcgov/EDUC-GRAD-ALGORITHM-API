@@ -1,6 +1,5 @@
-package ca.bc.gov.educ.api.gradstudent;
+package ca.bc.gov.educ.api.gradalgorithm;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
