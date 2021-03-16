@@ -4,11 +4,13 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.*;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,34 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrade;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRule;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRules;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradRequirement;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRule;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRules;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.MatchRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMatchRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.MinCreditRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.MinElectiveCreditRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMinElectiveCreditRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.School;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessment;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessments;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourses;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentExam;
+import ca.bc.gov.educ.api.gradalgorithm.struct.StudentExams;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradAlgorithmService {
@@ -35,6 +64,9 @@ public class GradAlgorithmService {
 
 	@Autowired
 	GraduationData graduationData;
+	
+	@Autowired
+	SpecialGraduationData gradStudentSpecialProgramData;
 
 	@Autowired
 	GradStudent gradStudent;
@@ -58,6 +90,7 @@ public class GradAlgorithmService {
 	CourseRequirements courseRequirements;
 
 	boolean isGraduated = true;
+	boolean isGraduatedSpecialProgram = true;
 
 	HttpHeaders httpHeaders;
 
@@ -218,6 +251,118 @@ public class GradAlgorithmService {
 
 		return graduationData;
 	}
+	
+	public SpecialGraduationData graduateSpecialProgramForStudent(String pen, String gradProgram, String gradSpecialProgram, boolean projected,
+			String accessToken) {
+			logger.info("\n************* Graduation Special Algorithm START  ************");
+
+			httpHeaders = APIUtils.getHeaders(accessToken);
+
+			logger.info("**** PEN: ****" + pen.substring(5));
+
+			//Get Student Demographics
+			gradStudent = getStudentDemographics(pen);
+			gradStudentSpecialProgramData.setGradStudent(gradStudent);
+
+			logger.info("**** Grad Special Program: " + gradSpecialProgram);
+
+			//Get All Courses for a Student
+			studentCourseArray = getAllCoursesForAStudent(pen);
+
+			//Get All Assessments for a Student
+			studentAssessments = getAllAssessmentsForAStudent(pen);
+			gradStudentSpecialProgramData.setStudentAssessments(studentAssessments);
+
+			//Get All Program Sets for a given Grad Program
+			//gradProgramSets = getProgramSets(gradProgram);
+
+			//Get All Program Rules for a given list of ProgramSetIDs
+			//gradProgramRules = getProgramRules(gradProgram, null);
+
+			//Get All course Requirements
+			courseRequirements = getAllCourseRequirements();
+
+			studentCourses.setStudentCourseList(Arrays.asList(studentCourseArray.clone()));
+
+			//Find Not Completed Courses
+			studentCourses = processCoursesForNotCompleted(studentCourses);
+
+			//Find Registered Courses only if the flag is Y
+			studentCourses = processCoursesForProjected(studentCourses);
+
+			//Find Failed Courses
+			studentCourses = processCoursesForFailed(studentCourses);
+
+			//Find Duplicate Courses
+			studentCourses = processCoursesForDuplicates(studentCourses);
+
+			//Find Career Preparation Courses
+			studentCourses = processCoursesForCP(studentCourses);
+
+			//Find Locally Developed Courses
+			studentCourses = processCoursesForLD(studentCourses);
+
+			//Get All Grad Letter Grades
+			gradLetterGrades = getAllLetterGrades();
+
+			//Get Unique student courses
+			StudentCourses uniqueStudentCourses = getUniqueStudentCourses(studentCourses, projected);			
+
+			//Run Special Match Credits rules
+			List<GradSpecialProgramRule> matchRulesList = getSpecialProgramRules(gradProgram,gradSpecialProgram, "M");		
+
+			//logger.debug("Unique Student Courses:\n:" + uniqueStudentCourses.toString());
+			SpecialMatchRuleData matchRuleSpecialData = runMatchRulesSpecial(new GradSpecialProgramRules(matchRulesList), uniqueStudentCourses, courseRequirements);
+			if (matchRuleSpecialData.isPassed()) {
+				logger.info("All Match rules Passed!");
+			}
+			else {
+				logger.info("One or More Match rules Failed!");
+				isGraduatedSpecialProgram = false;
+			}
+			StudentCourses usedStudentCourses =  matchRuleSpecialData.getStudentCourses();
+			//Run Special Min Credits Elective Rule
+			List<GradSpecialProgramRule> minCreditElectiveRuleList = getSpecialProgramRules(gradProgram,gradSpecialProgram, "MCE");					
+			SpecialMinElectiveCreditRuleData minElectiveCreditRuleData = hasMinElectiveCreditsSpecial(new GradSpecialProgramRules(minCreditElectiveRuleList), usedStudentCourses);
+			if (minElectiveCreditRuleData.isPassed()) {
+				logger.info("Special Programs : "+gradSpecialProgram+" Min Credits rule Passed!");
+			}
+			else {
+				logger.info("Special Programs : "+gradSpecialProgram+" Min Credits rule Failed!");
+				isGraduatedSpecialProgram = false;
+			}
+
+			gradStudentSpecialProgramData.setStudentCourses(matchRuleSpecialData.getStudentCourses());
+
+			//Populate Grad Status Details
+			SpecialGradAlgorithmGraduationStatus gradStudentSpecialAlg = new SpecialGradAlgorithmGraduationStatus();
+			gradStudentSpecialAlg.setPen(pen);
+			gradStudentSpecialAlg.setSpecialProgramID(getSpecialProgramID(gradProgram,gradSpecialProgram));
+			if (isGraduatedSpecialProgram) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(gradStudentSpecialProgramData.getStudentCourses().getStudentCourseList(),
+						gradStudentSpecialProgramData.getStudentAssessments().getStudentAssessmentList()));
+			}
+			
+			gradStudentSpecialProgramData.setGradStatus(gradStudentSpecialAlg);
+			gradStudentSpecialProgramData.setGraduated(isGraduatedSpecialProgram);
+			List<GradRequirement> reqMet = new ArrayList<>();
+			List<GradRequirement> reqNotMet = new ArrayList<>();
+
+			reqMet = matchRuleSpecialData.getPassMessages();
+			reqNotMet  = matchRuleSpecialData.getFailMessages();
+
+			if (minElectiveCreditRuleData.isPassed()) {
+				reqMet.addAll(minElectiveCreditRuleData.getPassMessages());
+			}
+			else {
+				reqNotMet.addAll(minElectiveCreditRuleData.getFailMessages());
+			}
+
+			gradStudentSpecialProgramData.setRequirementsMet(reqMet);
+			gradStudentSpecialProgramData.setNonGradReasons(reqNotMet);
+
+			return gradStudentSpecialProgramData;
+	}
 
 	/*
 	********************************************************************************************************************
@@ -292,7 +437,7 @@ public class GradAlgorithmService {
 		return studentExams;
 	}
 
-	private GradProgramSets getProgramSets(String gradProgram) {
+	/*private GradProgramSets getProgramSets(String gradProgram) {
 		GradProgramSets result = restTemplate.exchange(
 				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/programsets"
 						+ "/" + gradProgram, HttpMethod.GET,
@@ -303,7 +448,7 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	/*private ProgramRules getProgramRules(GradProgramSets gradProgramSets) {
+	private ProgramRules getProgramRules(GradProgramSets gradProgramSets) {
 		List<UUID> programSetIds = new ArrayList<UUID>();
 		ProgramSets programSets = new ProgramSets();
 
@@ -332,6 +477,16 @@ public class GradAlgorithmService {
 				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {}).getBody();
 		logger.info("**** # of Program Rules: " + result.size());
 
+		return result;
+	}
+	
+	private List<GradSpecialProgramRule> getSpecialProgramRules(String gradProgram, String gradSpecialProgram,
+			String requirementType) {
+		List<GradSpecialProgramRule> result = restTemplate.exchange(
+				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
+						"specialprogramrules/"+gradProgram+"/"+gradSpecialProgram+"/"+requirementType, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradSpecialProgramRule>>() {}).getBody();
+		logger.info("**** # of Special Program Rules: " + result.size());
 		return result;
 	}
 
@@ -626,5 +781,41 @@ public class GradAlgorithmService {
 		}
 
 		return json;
+	}
+	
+	private UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram) {
+		GradSpecialProgram result = restTemplate.exchange(
+				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/specialprograms/" +gradProgram+ "/" + gradSpecialProgram, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), GradSpecialProgram.class).getBody();
+		return result.getId();
+	}	
+	
+	private SpecialMinElectiveCreditRuleData hasMinElectiveCreditsSpecial(GradSpecialProgramRules gradSpecialProgramRules, StudentCourses uniqueStudentCourses) {
+		SpecialMinElectiveCreditRuleData minElectiveCreditSpecialRuleData = new SpecialMinElectiveCreditRuleData(gradSpecialProgramRules,
+				uniqueStudentCourses, false, null, null);
+		String json = getJSONStringFromObject(minElectiveCreditSpecialRuleData);
+		logger.info("**** Running Rule Engine Special Min Elective Credits Rule");
+
+		SpecialMinElectiveCreditRuleData result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES, HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), SpecialMinElectiveCreditRuleData.class).getBody();
+
+		return result;
+	}
+	
+	private SpecialMatchRuleData runMatchRulesSpecial(GradSpecialProgramRules gradSpecialProgramRules,
+			StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements2) {
+		SpecialMatchRuleData matchRuleSpecialData = new SpecialMatchRuleData(gradSpecialProgramRules, uniqueStudentCourses, courseRequirements);
+		String json = getJSONStringFromObject(matchRuleSpecialData);
+
+		logger.info("**** Running Rule Engine Special Match Rules");
+
+		SpecialMatchRuleData result = restTemplate.exchange(
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES, HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), SpecialMatchRuleData.class).getBody();
+
+		return result;
 	}
 }

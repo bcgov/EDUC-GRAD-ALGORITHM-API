@@ -121,3 +121,5 @@ endpoint:
       run-min-credits-rules: run-min-credits-rules
       run-match-rules: run-match-rules
       run-min-elective-credits-rules: run-min-elective-credits-rules
+      run-special-min-elective-credits-rules: run-special-min-elective-credits-rules
+      run-special-match-rules: run-special-match-rules
