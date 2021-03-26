@@ -28,10 +28,13 @@ import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 @Service
 public class GradAlgorithmService {
 
-	private static Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
+	private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	RuleProcessorData ruleProcessorData;
 
 	@Autowired
 	GraduationData graduationData;
@@ -52,7 +55,7 @@ public class GradAlgorithmService {
 	StudentExams studentExams;
 
 	@Autowired
-	GradLetterGrades gradLetterGrades;
+	List<GradLetterGrade> gradLetterGrades;
 
 	@Autowired
 	CourseRequirements courseRequirements;
@@ -60,6 +63,67 @@ public class GradAlgorithmService {
 	boolean isGraduated = true;
 
 	HttpHeaders httpHeaders;
+
+	public RuleProcessorData graduateStudentNew(String pen, String gradProgram, boolean projected, String accessToken) {
+		logger.info("\n************* New Graduation Algorithm START  ************");
+		httpHeaders = APIUtils.getHeaders(accessToken);
+		logger.info("**** PEN: ****" + pen.substring(5));
+		logger.info("**** Grad Program: " + gradProgram);
+
+		//Get Student Demographics
+		ruleProcessorData.setGradStudent(getStudentDemographics(pen));
+		//Get All Courses for a Student
+		ruleProcessorData.setStudentCourses(Arrays.asList(getAllCoursesForAStudent(pen)));
+		//Get All Assessments for a Student
+		ruleProcessorData.setStudentAssessments(getAllAssessmentsForAStudent(pen).getStudentAssessmentList());
+		//Get All course Requirements
+		ruleProcessorData.setCourseRequirements(getAllCourseRequirements().getCourseRequirementList());
+		//Get All Grad Letter Grades
+		ruleProcessorData.setGradLetterGradeList(getAllLetterGrades().getGradLetterGradeList());
+
+		//Get Grad Algorithm Rules from the DB
+		List<GradAlgorithmRule> gradAlgorithmRules = new ArrayList<>();
+		//TODO: Move all these Algorithm Rules to a New Table
+		gradAlgorithmRules.add(new GradAlgorithmRule("1", "Incomplete", "IncompleteCoursesRule",
+				"Process any Incomplete Courses", 10));
+		gradAlgorithmRules.add(new GradAlgorithmRule("2", "Registrations", "RegistrationsRule",
+				"Process any Registered Courses", 20));
+		gradAlgorithmRules.add(new GradAlgorithmRule("3", "Failed", "FailedCoursesRule",
+				"Process any Failed Courses", 30));
+		gradAlgorithmRules.add(new GradAlgorithmRule("4", "Duplicate", "DuplicateCoursesRule",
+				"Process any Duplicate Courses", 40));
+		gradAlgorithmRules.add(new GradAlgorithmRule("5", "CPCourses", "CPCoursesRule",
+				"Process any Career Program Courses", 50));
+		gradAlgorithmRules.add(new GradAlgorithmRule("6", "LDCourses", "LDCoursesRule",
+				"Process any Locally Developed Courses", 60));
+		gradAlgorithmRules.add(new GradAlgorithmRule("7", "RestrictedCourses", "RestrictedCoursesRule",
+				"Process any Restricted Courses", 70));
+		gradAlgorithmRules.add(new GradAlgorithmRule("8", "MinCredits", "MinCreditsRule",
+				"Process any MinCredits Rules", 80));
+		gradAlgorithmRules.add(new GradAlgorithmRule("9", "MatchCredits", "MatchCreditsRule",
+				"Process any MatchCredits Rules", 90));
+		gradAlgorithmRules.add(new GradAlgorithmRule("10", "MinElectiveCredits", "MinElectiveCreditsRule",
+				"Process any MinElectiveCredits Rules", 100));
+
+		ruleProcessorData.setGradAlgorithmRules(gradAlgorithmRules);
+
+		//Get all Grad Program Rules
+		List<GradProgramRule> programRulesList = getProgramRules(gradProgram);
+		ruleProcessorData.setGradProgramRules(programRulesList);
+
+		//Set Projected flag
+		ruleProcessorData.setProjected(projected);
+
+		//Calling Rule Processor
+		ruleProcessorData = processGradAlgorithmRules(ruleProcessorData);
+
+		//TODO: Convert ruleProcessorData into GraduationData object
+
+		logger.debug(ruleProcessorData.getRequirementsMet().toString());
+		logger.info("\n************* New Graduation Algorithm END  ************");
+
+		return ruleProcessorData;
+	}
 
 	public GraduationData graduateStudent(String pen, String gradProgram, boolean projected, String accessToken) {
 		logger.info("\n************* Graduation Algorithm START  ************");
@@ -85,12 +149,6 @@ public class GradAlgorithmService {
 		studentExams = getAllExamsForAStudent(pen);
 		graduationData.setStudentExams(studentExams);
 
-		//Get All Program Sets for a given Grad Program
-		//gradProgramSets = getProgramSets(gradProgram);
-
-		//Get All Program Rules for a given list of ProgramSetIDs
-		//gradProgramRules = getProgramRules(gradProgram, null);
-
 		//Get All course Requirements
 		courseRequirements = getAllCourseRequirements();
 
@@ -115,7 +173,7 @@ public class GradAlgorithmService {
 		studentCourses = processCoursesForLD(studentCourses);
 
 		//Get All Grad Letter Grades
-		gradLetterGrades = getAllLetterGrades();
+		gradLetterGrades = getAllLetterGrades().getGradLetterGradeList();
 
 		//Get Unique student courses
 		StudentCourses uniqueStudentCourses = getUniqueStudentCourses(studentCourses, projected);
@@ -176,8 +234,7 @@ public class GradAlgorithmService {
 					graduationData.getStudentAssessments().getStudentAssessmentList()));
 		}
 		gradStatus.setGpa(getGPA(graduationData.getStudentCourses().getStudentCourseList(),
-				graduationData.getStudentAssessments().getStudentAssessmentList(),
-				gradLetterGrades.getGradLetterGradeList()));
+				graduationData.getStudentAssessments().getStudentAssessmentList(), gradLetterGrades));
 		gradStatus.setHonoursFlag(getHonoursFlag(gradStatus.getGpa()));
 		gradStatus.setSchoolOfRecord(gradStudent.getMincode());
 
@@ -230,7 +287,8 @@ public class GradAlgorithmService {
 				GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
 
-		logger.debug(result.getStudSurname().trim() + ", " + result.getStudGiven().trim());
+		logger.debug((result != null ? result.getStudSurname().trim() : null) + ", "
+				+ (result != null ? result.getStudGiven().trim() : null));
 
 		return result;
 	}
@@ -245,11 +303,11 @@ public class GradAlgorithmService {
 		if (response.getStatusCode().value() != 204)
 			result = response.getBody();
 
-		logger.info("**** # of courses: " + result.length);
+		logger.info("**** # of courses: " + (result != null ? result.length : 0));
 
-		for (int i = 0; i < result.length; i++) {
-			result[i].setGradReqMet("");
-			result[i].setGradReqMetDetail("");
+		for (StudentCourse studentCourse : result) {
+			studentCourse.setGradReqMet("");
+			studentCourse.setGradReqMetDetail("");
 		}
 
 		return result;
@@ -267,9 +325,10 @@ public class GradAlgorithmService {
 		if (response.getStatusCode().value() != 204)
 			result = response.getBody();
 
-		logger.info("**** # of Assessments: " + result.length);
+		logger.info("**** # of Assessments: " + (result != null ? result.length : 0));
 
-		this.studentAssessments.setStudentAssessmentList(Arrays.asList(result.clone()));
+		this.studentAssessments.setStudentAssessmentList(
+				Arrays.asList(result != null ? result.clone() : new StudentAssessment[0]));
 
 		return studentAssessments;
 	}
@@ -285,9 +344,10 @@ public class GradAlgorithmService {
 		if (response.getStatusCode().value() !=204)
 			result = response.getBody();
 
-		logger.info("**** # of Exams: " + result.length);
+		logger.info("**** # of Exams: " + (result != null ? result.length : 0));
 
-		this.studentExams.setStudentExamList(Arrays.asList(result.clone()));
+		this.studentExams.setStudentExamList(
+				Arrays.asList(result != null ? result.clone() : new StudentExam[0]));
 
 		return studentExams;
 	}
@@ -298,7 +358,7 @@ public class GradAlgorithmService {
 						+ "/" + gradProgram, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradProgramSets.class).getBody();
 
-		logger.info("**** # of Sub Programs: " + result.getGradProgramSetList().size());
+		logger.info("**** # of Sub Programs: " + (result != null ? result.getGradProgramSetList().size() : 0));
 
 		return result;
 	}
@@ -325,12 +385,22 @@ public class GradAlgorithmService {
 		return result;
 	}*/
 
+	private List<GradProgramRule> getProgramRules(String programCode) {
+		List<GradProgramRule> result = restTemplate.exchange(
+				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
+						"programrules?programCode=" + programCode, HttpMethod.GET,
+				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {}).getBody();
+		logger.info("**** # of Program Rules: " + (result != null ? result.size() : 0));
+
+		return result;
+	}
+
 	private List<GradProgramRule> getProgramRules(String programCode, String requirementType) {
 		List<GradProgramRule> result = restTemplate.exchange(
 				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
 						"programrules?programCode=" + programCode + "&requirementType=" + requirementType, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {}).getBody();
-		logger.info("**** # of Program Rules: " + result.size());
+		logger.info("**** # of Program Rules: " + (result != null ? result.size() : 0));
 
 		return result;
 	}
@@ -339,7 +409,7 @@ public class GradAlgorithmService {
 		CourseRequirements result = restTemplate.exchange(
 				"https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement", HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), CourseRequirements.class).getBody();
-		logger.info("**** # of Course Requirements: " + result.getCourseRequirementList().size());
+		logger.info("**** # of Course Requirements: " + (result != null ? result.getCourseRequirementList().size() : 0));
 
 		return result;
 	}
@@ -456,7 +526,7 @@ public class GradAlgorithmService {
 		GradLetterGrades result = restTemplate.exchange(
 				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), GradLetterGrades.class).getBody();
-		logger.info("**** # of Letter Grades: " + result.getGradLetterGradeList().size());
+		logger.info("**** # of Letter Grades: " + (result != null ? result.getGradLetterGradeList().size() : 0));
 
 		return result;
 	}
@@ -496,12 +566,10 @@ public class GradAlgorithmService {
 
 		logger.info("**** Running Rule Engine Min Credits Rule");
 
-		MinCreditRuleData result = restTemplate.exchange(
+		return restTemplate.exchange(
 				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
 						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinCreditRuleData.class).getBody();
-
-		return result;
 	}
 
 	private MatchRuleData runMatchRules(GradProgramRules matchRules, StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements) {
@@ -510,12 +578,10 @@ public class GradAlgorithmService {
 
 		logger.info("**** Running Rule Engine Match Rules");
 
-		MatchRuleData result = restTemplate.exchange(
+		return restTemplate.exchange(
 				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
 						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MatchRuleData.class).getBody();
-
-		return result;
 	}
 
 	private MinElectiveCreditRuleData hasMinElectiveCredits(GradProgramRule minElectiveCreditRule, StudentCourses uniqueStudentCourses){
@@ -525,12 +591,22 @@ public class GradAlgorithmService {
 
 		logger.info("**** Running Rule Engine Min Elective Credits Rule");
 
-		MinElectiveCreditRuleData result = restTemplate.exchange(
+		return restTemplate.exchange(
 				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
 						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES, HttpMethod.POST,
 				new HttpEntity<>(json, httpHeaders), MinElectiveCreditRuleData.class).getBody();
+	}
 
-		return result;
+	private RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData) {
+
+		String json = getJSONStringFromObject(ruleProcessorData);
+
+		logger.info("**** Processing Grad Algorithm Rules");
+
+		return restTemplate.exchange(
+				GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
+						+ GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES, HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), RuleProcessorData.class).getBody();
 	}
 
 	private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
@@ -546,7 +622,7 @@ public class GradAlgorithmService {
 
 		studentCourses = studentCourses
 				.stream()
-				.filter(sc -> sc.isUsed())
+				.filter(StudentCourse::isUsed)
 				.collect(Collectors.toList());
 
 		for (StudentCourse studentCourse : studentCourses) {
@@ -566,8 +642,8 @@ public class GradAlgorithmService {
 	private String getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList,
 						 List<GradLetterGrade> gradLetterGradesList) {
 
-		studentCourseList = studentCourseList.stream().filter(sc -> sc.isUsed()).collect(Collectors.toList());
-		float totalCredits = studentCourseList.stream().filter(sc -> sc.isUsed()).mapToInt(sc -> sc.getCreditsUsedForGrad()).sum();
+		studentCourseList = studentCourseList.stream().filter(StudentCourse::isUsed).collect(Collectors.toList());
+		float totalCredits = studentCourseList.stream().filter(StudentCourse::isUsed).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
 		float acquiredCredits = 0;
 		String tempGpaMV = "0";
 
@@ -583,7 +659,7 @@ public class GradAlgorithmService {
 				tempGpaMV = letterGrade.getGpaMarkValue();
 			}
 
-			float gpaMarkValue = Float.valueOf(tempGpaMV);
+			float gpaMarkValue = Float.parseFloat(tempGpaMV);
 
 			acquiredCredits += (gpaMarkValue * sc.getCreditsUsedForGrad());
 
@@ -600,7 +676,7 @@ public class GradAlgorithmService {
 
 	private boolean getHonoursFlag(String GPA) {
 
-		if (Float.valueOf(GPA) > 3)
+		if (Float.parseFloat(GPA) > 3)
 			return true;
 		else
 			return false;
@@ -608,11 +684,9 @@ public class GradAlgorithmService {
 
 	private School getSchool(String minCode){
 
-		School result = restTemplate.exchange(
+		return restTemplate.exchange(
 				"https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
 				new HttpEntity<>(httpHeaders), School.class).getBody();
-
-		return result;
 	}
 
 	private <T> String getJSONStringFromObject(T inputObject){
