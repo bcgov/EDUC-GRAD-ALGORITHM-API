@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.endpoint;
 
 import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,9 +16,9 @@ public interface GradAlgorithmEndpoint {
 
     @GetMapping("/graduatestudent")
     @PreAuthorize("#oauth2.hasScope('RUN_GRAD_ALGORITHM')")
-    public GraduationData graduateStudent(@RequestParam(name = "pen") String pen,
-                                          @RequestParam(name = "gradProgram") String gradProgram,
-                                          @RequestParam(required = false) boolean projected);
+    public RuleProcessorData graduateStudent(@RequestParam(name = "pen") String pen,
+                                             @RequestParam(name = "gradProgram") String gradProgram,
+                                             @RequestParam(required = false) boolean projected);
 
     //@PostMapping("/graduate-students")
     //public List<GradStudent> graduateStudents(@RequestParam List<String> penList);

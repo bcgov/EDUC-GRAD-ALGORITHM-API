@@ -30,12 +30,4 @@ public class GradProgramRule {
 	private String programCode;
 	private boolean passed;
 
-	@Override
-	public String toString() {
-		return "GradProgramRule [id=" + id + ", ruleCode=" + ruleCode + ", requirementName=" + requirementName
-				+ ", requirementType=" + requirementType + ", requirementTypeDesc=" + requirementTypeDesc
-				+ ", requiredCredits=" + requiredCredits + ", notMetDesc=" + notMetDesc + ", requiredLevel="
-				+ requiredLevel + ", languageOfInstruction=" + languageOfInstruction + ", requirementDesc="
-				+ requirementDesc + ", isActive=" + isActive + ", programCode=" + programCode + "]";
-	}
 }
