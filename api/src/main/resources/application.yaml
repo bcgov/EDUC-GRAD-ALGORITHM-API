@@ -11,7 +11,7 @@ spring:
     enabled: false
   datasource:
     hikari:
-      pool-name: gradstudent-api-cp
+      pool-name: grad-algorithm-api-cp
       maximum-pool-size: ${MAXIMUM_POOL_SIZE}
       connection-timeout: ${CONNECTION_TIMEOUT}
       max-lifetime: ${MAX_LIFETIME}
@@ -106,7 +106,8 @@ endpoint:
     get-program-rules:
       url: https://program-rule-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program-rules
   rule-engine-api:
-    base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
+    #base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
+    base-domain: https://rule-engine-api-temp-77c02f-tools.apps.silver.devops.gov.bc.ca/
     api-keyword: api
     version: v1
     root: rule-engine
@@ -123,3 +124,4 @@ endpoint:
       run-min-elective-credits-rules: run-min-elective-credits-rules
       run-special-min-elective-credits-rules: run-special-min-elective-credits-rules
       run-special-match-rules: run-special-match-rules
+      run-grad-algorithm-rules: run-grad-algorithm-rules

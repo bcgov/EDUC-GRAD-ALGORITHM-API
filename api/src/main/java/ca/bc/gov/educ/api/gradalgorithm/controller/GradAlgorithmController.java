@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.educ.api.gradalgorithm.endpoint.GradAlgorithmEndpoint;
 import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
+import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,12 +25,12 @@ public class GradAlgorithmController implements GradAlgorithmEndpoint {
     @Autowired
     GradAlgorithmService gradAlgorithmService;
 
-    public GraduationData graduateStudent(String pen, String gradProgram, boolean projected){
+    public RuleProcessorData graduateStudent(String pen, String gradProgram, boolean projected){
         logger.debug("**** GRAD ALGORITHM Started ****");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
         String accessToken = details.getTokenValue();
-        return gradAlgorithmService.graduateStudent(pen, gradProgram, projected, accessToken);
+        return gradAlgorithmService.graduateStudentNew(pen, gradProgram, projected, accessToken);
     }
     
     public SpecialGraduationData graduateSpecialProgramForStudent(String pen, String gradProgram, String gradSpecialProgram, boolean projected){
