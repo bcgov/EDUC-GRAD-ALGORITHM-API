@@ -20,6 +20,4 @@ public interface GradAlgorithmEndpoint {
                                              @RequestParam(name = "gradProgram") String gradProgram,
                                              @RequestParam(required = false) boolean projected);
 
-    //@PostMapping("/graduate-students")
-    //public List<GradStudent> graduateStudents(@RequestParam List<String> penList);
 }

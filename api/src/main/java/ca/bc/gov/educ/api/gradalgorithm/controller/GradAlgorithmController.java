@@ -32,7 +32,4 @@ public class GradAlgorithmController implements GradAlgorithmEndpoint {
         return gradAlgorithmService.graduateStudentNew(pen, gradProgram, projected, accessToken);
     }
 
-    //public List<GradStudent> graduateStudents(@RequestParam List<String> penList){
-    //    return null;
-    //}
 }
