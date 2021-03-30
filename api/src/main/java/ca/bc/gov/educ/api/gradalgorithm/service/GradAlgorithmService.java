@@ -73,11 +73,12 @@ public class GradAlgorithmService {
 		//Get Student Demographics
 		ruleProcessorData.setGradStudent(getStudentDemographics(pen));
 		//Get All Courses for a Student
-		ruleProcessorData.setStudentCourses(Arrays.asList(getAllCoursesForAStudent(pen)));
+		List<StudentCourse> studentCourses = Arrays.asList(getAllCoursesForAStudent(pen));
+		ruleProcessorData.setStudentCourses(studentCourses);
 		//Get All Assessments for a Student
 		ruleProcessorData.setStudentAssessments(getAllAssessmentsForAStudent(pen).getStudentAssessmentList());
 		//Get All course Requirements
-		ruleProcessorData.setCourseRequirements(getAllCourseRequirements().getCourseRequirementList());
+		ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses).getCourseRequirementList());
 		//Get All Grad Letter Grades
 		ruleProcessorData.setGradLetterGradeList(getAllLetterGrades().getGradLetterGradeList());
 
@@ -150,7 +151,7 @@ public class GradAlgorithmService {
 		graduationData.setStudentExams(studentExams);
 
 		//Get All course Requirements
-		courseRequirements = getAllCourseRequirements();
+		courseRequirements = getAllCourseRequirements(Arrays.asList(studentCourseArray));
 
 		studentCourses.setStudentCourseList(Arrays.asList(studentCourseArray.clone()));
 
@@ -405,10 +406,15 @@ public class GradAlgorithmService {
 		return result;
 	}
 
-	private CourseRequirements getAllCourseRequirements() {
+	private CourseRequirements getAllCourseRequirements(List<StudentCourse> studentCourses) {
+
+		List<String> courseCodes = new ArrayList<>();
+		studentCourses.stream().forEach(sc -> courseCodes.add(sc.getCourseCode()));
+		String json = getJSONStringFromObject(new CourseList(courseCodes));
+
 		CourseRequirements result = restTemplate.exchange(
-				"https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement", HttpMethod.GET,
-				new HttpEntity<>(httpHeaders), CourseRequirements.class).getBody();
+				"https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement/course-list", HttpMethod.POST,
+				new HttpEntity<>(json, httpHeaders), CourseRequirements.class).getBody();
 		logger.info("**** # of Course Requirements: " + (result != null ? result.getCourseRequirementList().size() : 0));
 
 		return result;
