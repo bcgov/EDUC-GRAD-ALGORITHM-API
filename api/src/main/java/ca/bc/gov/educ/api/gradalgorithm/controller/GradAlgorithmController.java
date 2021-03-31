@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.bc.gov.educ.api.gradalgorithm.endpoint.GradAlgorithmEndpoint;
 import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
 import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGraduationData;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,14 +30,6 @@ public class GradAlgorithmController implements GradAlgorithmEndpoint {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
         String accessToken = details.getTokenValue();
         return gradAlgorithmService.graduateStudentNew(pen, gradProgram, projected, accessToken);
-    }
-    
-    public SpecialGraduationData graduateSpecialProgramForStudent(String pen, String gradProgram, String gradSpecialProgram, boolean projected){
-        logger.debug("**** GRAD SPECIAL PROGRAM ALGORITHM Started ****");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
-        String accessToken = details.getTokenValue();
-        return gradAlgorithmService.graduateSpecialProgramForStudent(pen,gradProgram, gradSpecialProgram, projected, accessToken);
     }
 
 }

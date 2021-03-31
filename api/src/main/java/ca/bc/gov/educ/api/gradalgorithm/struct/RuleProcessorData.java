@@ -18,6 +18,11 @@ public class RuleProcessorData {
     private GradStudent gradStudent;
     private List<GradAlgorithmRules> gradAlgorithmRules;
     private List<GradProgramRule> gradProgramRules;
+    private List<GradSpecialProgramRule> gradSpecialProgramRulesFrenchImmersion;
+    private List<GradSpecialProgramRule> gradSpecialProgramRulesAdvancedPlacement;
+    private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBD;
+    private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBC;
+    private List<GradSpecialProgramRule> gradSpecialProgramRulesCareerProgram;
     private List<StudentCourse> studentCourses;
     private List<StudentAssessment> studentAssessments;
     private List<CourseRequirement> courseRequirements;
@@ -25,7 +30,13 @@ public class RuleProcessorData {
     private List<GradRequirement> nonGradReasons;
     private List<GradRequirement> requirementsMet;
     private boolean isGraduated;
+    private boolean isSpecialProgramGraduated;
+    private boolean hasSpecialProgramFrenchImmersion;
+    private boolean hasSpecialProgramAdvancedPlacement;
+    private boolean hasSpecialProgramInternationalBaccalaureate;
+    private boolean hasSpecialProgramCareerProgram;
     private GradAlgorithmGraduationStatus gradStatus;
+    private SpecialGradAlgorithmGraduationStatus gradSpecialProgramStatus;
     private School school;
     private boolean isProjected;
 
