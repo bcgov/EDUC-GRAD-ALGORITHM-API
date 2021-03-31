@@ -26,9 +26,9 @@ spring:
       ddl-auto: none
   mvc:
     log-request-details: ${SPRING_SHOW_REQUEST_DETAILS}
-#  jackson:
-#    deserialization:
-#      fail-on-unknown-properties: true
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
 #  security:
 #    user:
 #      name: ${API_USERNAME}
@@ -122,4 +122,6 @@ endpoint:
       run-min-credits-rules: run-min-credits-rules
       run-match-rules: run-match-rules
       run-min-elective-credits-rules: run-min-elective-credits-rules
+      run-special-min-elective-credits-rules: run-special-min-elective-credits-rules
+      run-special-match-rules: run-special-match-rules
       run-grad-algorithm-rules: run-grad-algorithm-rules

@@ -24,7 +24,10 @@ public class GradAlgorithmAPIConstants {
     public static String RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES;
+    public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES;
+    public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES;
+
 
     //Attribute Constants
 
@@ -103,6 +106,16 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.rule-engine-api.endpoints.run-min-elective-credits-rules}")
     public void setRuleEngineApiEndpointRunMinElectiveCreditsRules(String ruleEngineApiEndpointRunMinElectiveCreditsRules) {
         RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES = ruleEngineApiEndpointRunMinElectiveCreditsRules;
+    }
+   
+    @Value("${endpoint.rule-engine-api.endpoints.run-special-min-elective-credits-rules}")
+    public void setRuleEngineApiEndpointRunSpecialMinElectiveCreditsRules(String ruleEngineApiEndpointRunSpecialMinElectiveCreditsRules) {
+        RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES = ruleEngineApiEndpointRunSpecialMinElectiveCreditsRules;
+    }
+    
+    @Value("${endpoint.rule-engine-api.endpoints.run-special-match-rules}")
+    public void setRuleEngineApiEndpointRunSpecialMatchRules(String ruleEngineApiEndpointRunSpecialMatchRules) {
+        RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES = ruleEngineApiEndpointRunSpecialMatchRules;
     }
 
     @Value("${endpoint.rule-engine-api.endpoints.run-grad-algorithm-rules}")
