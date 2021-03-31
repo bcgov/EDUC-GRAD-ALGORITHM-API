@@ -1,12 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.struct;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Data
 @Component
@@ -29,6 +30,8 @@ public class RuleProcessorData {
     private List<GradLetterGrade> gradLetterGradeList;
     private List<GradRequirement> nonGradReasons;
     private List<GradRequirement> requirementsMet;
+    private List<GradRequirement> nonGradReasonsSpecialPrograms;
+    private List<GradRequirement> requirementsMetSpecialPrograms;
     private boolean isGraduated;
     private boolean isSpecialProgramGraduated;
     private boolean hasSpecialProgramFrenchImmersion;
