@@ -34,7 +34,6 @@ import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRule;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRules;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradRequirement;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRule;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRules;
@@ -77,7 +76,7 @@ public class GradAlgorithmService {
 	SpecialGraduationData gradStudentSpecialProgramData;
 
 	@Autowired
-	GradSearchStudent gradStudent;
+	GradStudent gradStudent;
 
 	@Autowired
 	StudentCourse[] studentCourseArray;
@@ -349,14 +348,14 @@ public class GradAlgorithmService {
 		return result;
 	}
 	
-	private GradSearchStudent getStudentDemographics(String pen) {
+	private GradStudent getStudentDemographics(String pen) {
 		logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/*****" + pen.substring(5));
-		GradSearchStudent result = restTemplate.exchange(
+		GradStudent result = restTemplate.exchange(
 				GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
-				new HttpEntity<>(httpHeaders), GradSearchStudent.class).getBody();
+				new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
 
-		logger.debug((result != null ? result.getLegalLastName().trim() : null) + ", "
-				+ (result != null ? result.getLegalFirstName().trim() : null));
+		logger.debug((result != null ? result.getStudSurname().trim() : null) + ", "
+				+ (result != null ? result.getStudGiven().trim() : null));
 
 		return result;
 	}
