@@ -1,8 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.controller;
 
-import ca.bc.gov.educ.api.gradalgorithm.endpoint.GradAlgorithmEndpoint;
-import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
-import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.bc.gov.educ.api.gradalgorithm.endpoint.GradAlgorithmEndpoint;
+import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
+import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
