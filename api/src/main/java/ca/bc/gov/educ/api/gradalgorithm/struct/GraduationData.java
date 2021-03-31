@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class GraduationData {
-    private GradSearchStudent gradStudent;
+    private GradStudent gradStudent;
     private GradAlgorithmGraduationStatus gradStatus;
     private School school;
     private StudentCourses studentCourses;
