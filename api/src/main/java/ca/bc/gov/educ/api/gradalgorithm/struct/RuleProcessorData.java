@@ -25,6 +25,8 @@ public class RuleProcessorData {
     private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBC;
     private List<GradSpecialProgramRule> gradSpecialProgramRulesCareerProgram;
     private List<StudentCourse> studentCourses;
+    private List<StudentCourse> studentCoursesForFrenchImmersion;
+    private List<StudentCourse> studentCoursesForCareerProgram;
     private List<StudentAssessment> studentAssessments;
     private List<CourseRequirement> courseRequirements;
     private List<GradLetterGrade> gradLetterGradeList;
@@ -33,7 +35,10 @@ public class RuleProcessorData {
     private List<GradRequirement> nonGradReasonsSpecialPrograms;
     private List<GradRequirement> requirementsMetSpecialPrograms;
     private boolean isGraduated;
-    private boolean isSpecialProgramGraduated;
+    private boolean isSpecialProgramFrenchImmersionGraduated;
+    private boolean isSpecialProgramAdvancedPlacementGraduated;
+    private boolean isSpecialProgramInternationalBaccalaureateGraduated;
+    private boolean isSpecialProgramCareerProgramGraduated;
     private boolean hasSpecialProgramFrenchImmersion;
     private boolean hasSpecialProgramAdvancedPlacement;
     private boolean hasSpecialProgramInternationalBaccalaureate;
