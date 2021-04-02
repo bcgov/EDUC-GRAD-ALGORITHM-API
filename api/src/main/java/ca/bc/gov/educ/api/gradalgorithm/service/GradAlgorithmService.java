@@ -106,7 +106,7 @@ public class GradAlgorithmService {
 		httpHeaders = APIUtils.getHeaders(accessToken);
 		logger.info("**** PEN: ****" + pen.substring(5));
 		logger.info("**** Grad Program: " + gradProgram);
-
+		ruleProcessorData = new RuleProcessorData();
 		//Get Student Demographics
 		ruleProcessorData.setGradStudent(getStudentDemographics(pen));
 		//Get All Courses for a Student
@@ -480,21 +480,12 @@ public class GradAlgorithmService {
 		logger.info("**** # of Special Program Rules: " + result.size());
 		return result;
 	}
-	
-	private List<GradSpecialProgramRule> getSpecialProgramRules(String gradProgram, String gradSpecialProgram,
-			String requirementType) {
-		List<GradSpecialProgramRule> result = restTemplate.exchange(
-				"https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
-						"specialprogramrules/"+gradProgram+"/"+gradSpecialProgram+"/"+requirementType, HttpMethod.GET,
-				new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradSpecialProgramRule>>() {}).getBody();
-		logger.info("**** # of Special Program Rules: " + result.size());
-		return result;
-	}
 
 	private CourseRequirements getAllCourseRequirements(List<StudentCourse> studentCourseList) {
 		
 		List<String> courseList = studentCourseList.stream()
                 .map(StudentCourse::getCourseCode)
+                .distinct()
                 .collect(Collectors.toList());		
 		String json = getJSONStringFromObject(new CourseList(courseList));
 		CourseRequirements result = restTemplate.exchange(
