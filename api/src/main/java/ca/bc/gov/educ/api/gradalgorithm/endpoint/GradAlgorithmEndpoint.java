@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.endpoint;
 
+import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public interface GradAlgorithmEndpoint {
 
     @GetMapping("/graduatestudent")
     @PreAuthorize("#oauth2.hasScope('RUN_GRAD_ALGORITHM')")
-    public RuleProcessorData graduateStudent(@RequestParam(name = "pen") String pen,
-                                             @RequestParam(name = "gradProgram") String gradProgram,
-                                             @RequestParam(required = false) boolean projected);
+    public GraduationData graduateStudent(@RequestParam(name = "pen") String pen,
+                                          @RequestParam(name = "gradProgram") String gradProgram,
+                                          @RequestParam(required = false) boolean projected);
 }
