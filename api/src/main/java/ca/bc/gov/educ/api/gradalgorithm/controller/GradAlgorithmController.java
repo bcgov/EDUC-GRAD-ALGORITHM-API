@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.controller;
 
+import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class GradAlgorithmController implements GradAlgorithmEndpoint {
     @Autowired
     GradAlgorithmService gradAlgorithmService;
 
-    public RuleProcessorData graduateStudent(String pen, String gradProgram, boolean projected){
+    public GraduationData graduateStudent(String pen, String gradProgram, boolean projected){
         logger.debug("**** GRAD ALGORITHM Started ****");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
