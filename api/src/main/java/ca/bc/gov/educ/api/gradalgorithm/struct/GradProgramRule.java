@@ -28,6 +28,7 @@ public class GradProgramRule {
 	private String requirementDesc;
 	private String isActive;
 	private String programCode;
+	private String ruleCategory;
 	private boolean passed;
 
 }
