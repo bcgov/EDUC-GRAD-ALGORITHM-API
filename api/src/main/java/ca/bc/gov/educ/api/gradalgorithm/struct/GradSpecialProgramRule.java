@@ -22,6 +22,7 @@ public class GradSpecialProgramRule {
 	private String requirementDesc;
 	private String isActive;
 	private UUID specialProgramID;
+	private String ruleCategory;
 	
 	@Override
 	public String toString() {

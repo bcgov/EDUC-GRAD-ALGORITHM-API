@@ -1,11 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.struct;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,7 +35,11 @@ public class GradSearchStudent {
 	private String memo;
 	private String trueStudentID;
 	private String program;
-	private String schoolName;
+	private String schoolOfRecord;
+	private String schoolOfRecordName;
+	private String schoolOfRecordindependentAffiliation;
+	private String studentGrade;
+	private String studentStatus;
 	  
 	  
 }

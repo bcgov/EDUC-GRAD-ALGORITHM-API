@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -39,16 +41,15 @@ import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRule;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRules;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudentSpecialProgram;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGradAlgorithmGraduationStatus;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.MatchRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMatchRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.MinCreditRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.MinElectiveCreditRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMinElectiveCreditRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.School;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMatchRuleData;
+import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMinElectiveCreditRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessment;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessments;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
@@ -121,9 +122,9 @@ public class GradAlgorithmService {
             ruleProcessorData.setGradSpecialProgramRulesFrenchImmersion(getSpecialProgramRules(gradProgram, "FI"));
         if (ruleProcessorData.isHasSpecialProgramAdvancedPlacement())
             ruleProcessorData.setGradSpecialProgramRulesAdvancedPlacement(getSpecialProgramRules(gradProgram, "AD"));
-        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureate())
+        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBD())
             ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBD(getSpecialProgramRules(gradProgram, "BD"));
-        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureate())
+        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
             ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBC(getSpecialProgramRules(gradProgram, "BC"));
         if (ruleProcessorData.isHasSpecialProgramCareerProgram())
             ruleProcessorData.setGradSpecialProgramRulesCareerProgram(getSpecialProgramRules(gradProgram, "CP"));
@@ -141,17 +142,34 @@ public class GradAlgorithmService {
         }
         gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
                 ruleProcessorData.getGradLetterGradeList()));
-        gradStatus.setHonoursFlag(getHonoursFlag(gradStatus.getGpa()));
+        gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
         gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getMincode());
 
         ruleProcessorData.setGradStatus(gradStatus);
+        
+        //Populating Special Grad Status
+        List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList = new ArrayList<SpecialGradAlgorithmGraduationStatus>();
+        if (ruleProcessorData.isHasSpecialProgramFrenchImmersion())
+        	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"FI",specialProgramStatusList);
+        if (ruleProcessorData.isHasSpecialProgramCareerProgram())
+        	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"CP",specialProgramStatusList);
+        if (ruleProcessorData.isHasSpecialProgramAdvancedPlacement())
+        	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"AD",specialProgramStatusList);
+        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBD())
+        	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BD",specialProgramStatusList);
+        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
+        	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BC",specialProgramStatusList);
+		
+        
         ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getMincode()));
 
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
 		graduationData.setGradStatus(ruleProcessorData.getGradStatus());
+		graduationData.setSpecialGradStatus(specialProgramStatusList);
 		graduationData.setSchool(ruleProcessorData.getSchool());
 		graduationData.setStudentCourses(new StudentCourses(ruleProcessorData.getStudentCourses()));
+        graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
         graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
         graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
         graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
@@ -167,6 +185,46 @@ public class GradAlgorithmService {
 	Utility Methods
 	********************************************************************************************************************
 	 */
+    
+    private List<SpecialGradAlgorithmGraduationStatus> getListOfSpecialProgramStatus(String pen,String gradProgram, String specialProgramCode,List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList) {
+    	List<GradRequirement> nonGradReasons = new ArrayList<GradRequirement>();
+    	List<GradRequirement> reqMet = new ArrayList<GradRequirement>();
+    	SpecialGradAlgorithmGraduationStatus gradStudentSpecialAlg = new SpecialGradAlgorithmGraduationStatus();
+		gradStudentSpecialAlg.setPen(pen);
+		gradStudentSpecialAlg.setSpecialProgramID(getSpecialProgramID(gradProgram,specialProgramCode));
+		if (ruleProcessorData.isGraduated()) {
+			gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCoursesForFrenchImmersion(),
+					ruleProcessorData.getStudentAssessments()));
+		}
+		
+		if("FI".equalsIgnoreCase(specialProgramCode)) {
+			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
+			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
+			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsFrenchImmersion();
+			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsFrenchImmersion();
+			
+		}
+		if("CP".equalsIgnoreCase(specialProgramCode)) {
+			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
+			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
+			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
+			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
+		}
+		if("AD".equalsIgnoreCase(specialProgramCode)) 
+			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramAdvancedPlacementGraduated());
+		if("BC".equalsIgnoreCase(specialProgramCode)) 
+			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramInternationalBaccalaureateGraduatedBC());
+		if("BD".equalsIgnoreCase(specialProgramCode)) 
+			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramInternationalBaccalaureateGraduatedBD());
+		
+		Collections.sort(nonGradReasons, Comparator.comparing(GradRequirement::getRule));
+		gradStudentSpecialAlg.setSpecialNonGradReasons(nonGradReasons);
+		Collections.sort(reqMet,Comparator.comparing(GradRequirement::getRule));
+		gradStudentSpecialAlg.setSpecialRequirementsMet(reqMet);
+		
+		specialProgramStatusList.add(gradStudentSpecialAlg);
+		return specialProgramStatusList;
+    }
 
     private RuleProcessorData checkForSpecialProgram(String pen, RuleProcessorData ruleProcessorData) {
         List<GradStudentSpecialProgram> gradSpecialResponseList = restTemplate.exchange(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/pen/%s", pen), HttpMethod.GET,
@@ -183,8 +241,11 @@ public class GradAlgorithmService {
             if (sp.getSpecialProgramCode().equalsIgnoreCase("AD")) {
                 ruleProcessorData.setHasSpecialProgramAdvancedPlacement(true);
             }
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("BD") || sp.getSpecialProgramCode().equalsIgnoreCase("BC")) {
-                ruleProcessorData.setHasSpecialProgramInternationalBaccalaureate(true);
+            if (sp.getSpecialProgramCode().equalsIgnoreCase("BD")) {
+                ruleProcessorData.setHasSpecialProgramInternationalBaccalaureateBD(true);
+            }
+            if (sp.getSpecialProgramCode().equalsIgnoreCase("BC")) {
+                ruleProcessorData.setHasSpecialProgramInternationalBaccalaureateBC(true);
             }
             if (sp.getSpecialProgramCode().equalsIgnoreCase("CP")) {
                 ruleProcessorData.setHasSpecialProgramCareerProgram(true);
@@ -278,17 +339,6 @@ public class GradAlgorithmService {
         List<GradProgramRule> result = restTemplate.exchange(
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
                         "programrules?programCode=" + programCode, HttpMethod.GET,
-                new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {
-                }).getBody();
-        logger.info("**** # of Program Rules: " + (result != null ? result.size() : 0));
-
-        return result;
-    }
-
-    private List<GradProgramRule> getProgramRules(String programCode, String requirementType) {
-        List<GradProgramRule> result = restTemplate.exchange(
-                "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
-                        "programrules?programCode=" + programCode + "&requirementType=" + requirementType, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradProgramRule>>() {
                 }).getBody();
         logger.info("**** # of Program Rules: " + (result != null ? result.size() : 0));
@@ -579,12 +629,12 @@ public class GradAlgorithmService {
         return df.format(finalGPA);
     }
 
-    private boolean getHonoursFlag(String GPA) {
+    private String getHonoursFlag(String GPA) {
 
         if (Float.parseFloat(GPA) > 3)
-            return true;
+            return "Y";
         else
-            return false;
+            return "N";
     }
 
     private School getSchool(String minCode) {

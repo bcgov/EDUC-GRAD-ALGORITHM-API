@@ -16,6 +16,6 @@ public class GradAlgorithmRules {
 	private String ruleDescription;
 	private Integer sortOrder;
 	private String programCode;
-	private String specialProgramCode;	
+	private String isActive;	
 	
 }
