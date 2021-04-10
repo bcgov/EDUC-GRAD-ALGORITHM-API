@@ -1,12 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.struct;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Data
 @Component
@@ -16,13 +17,15 @@ import java.util.List;
 public class GraduationData {
     private GradStudent gradStudent;
     private GradAlgorithmGraduationStatus gradStatus;
+    private List<SpecialGradAlgorithmGraduationStatus> specialGradStatus;
     private School school;
-    private StudentCourses studentCourses;
-    private StudentAssessments studentAssessments;
+    private StudentCourses studentCourses;    
+    private StudentAssessments studentAssessments;    
     private StudentExams studentExams;
     private List<GradRequirement> nonGradReasons;
     private List<GradRequirement> requirementsMet;
     //Grad Message
     //Student Career Programs
     private boolean isGraduated;
+    
 }
