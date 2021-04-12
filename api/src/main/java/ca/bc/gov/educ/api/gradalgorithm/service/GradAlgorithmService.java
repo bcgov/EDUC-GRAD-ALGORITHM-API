@@ -192,16 +192,16 @@ public class GradAlgorithmService {
     	SpecialGradAlgorithmGraduationStatus gradStudentSpecialAlg = new SpecialGradAlgorithmGraduationStatus();
 		gradStudentSpecialAlg.setPen(pen);
 		gradStudentSpecialAlg.setSpecialProgramID(getSpecialProgramID(gradProgram,specialProgramCode));
-		if (ruleProcessorData.isGraduated()) {
-			gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCoursesForFrenchImmersion(),
-					ruleProcessorData.getStudentAssessments()));
-		}
 		
 		if("FI".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
 			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
 			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsFrenchImmersion();
 			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsFrenchImmersion();
+			if (gradStudentSpecialAlg.isSpecialGraduated()) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getSpecialStudentCourses().getStudentCourseList(),
+						gradStudentSpecialAlg.getSpecialStudentAssessments().getStudentAssessmentList()));
+			}
 			
 		}
 		if("CP".equalsIgnoreCase(specialProgramCode)) {
@@ -209,13 +209,32 @@ public class GradAlgorithmService {
 			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
 			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
 			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
+			if (gradStudentSpecialAlg.isSpecialGraduated()) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getSpecialStudentCourses().getStudentCourseList(),
+						gradStudentSpecialAlg.getSpecialStudentAssessments().getStudentAssessmentList()));
+			}
 		}
-		if("AD".equalsIgnoreCase(specialProgramCode)) 
+		if("AD".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramAdvancedPlacementGraduated());
-		if("BC".equalsIgnoreCase(specialProgramCode)) 
+			if (gradStudentSpecialAlg.isSpecialGraduated()) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+						ruleProcessorData.getStudentAssessments()));
+			}
+		}
+		if("BC".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramInternationalBaccalaureateGraduatedBC());
-		if("BD".equalsIgnoreCase(specialProgramCode)) 
+			if (gradStudentSpecialAlg.isSpecialGraduated()) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+						ruleProcessorData.getStudentAssessments()));
+			}
+		}
+		if("BD".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramInternationalBaccalaureateGraduatedBD());
+			if (gradStudentSpecialAlg.isSpecialGraduated()) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+						ruleProcessorData.getStudentAssessments()));
+			}
+		}
 		
 		Collections.sort(nonGradReasons, Comparator.comparing(GradRequirement::getRule));
 		gradStudentSpecialAlg.setSpecialNonGradReasons(nonGradReasons);
