@@ -196,6 +196,7 @@ public class GradAlgorithmService {
 		if("FI".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
 			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
+			gradStudentSpecialAlg.setSpecialStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
 			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsFrenchImmersion();
 			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsFrenchImmersion();
 			if (gradStudentSpecialAlg.isSpecialGraduated()) {
@@ -207,6 +208,7 @@ public class GradAlgorithmService {
 		if("CP".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
 			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
+			gradStudentSpecialAlg.setSpecialStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
 			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
 			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
 			if (gradStudentSpecialAlg.isSpecialGraduated()) {
