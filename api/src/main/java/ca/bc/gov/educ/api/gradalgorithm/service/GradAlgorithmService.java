@@ -238,9 +238,13 @@ public class GradAlgorithmService {
 			}
 		}
 		
-		Collections.sort(nonGradReasons, Comparator.comparing(GradRequirement::getRule));
+		if(nonGradReasons != null)
+			Collections.sort(nonGradReasons, Comparator.comparing(GradRequirement::getRule));
+		
 		gradStudentSpecialAlg.setSpecialNonGradReasons(nonGradReasons);
-		Collections.sort(reqMet,Comparator.comparing(GradRequirement::getRule));
+		if(reqMet != null)
+			Collections.sort(reqMet,Comparator.comparing(GradRequirement::getRule));
+		
 		gradStudentSpecialAlg.setSpecialRequirementsMet(reqMet);
 		
 		specialProgramStatusList.add(gradStudentSpecialAlg);
