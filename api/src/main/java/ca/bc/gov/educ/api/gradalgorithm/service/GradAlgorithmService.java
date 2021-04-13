@@ -341,25 +341,6 @@ public class GradAlgorithmService {
         return studentAssessments;
     }
 
-    private StudentExams getAllExamsForAStudent(String pen) {
-        ResponseEntity<StudentExam[]> response = restTemplate.exchange(
-                "https://student-exam-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentexam/pen"
-                        + "/" + pen, HttpMethod.GET,
-                new HttpEntity<>(httpHeaders), StudentExam[].class);
-
-        StudentExam[] result = new StudentExam[0];
-
-        if (response.getStatusCode().value() != 204)
-            result = response.getBody();
-
-        logger.info("**** # of Exams: " + (result != null ? result.length : 0));
-
-        this.studentExams.setStudentExamList(
-                Arrays.asList(result != null ? result.clone() : new StudentExam[0]));
-
-        return studentExams;
-    }
-
     private List<GradProgramRule> getProgramRules(String programCode) {
         List<GradProgramRule> result = restTemplate.exchange(
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/" +
@@ -395,114 +376,6 @@ public class GradAlgorithmService {
         return result;
     }
 
-    private StudentCourses processCoursesForNotCompleted(StudentCourses studentCourses) {
-        String json = getJSONStringFromObject(studentCourses);
-
-        StudentCourses result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_NOT_COMPLETED, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
-
-        logger.info("**** Rule Engine # of Not Completed Courses: " +
-                result.getStudentCourseList()
-                        .stream()
-                        .filter(sc -> sc.isNotCompleted())
-                        .collect(Collectors.toList())
-                        .size());
-
-        return result;
-    }
-
-    private StudentCourses processCoursesForProjected(StudentCourses studentCourses) {
-        String json = getJSONStringFromObject(studentCourses);
-
-        StudentCourses result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_PROJECTED, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
-
-        logger.info("**** Rule Engine # of Projected Courses: " +
-                result.getStudentCourseList()
-                        .stream()
-                        .filter(sc -> sc.isProjected())
-                        .collect(Collectors.toList())
-                        .size());
-
-        return result;
-    }
-
-    private StudentCourses processCoursesForFailed(StudentCourses studentCourses) {
-        String json = getJSONStringFromObject(studentCourses);
-
-        StudentCourses result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_FAILED, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
-
-        logger.info("**** Rule Engine # of Failed Courses: " +
-                result.getStudentCourseList()
-                        .stream()
-                        .filter(sc -> sc.isFailed())
-                        .collect(Collectors.toList())
-                        .size());
-
-        return result;
-    }
-
-    private StudentCourses processCoursesForDuplicates(StudentCourses studentCourses) {
-        String json = getJSONStringFromObject(studentCourses);
-
-        StudentCourses result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_DUPLICATES, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
-
-        logger.info("**** Rule Engine # of Duplicate Courses: " +
-                result.getStudentCourseList()
-                        .stream()
-                        .filter(sc -> sc.isDuplicate())
-                        .collect(Collectors.toList())
-                        .size());
-
-        return result;
-    }
-
-    private StudentCourses processCoursesForCP(StudentCourses studentCourses) {
-        String json = getJSONStringFromObject(studentCourses);
-
-        StudentCourses result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_CP, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
-
-        logger.info("**** Rule Engine # of Career Program Courses: " +
-                result.getStudentCourseList()
-                        .stream()
-                        .filter(sc -> sc.isCareerPrep())
-                        .collect(Collectors.toList())
-                        .size());
-
-        return result;
-    }
-
-    private StudentCourses processCoursesForLD(StudentCourses studentCourses) {
-        String json = getJSONStringFromObject(studentCourses);
-
-        StudentCourses result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_FIND_LD, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), StudentCourses.class).getBody();
-
-        logger.info("**** Rule Engine # of Locally Developed Courses: " +
-                result.getStudentCourseList()
-                        .stream()
-                        .filter(sc -> sc.isLocallyDeveloped())
-                        .collect(Collectors.toList())
-                        .size());
-
-        return result;
-    }
-
     private GradLetterGrades getAllLetterGrades() {
         GradLetterGrades result = restTemplate.exchange(
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
@@ -510,71 +383,6 @@ public class GradAlgorithmService {
         logger.info("**** # of Letter Grades: " + (result != null ? result.getGradLetterGradeList().size() : 0));
 
         return result;
-    }
-
-    private StudentCourses getUniqueStudentCourses(StudentCourses studentCourses, boolean projected) {
-        List<StudentCourse> uniqueStudentCourseList = new ArrayList<StudentCourse>();
-
-        uniqueStudentCourseList = studentCourses.getStudentCourseList()
-                .stream()
-                .filter(sc -> !sc.isNotCompleted()
-                        && !sc.isDuplicate()
-                        && !sc.isFailed()
-                        && !sc.isCareerPrep()
-                        && !sc.isLocallyDeveloped())
-                .collect(Collectors.toList());
-
-        if (!projected) {
-            logger.info("Excluding Registrations!");
-            uniqueStudentCourseList = uniqueStudentCourseList
-                    .stream()
-                    .filter(sc -> !sc.isProjected())
-                    .collect(Collectors.toList());
-        } else
-            logger.info("Including Registrations!");
-
-        StudentCourses result = new StudentCourses();
-        result.setStudentCourseList(uniqueStudentCourseList);
-
-        return result;
-    }
-
-    private MinCreditRuleData hasMinCredits(GradProgramRule minCreditRule, StudentCourses uniqueStudentCourses) {
-        MinCreditRuleData minCreditRuleData = new MinCreditRuleData(minCreditRule, uniqueStudentCourses,
-                0, 0, false);
-        String json = getJSONStringFromObject(minCreditRuleData);
-
-        logger.info("**** Running Rule Engine Min Credits Rule");
-
-        return restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), MinCreditRuleData.class).getBody();
-    }
-
-    private MatchRuleData runMatchRules(GradProgramRules matchRules, StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements) {
-        MatchRuleData matchRuleData = new MatchRuleData(matchRules, uniqueStudentCourses, courseRequirements);
-        String json = getJSONStringFromObject(matchRuleData);
-
-        logger.info("**** Running Rule Engine Match Rules");
-
-        return restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), MatchRuleData.class).getBody();
-    }
-
-    private MinElectiveCreditRuleData hasMinElectiveCredits(GradProgramRule minElectiveCreditRule, StudentCourses uniqueStudentCourses) {
-        MinElectiveCreditRuleData minElectiveCreditRuleData = new MinElectiveCreditRuleData(minElectiveCreditRule,
-                uniqueStudentCourses, 0, 0, false);
-        String json = getJSONStringFromObject(minElectiveCreditRuleData);
-
-        logger.info("**** Running Rule Engine Min Elective Credits Rule");
-
-        return restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), MinElectiveCreditRuleData.class).getBody();
     }
 
     private RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData) {
@@ -687,34 +495,5 @@ public class GradAlgorithmService {
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/specialprograms/" + gradProgram + "/" + gradSpecialProgram, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), GradSpecialProgram.class).getBody();
         return result.getId();
-    }
-
-    private SpecialMinElectiveCreditRuleData hasMinElectiveCreditsSpecial(GradSpecialProgramRules gradSpecialProgramRules, StudentCourses uniqueStudentCourses) {
-        SpecialMinElectiveCreditRuleData minElectiveCreditSpecialRuleData = new SpecialMinElectiveCreditRuleData(gradSpecialProgramRules,
-                uniqueStudentCourses, false, null, null);
-        String json = getJSONStringFromObject(minElectiveCreditSpecialRuleData);
-        logger.info("**** Running Rule Engine Special Min Elective Credits Rule");
-
-        SpecialMinElectiveCreditRuleData result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), SpecialMinElectiveCreditRuleData.class).getBody();
-
-        return result;
-    }
-
-    private SpecialMatchRuleData runMatchRulesSpecial(GradSpecialProgramRules gradSpecialProgramRules,
-                                                      StudentCourses uniqueStudentCourses, CourseRequirements courseRequirements2) {
-        SpecialMatchRuleData matchRuleSpecialData = new SpecialMatchRuleData(gradSpecialProgramRules, uniqueStudentCourses, courseRequirements);
-        String json = getJSONStringFromObject(matchRuleSpecialData);
-
-        logger.info("**** Running Rule Engine Special Match Rules");
-
-        SpecialMatchRuleData result = restTemplate.exchange(
-                GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES, HttpMethod.POST,
-                new HttpEntity<>(json, httpHeaders), SpecialMatchRuleData.class).getBody();
-
-        return result;
     }
 }
