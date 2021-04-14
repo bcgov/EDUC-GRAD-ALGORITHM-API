@@ -106,8 +106,7 @@ endpoint:
     get-program-rules:
       url: https://program-rule-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program-rules
   rule-engine-api:
-    #base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
-    base-domain: https://rule-engine-api-temp-77c02f-tools.apps.silver.devops.gov.bc.ca/
+    base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
     api-keyword: api
     version: v1
     root: rule-engine
