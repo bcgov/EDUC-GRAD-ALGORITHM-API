@@ -14,18 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GraduationData {
+public class SpecialGraduationData {
     private GradStudent gradStudent;
-    private GradAlgorithmGraduationStatus gradStatus;
-    private List<SpecialGradAlgorithmGraduationStatus> specialGradStatus;
-    private School school;
-    private StudentCourses studentCourses;    
-    private StudentAssessments studentAssessments;    
+    private SpecialGradAlgorithmGraduationStatus gradStatus;
+    private StudentCourses studentCourses;
+    private StudentAssessments studentAssessments;
     private StudentExams studentExams;
     private List<GradRequirement> nonGradReasons;
     private List<GradRequirement> requirementsMet;
-    //Grad Message
-    //Student Career Programs
     private boolean isGraduated;
-    
 }

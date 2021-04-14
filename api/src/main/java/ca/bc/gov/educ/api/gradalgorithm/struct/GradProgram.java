@@ -15,22 +15,12 @@ import java.sql.Date;
 @NoArgsConstructor
 public class GradProgram {
 
-	private String programCode; 
-	private String programName; 
-	private String programType;	
-	private String createdBy;	
-	private Date createdTimestamp;
-	private String updatedBy;	
-	private Date updatedTimestamp;
-	
-	
-	@Override
-	public String toString() {
-		return "GradProgram [programCode=" + programCode + ", programName=" + programName + ", programType="
-				+ programType + ", createdBy=" + createdBy + ", createdTimestamp=" + createdTimestamp + ", updatedBy=" + updatedBy
-				+ ", updatedTimestamp=" + updatedTimestamp + "]";
-	}
-	
-	
-			
+    private String programCode;
+    private String programName;
+    private String programType;
+    private String createdBy;
+    private Date createdTimestamp;
+    private String updatedBy;
+    private Date updatedTimestamp;
+
 }

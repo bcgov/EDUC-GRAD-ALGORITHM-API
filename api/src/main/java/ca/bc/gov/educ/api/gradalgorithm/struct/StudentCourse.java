@@ -31,6 +31,8 @@ public class StudentCourse {
     private String relatedLevel;
     private String hasRelatedCourse;
     private boolean isNotCompleted;
+    private String language;
+    private String workExpFlag;
     private boolean isProjected;
     private boolean isFailed;
     private boolean isDuplicate;
