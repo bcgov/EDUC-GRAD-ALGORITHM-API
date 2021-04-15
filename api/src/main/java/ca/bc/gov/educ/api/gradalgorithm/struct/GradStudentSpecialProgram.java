@@ -18,5 +18,6 @@ public class GradStudentSpecialProgram {
     private String specialProgramName;
     private String specialProgramCode;
     private String mainProgramCode;
+    private UUID studentID;
 				
 }
