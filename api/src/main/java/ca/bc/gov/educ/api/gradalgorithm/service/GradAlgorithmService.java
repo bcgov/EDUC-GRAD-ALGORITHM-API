@@ -34,27 +34,19 @@ import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmRules;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrade;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRule;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRules;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradRequirement;
+import ca.bc.gov.educ.api.gradalgorithm.struct.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRule;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRules;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudentSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MatchRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MinCreditRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MinElectiveCreditRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.School;
 import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGradAlgorithmGraduationStatus;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMatchRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMinElectiveCreditRuleData;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessment;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessments;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourses;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentExam;
 import ca.bc.gov.educ.api.gradalgorithm.struct.StudentExams;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
@@ -289,14 +281,14 @@ public class GradAlgorithmService {
         return result;
     }
 
-    private GradStudent getStudentDemographics(String pen) {
+    private GradSearchStudent getStudentDemographics(String pen) {
         logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/*****" + pen.substring(5));
-        GradStudent result = restTemplate.exchange(
+        GradSearchStudent result = restTemplate.exchange(
                 GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
-                new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
+                new HttpEntity<>(httpHeaders), GradSearchStudent.class).getBody();
 
-        logger.debug((result != null ? result.getStudSurname().trim() : null) + ", "
-                + (result != null ? result.getStudGiven().trim() : null));
+        logger.debug((result != null ? result.getLegalLastName().trim() : null) + ", "
+                + (result != null ? result.getLegalFirstName().trim() : null));
 
         return result;
     }

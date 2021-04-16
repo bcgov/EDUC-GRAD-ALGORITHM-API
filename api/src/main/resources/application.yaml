@@ -79,7 +79,7 @@ springdoc:
 endpoint:
   grad-student-api:
     get-student-by-pen:
-      url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1
+      url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/pen
     get-all-students:
       url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstudent
   student-course-api:
