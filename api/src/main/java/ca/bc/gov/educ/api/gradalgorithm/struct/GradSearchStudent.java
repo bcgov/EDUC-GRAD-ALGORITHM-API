@@ -1,12 +1,15 @@
 package ca.bc.gov.educ.api.gradalgorithm.struct;
 
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
+@Component
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class GradSearchStudent {
