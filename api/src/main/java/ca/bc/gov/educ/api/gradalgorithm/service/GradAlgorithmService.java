@@ -185,6 +185,7 @@ public class GradAlgorithmService {
     	SpecialGradAlgorithmGraduationStatus gradStudentSpecialAlg = new SpecialGradAlgorithmGraduationStatus();
 		gradStudentSpecialAlg.setPen(pen);
 		gradStudentSpecialAlg.setSpecialProgramID(getSpecialProgramID(gradProgram,specialProgramCode));
+		gradStudentSpecialAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
 		
 		if("FI".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
