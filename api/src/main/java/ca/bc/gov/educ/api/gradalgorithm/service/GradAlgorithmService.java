@@ -283,10 +283,11 @@ public class GradAlgorithmService {
 
     private GradSearchStudent getStudentDemographics(String pen) {
         logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/*****" + pen.substring(5));
-        GradSearchStudent result = restTemplate.exchange(
+        List<GradSearchStudent> resultList = restTemplate.exchange(
                 GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
-                new HttpEntity<>(httpHeaders), GradSearchStudent.class).getBody();
-
+                new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradSearchStudent>>() {
+                }).getBody();
+        GradSearchStudent result = resultList.get(0);
         logger.debug((result != null ? result.getLegalLastName().trim() : null) + ", "
                 + (result != null ? result.getLegalFirstName().trim() : null));
 
