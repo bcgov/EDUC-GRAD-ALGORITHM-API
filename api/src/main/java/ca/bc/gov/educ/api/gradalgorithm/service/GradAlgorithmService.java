@@ -136,7 +136,7 @@ public class GradAlgorithmService {
         gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
                 ruleProcessorData.getGradLetterGradeList()));
         gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-        gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getMincode());
+        gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 
         ruleProcessorData.setGradStatus(gradStatus);
         
@@ -154,7 +154,7 @@ public class GradAlgorithmService {
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BC",specialProgramStatusList);
 		
         
-        ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getMincode()));
+        ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord()));
 
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
@@ -467,9 +467,9 @@ public class GradAlgorithmService {
 
     private School getSchool(String minCode) {
 
-        return restTemplate.exchange(
-                "https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
+        School schObj = restTemplate.exchange("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), School.class).getBody();
+        return schObj;
     }
 
     private <T> String getJSONStringFromObject(T inputObject) {
