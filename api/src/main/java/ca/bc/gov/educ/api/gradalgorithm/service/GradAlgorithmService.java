@@ -127,6 +127,7 @@ public class GradAlgorithmService {
         //Populate Grad Status Details
         GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
         gradStatus.setPen(pen);
+        gradStatus.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
         gradStatus.setProgram(gradProgram);
         if (isGraduated) {
             gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
