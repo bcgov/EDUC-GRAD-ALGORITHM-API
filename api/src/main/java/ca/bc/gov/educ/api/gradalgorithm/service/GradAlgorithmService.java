@@ -27,35 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.CourseList;
-import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRequirements;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmGraduationStatus;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmRules;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrade;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradLetterGrades;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRule;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradProgramRules;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradRequirement;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgram;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRule;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradSpecialProgramRules;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudentSpecialProgram;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MatchRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MinCreditRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.MinElectiveCreditRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.RuleProcessorData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.School;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialGradAlgorithmGraduationStatus;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMatchRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.SpecialMinElectiveCreditRuleData;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessment;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessments;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourses;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentExam;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentExams;
+import ca.bc.gov.educ.api.gradalgorithm.struct.*;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
@@ -76,18 +48,10 @@ public class GradAlgorithmService {
     @Autowired
     StudentAssessments studentAssessments;
 
-    @Autowired
-    StudentExams studentExams;
-
-    @Autowired
-    CourseRequirements courseRequirements;
-
     boolean isGraduated = true;
-    boolean isGraduatedSpecialProgram = true;
-
     HttpHeaders httpHeaders;
 
-    public GraduationData graduateStudentNew(String pen, String gradProgram, boolean projected, String accessToken) {
+    public GraduationData graduateStudent(String pen, String gradProgram, boolean projected, String accessToken) {
         logger.info("\n************* New Graduation Algorithm START  ************");
         httpHeaders = APIUtils.getHeaders(accessToken);
         logger.info("**** PEN: ****" + pen.substring(5));
@@ -160,7 +124,6 @@ public class GradAlgorithmService {
         if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BC",specialProgramStatusList);
 		
-        
         ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getMincode()));
 
         //Convert ruleProcessorData into GraduationData object
@@ -175,16 +138,14 @@ public class GradAlgorithmService {
         graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
         graduationData.setGraduated(ruleProcessorData.isGraduated());
 
-        logger.info("\n************* New Graduation Algorithm END  ************");
+        logger.info("\n************* Graduation Algorithm END  ************");
 
         return graduationData;
     }
 
-	/*
-	********************************************************************************************************************
+	/******************************************************************************************************************
 	Utility Methods
-	********************************************************************************************************************
-	 */
+	*******************************************************************************************************************/
     
     private List<SpecialGradAlgorithmGraduationStatus> getListOfSpecialProgramStatus(String pen,String gradProgram, String specialProgramCode,List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList) {
     	List<GradRequirement> nonGradReasons = new ArrayList<GradRequirement>();
@@ -289,7 +250,7 @@ public class GradAlgorithmService {
         return result;
     }
 
-    private GradStudent getStudentDemographics(String pen) {
+    protected GradStudent getStudentDemographics(String pen) {
         logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/*****" + pen.substring(5));
         GradStudent result = restTemplate.exchange(
                 GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
@@ -494,6 +455,6 @@ public class GradAlgorithmService {
         GradSpecialProgram result = restTemplate.exchange(
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/specialprograms/" + gradProgram + "/" + gradSpecialProgram, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), GradSpecialProgram.class).getBody();
-        return result.getId();
+        return result != null ? result.getId() : null;
     }
 }
