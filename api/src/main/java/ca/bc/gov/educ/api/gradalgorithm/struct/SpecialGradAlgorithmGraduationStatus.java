@@ -20,4 +20,5 @@ public class SpecialGradAlgorithmGraduationStatus {
     private boolean isSpecialGraduated;
     private List<GradRequirement> specialNonGradReasons;
     private List<GradRequirement> specialRequirementsMet;
+    private UUID studentID;
 }

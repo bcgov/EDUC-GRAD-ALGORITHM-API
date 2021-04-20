@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.educ.api.gradalgorithm.struct.*;
+
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
@@ -99,6 +100,7 @@ public class GradAlgorithmService {
         //Populate Grad Status Details
         GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
         gradStatus.setPen(pen);
+        gradStatus.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
         gradStatus.setProgram(gradProgram);
         if (isGraduated) {
             gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
@@ -107,7 +109,7 @@ public class GradAlgorithmService {
         gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
                 ruleProcessorData.getGradLetterGradeList()));
         gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-        gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getMincode());
+        gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 
         ruleProcessorData.setGradStatus(gradStatus);
         
@@ -124,7 +126,7 @@ public class GradAlgorithmService {
         if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BC",specialProgramStatusList);
 		
-        ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getMincode()));
+        ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord()));
 
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
@@ -153,6 +155,7 @@ public class GradAlgorithmService {
     	SpecialGradAlgorithmGraduationStatus gradStudentSpecialAlg = new SpecialGradAlgorithmGraduationStatus();
 		gradStudentSpecialAlg.setPen(pen);
 		gradStudentSpecialAlg.setSpecialProgramID(getSpecialProgramID(gradProgram,specialProgramCode));
+		gradStudentSpecialAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
 		
 		if("FI".equalsIgnoreCase(specialProgramCode)) {
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
@@ -250,14 +253,15 @@ public class GradAlgorithmService {
         return result;
     }
 
-    protected GradStudent getStudentDemographics(String pen) {
+    protected GradSearchStudent getStudentDemographics(String pen) {
         logger.debug("GET Grad Student Demographics: " + GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/*****" + pen.substring(5));
-        GradStudent result = restTemplate.exchange(
+        List<GradSearchStudent> resultList = restTemplate.exchange(
                 GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen, HttpMethod.GET,
-                new HttpEntity<>(httpHeaders), GradStudent.class).getBody();
-
-        logger.debug((result != null ? result.getStudSurname().trim() : null) + ", "
-                + (result != null ? result.getStudGiven().trim() : null));
+                new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradSearchStudent>>() {
+                }).getBody();
+        GradSearchStudent result = resultList.get(0);
+        logger.debug((result != null ? result.getLegalLastName().trim() : null) + ", "
+                + (result != null ? result.getLegalFirstName().trim() : null));
 
         return result;
     }
@@ -433,9 +437,9 @@ public class GradAlgorithmService {
 
     private School getSchool(String minCode) {
 
-        return restTemplate.exchange(
-                "https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
+        School schObj = restTemplate.exchange("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), School.class).getBody();
+        return schObj;
     }
 
     private <T> String getJSONStringFromObject(T inputObject) {
