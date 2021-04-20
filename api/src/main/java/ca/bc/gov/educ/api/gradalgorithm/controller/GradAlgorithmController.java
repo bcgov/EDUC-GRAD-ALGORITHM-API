@@ -30,7 +30,7 @@ public class GradAlgorithmController implements GradAlgorithmEndpoint {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
         String accessToken = details.getTokenValue();
-        return gradAlgorithmService.graduateStudentNew(pen, gradProgram, projected, accessToken);
+        return gradAlgorithmService.graduateStudent(pen, gradProgram, projected, accessToken);
     }
 
 }
