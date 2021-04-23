@@ -19,5 +19,6 @@ public class GradAlgorithmGraduationStatus {
     private String schoolOfRecord;
     private String studentGrade;
     private String studentStatus;
+    private String schoolAtGrad;
     private UUID studentID;
 }

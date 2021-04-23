@@ -98,10 +98,10 @@ public class GradAlgorithmService {
         ruleProcessorData = processGradAlgorithmRules(ruleProcessorData);
 
         //Populate Grad Status Details
-        GradAlgorithmGraduationStatus gradStatus = new GradAlgorithmGraduationStatus();
-        gradStatus.setPen(pen);
-        gradStatus.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
-        gradStatus.setProgram(gradProgram);
+        GradAlgorithmGraduationStatus gradStatus = getStudentGraduationStatus(pen);
+//        gradStatus.setPen(pen);
+//        gradStatus.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
+//        gradStatus.setProgram(gradProgram);
         if (isGraduated) {
             gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
                     ruleProcessorData.getStudentAssessments()));
@@ -109,7 +109,7 @@ public class GradAlgorithmService {
         gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
                 ruleProcessorData.getGradLetterGradeList()));
         gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-        gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+        //gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 
         ruleProcessorData.setGradStatus(gradStatus);
         
@@ -181,21 +181,21 @@ public class GradAlgorithmService {
 			}
 		}
 		if("AD".equalsIgnoreCase(specialProgramCode)) {
-			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramAdvancedPlacementGraduated());
+			gradStudentSpecialAlg.setSpecialGraduated(true);
 			if (gradStudentSpecialAlg.isSpecialGraduated()) {
 				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 						ruleProcessorData.getStudentAssessments()));
 			}
 		}
 		if("BC".equalsIgnoreCase(specialProgramCode)) {
-			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramInternationalBaccalaureateGraduatedBC());
+			gradStudentSpecialAlg.setSpecialGraduated(true);
 			if (gradStudentSpecialAlg.isSpecialGraduated()) {
 				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 						ruleProcessorData.getStudentAssessments()));
 			}
 		}
 		if("BD".equalsIgnoreCase(specialProgramCode)) {
-			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramInternationalBaccalaureateGraduatedBD());
+			gradStudentSpecialAlg.setSpecialGraduated(true);
 			if (gradStudentSpecialAlg.isSpecialGraduated()) {
 				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 						ruleProcessorData.getStudentAssessments()));
@@ -250,6 +250,14 @@ public class GradAlgorithmService {
                 }).getBody();
         logger.info("**** # of Grad Algorithm Rules: " + (result != null ? result.size() : 0));
 
+        return result;
+    }
+    
+    protected GradAlgorithmGraduationStatus getStudentGraduationStatus(String pen) {
+        logger.debug("GET Grad Student Graduation Status: " + GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_PEN_URL + "/*****" + pen.substring(5));
+        GradAlgorithmGraduationStatus result = restTemplate.exchange(
+                String.format(GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_PEN_URL,pen), HttpMethod.GET,
+                new HttpEntity<>(httpHeaders), GradAlgorithmGraduationStatus.class).getBody();
         return result;
     }
 
@@ -323,7 +331,8 @@ public class GradAlgorithmService {
                         "specialprogramrules/" + gradProgram + "/" + gradSpecialProgram, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradSpecialProgramRule>>() {
                 }).getBody();
-        logger.info("**** # of Special Program Rules: " + result.size());
+        if(result != null)
+        	logger.info("**** # of Special Program Rules: " + result.size());
         return result;
     }
 
