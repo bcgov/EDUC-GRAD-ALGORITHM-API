@@ -98,10 +98,7 @@ public class GradAlgorithmService {
         ruleProcessorData = processGradAlgorithmRules(ruleProcessorData);
 
         //Populate Grad Status Details
-        GradAlgorithmGraduationStatus gradStatus = getStudentGraduationStatus(pen);
-//        gradStatus.setPen(pen);
-//        gradStatus.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
-//        gradStatus.setProgram(gradProgram);
+        GradAlgorithmGraduationStatus gradStatus = getStudentGraduationStatus(ruleProcessorData.getGradStudent().getStudentID(),pen);
         if (isGraduated) {
             gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
                     ruleProcessorData.getStudentAssessments()));
@@ -253,10 +250,10 @@ public class GradAlgorithmService {
         return result;
     }
     
-    protected GradAlgorithmGraduationStatus getStudentGraduationStatus(String pen) {
-        logger.debug("GET Grad Student Graduation Status: " + GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_PEN_URL + "/*****" + pen.substring(5));
+    protected GradAlgorithmGraduationStatus getStudentGraduationStatus(String studentID,String pen) {
+        logger.debug("GET Grad Student Graduation Status: " + GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_STUDENT_ID_URL + "/*****" + pen.substring(5));
         GradAlgorithmGraduationStatus result = restTemplate.exchange(
-                String.format(GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_PEN_URL,pen), HttpMethod.GET,
+                String.format(GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_STUDENT_ID_URL,studentID), HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), GradAlgorithmGraduationStatus.class).getBody();
         return result;
     }
