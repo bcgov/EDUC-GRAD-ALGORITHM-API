@@ -126,4 +126,4 @@ endpoint:
       run-grad-algorithm-rules: run-grad-algorithm-rules
   grad-graduation-status-api: 
     get-graduation-status: 
-      url: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/studentid/%s
+      url: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/studentid/%s/algorithm
