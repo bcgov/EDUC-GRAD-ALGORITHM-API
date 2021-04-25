@@ -82,7 +82,7 @@ public class GradAlgorithmService {
         ruleProcessorData.setProjected(projected);
 
         //Set Special Program Flag
-        ruleProcessorData = checkForSpecialProgram(pen, ruleProcessorData);
+        ruleProcessorData = checkForSpecialProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData);
         if (ruleProcessorData.isHasSpecialProgramFrenchImmersion())
             ruleProcessorData.setGradSpecialProgramRulesFrenchImmersion(getSpecialProgramRules(gradProgram, "FI"));
         if (ruleProcessorData.isHasSpecialProgramAdvancedPlacement())
@@ -212,8 +212,8 @@ public class GradAlgorithmService {
 		return specialProgramStatusList;
     }
 
-    private RuleProcessorData checkForSpecialProgram(String pen, RuleProcessorData ruleProcessorData) {
-        List<GradStudentSpecialProgram> gradSpecialResponseList = restTemplate.exchange(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/pen/%s", pen), HttpMethod.GET,
+    private RuleProcessorData checkForSpecialProgram(String studentID, RuleProcessorData ruleProcessorData) {
+        List<GradStudentSpecialProgram> gradSpecialResponseList = restTemplate.exchange(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/studentid/%s", studentID), HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<GradStudentSpecialProgram>>() {
                 }).getBody();
 
