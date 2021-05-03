@@ -27,6 +27,7 @@ public class GradAlgorithmAPIConstants {
     public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES;
+    public static String GET_GRADSTATUS_BY_STUDENT_ID_URL;
 
 
     //Attribute Constants
@@ -122,6 +123,13 @@ public class GradAlgorithmAPIConstants {
     public void setRuleEngineApiEndpointRunGradAlgorithmRules(String ruleEngineApiEndpointRunGradAlgorithmRules) {
         RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES = ruleEngineApiEndpointRunGradAlgorithmRules;
     }
+    
+    @Value("${endpoint.grad-graduation-status-api.get-graduation-status.url}")
+    public void setGraduationStatusApiEndpointGetGradStatus(String graduationStatusApiEndpointGetGradStatus) {
+    	GET_GRADSTATUS_BY_STUDENT_ID_URL = graduationStatusApiEndpointGetGradStatus;
+    }
+    
+    
 
 //Application Properties Constants
 
