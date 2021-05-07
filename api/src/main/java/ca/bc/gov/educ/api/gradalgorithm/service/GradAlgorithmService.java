@@ -64,9 +64,12 @@ public class GradAlgorithmService {
         List<StudentCourse> studentCourses = Arrays.asList(getAllCoursesForAStudent(pen));
         ruleProcessorData.setStudentCourses(studentCourses);
         //Get All Assessments for a Student
-        ruleProcessorData.setStudentAssessments(getAllAssessmentsForAStudent(pen).getStudentAssessmentList());
+        List<StudentAssessment> studentAssessments = Arrays.asList(getAllAssessmentsForAStudent(pen));
+        ruleProcessorData.setStudentAssessments(studentAssessments);
         //Get All course Requirements
-        ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses).getCourseRequirementList());
+        ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses).getCourseRequirementList());        
+        //Get All Assessment Requirements
+        ruleProcessorData.setAssessmentRequirements(getAllAssessmentRequirements(studentAssessments).getAssessmentRequirementList());
         //Get All Grad Letter Grades
         ruleProcessorData.setGradLetterGradeList(getAllLetterGrades().getGradLetterGradeList());
         //Get All Grad Special Cases
@@ -292,7 +295,7 @@ public class GradAlgorithmService {
         return result;
     }
 
-    private StudentAssessments getAllAssessmentsForAStudent(String pen) {
+    private StudentAssessment[] getAllAssessmentsForAStudent(String pen) {
 
         ResponseEntity<StudentAssessment[]> response = restTemplate.exchange(
                 "https://student-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentassessment/pen"
@@ -306,10 +309,12 @@ public class GradAlgorithmService {
 
         logger.info("**** # of Assessments: " + (result != null ? result.length : 0));
 
-        this.studentAssessments.setStudentAssessmentList(
-                Arrays.asList(result != null ? result.clone() : new StudentAssessment[0]));
+        for (StudentAssessment studentAssessment : result) {
+        	studentAssessment.setGradReqMet("");
+        	studentAssessment.setGradReqMetDetail("");
+        }
 
-        return studentAssessments;
+        return result;
     }
 
     private List<GradProgramRule> getProgramRules(String programCode) {
@@ -348,6 +353,20 @@ public class GradAlgorithmService {
         return result;
     }
 
+    private AssessmentRequirements getAllAssessmentRequirements(List<StudentAssessment> studentAssessmentList) {
+        List<String> assessmentList = studentAssessmentList.stream()
+                .map(StudentAssessment::getAssessmentCode)
+                .distinct()
+                .collect(Collectors.toList());
+        String json = getJSONStringFromObject(new AssessmentList(assessmentList));
+        AssessmentRequirements result = restTemplate.exchange(
+                "https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/assessment-requirement/assessment-list", HttpMethod.POST,
+                new HttpEntity<>(json, httpHeaders), AssessmentRequirements.class).getBody();
+        logger.info("**** # of Assessment Requirements: " + (result != null ? result.getAssessmentRequirementList().size() : 0));
+
+        return result;
+    }
+    
     private GradLetterGrades getAllLetterGrades() {
         GradLetterGrades result = restTemplate.exchange(
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
