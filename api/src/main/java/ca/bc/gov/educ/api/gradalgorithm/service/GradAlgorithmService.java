@@ -69,7 +69,8 @@ public class GradAlgorithmService {
         ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses).getCourseRequirementList());
         //Get All Grad Letter Grades
         ruleProcessorData.setGradLetterGradeList(getAllLetterGrades().getGradLetterGradeList());
-
+        //Get All Grad Special Cases
+        ruleProcessorData.setGradSpecialCaseList(getAllSpecialCases());
         //Get Grad Algorithm Rules from the DB
         List<GradAlgorithmRules> gradAlgorithmRules = getGradAlgorithmRules(gradProgram);
         ruleProcessorData.setGradAlgorithmRules(gradAlgorithmRules);
@@ -352,6 +353,16 @@ public class GradAlgorithmService {
                 "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/lettergrade", HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), GradLetterGrades.class).getBody();
         logger.info("**** # of Letter Grades: " + (result != null ? result.getGradLetterGradeList().size() : 0));
+
+        return result;
+    }
+    
+    private List<GradSpecialCase> getAllSpecialCases() {
+        List<GradSpecialCase> result = restTemplate.exchange(
+                "https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/specialcase", HttpMethod.GET,
+                new HttpEntity<>(httpHeaders),new ParameterizedTypeReference<List<GradSpecialCase>>() {
+                }).getBody();
+        logger.info("**** # of Special Cases: " + (result != null ? result.size() : 0));
 
         return result;
     }
