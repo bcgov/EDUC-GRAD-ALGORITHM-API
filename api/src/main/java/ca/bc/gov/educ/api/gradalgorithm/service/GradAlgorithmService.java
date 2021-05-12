@@ -77,7 +77,8 @@ public class GradAlgorithmService {
         //Get Grad Algorithm Rules from the DB
         List<GradAlgorithmRules> gradAlgorithmRules = getGradAlgorithmRules(gradProgram);
         ruleProcessorData.setGradAlgorithmRules(gradAlgorithmRules);
-
+        //Get All course restrictions
+        ruleProcessorData.setCourseRestrictions(getAllCourseRestrictions(studentCourses).getCourseRestrictions()); 
         //Get all Grad Program Rules
         List<GradProgramRule> programRulesList = getProgramRules(gradProgram);
         ruleProcessorData.setGradProgramRules(programRulesList);
@@ -352,6 +353,22 @@ public class GradAlgorithmService {
 
         return result;
     }
+    
+    private CourseRestrictions getAllCourseRestrictions(List<StudentCourse> studentCourseList) {
+        List<String> courseList = studentCourseList.stream()
+                .map(StudentCourse::getCourseCode)
+                .distinct()
+                .collect(Collectors.toList());
+        String json = getJSONStringFromObject(new CourseList(courseList));
+        CourseRestrictions result = restTemplate.exchange(
+                "https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-restriction/course-list", HttpMethod.POST,
+                new HttpEntity<>(json, httpHeaders), CourseRestrictions.class).getBody();
+        logger.info("**** # of Course Restrictions: " + (result != null ? result.getCourseRestrictions().size() : 0));
+
+        return result;
+    }
+    
+    
 
     private AssessmentRequirements getAllAssessmentRequirements(List<StudentAssessment> studentAssessmentList) {
         List<String> assessmentList = studentAssessmentList.stream()
@@ -360,7 +377,7 @@ public class GradAlgorithmService {
                 .collect(Collectors.toList());
         String json = getJSONStringFromObject(new AssessmentList(assessmentList));
         AssessmentRequirements result = restTemplate.exchange(
-                "https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/assessment-requirement/assessment-list", HttpMethod.POST,
+                "https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list", HttpMethod.POST,
                 new HttpEntity<>(json, httpHeaders), AssessmentRequirements.class).getBody();
         logger.info("**** # of Assessment Requirements: " + (result != null ? result.getAssessmentRequirementList().size() : 0));
 
