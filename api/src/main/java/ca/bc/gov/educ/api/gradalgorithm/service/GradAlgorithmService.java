@@ -64,21 +64,21 @@ public class GradAlgorithmService {
         List<StudentCourse> studentCourses = Arrays.asList(getAllCoursesForAStudent(pen));
         ruleProcessorData.setStudentCourses(studentCourses);
         //Get All Assessments for a Student
-        List<StudentAssessment> studentAssessments = Arrays.asList(getAllAssessmentsForAStudent(pen));
-        ruleProcessorData.setStudentAssessments(studentAssessments);
+        List<StudentAssessment> sAssessments = Arrays.asList(getAllAssessmentsForAStudent(pen));
+        ruleProcessorData.setStudentAssessments(sAssessments);
         //Get All course Requirements
-        ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses).getCourseRequirementList());        
+        ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses) != null ?getAllCourseRequirements(studentCourses).getCourseRequirementList():null);        
         //Get All Assessment Requirements
-        ruleProcessorData.setAssessmentRequirements(getAllAssessmentRequirements(studentAssessments).getAssessmentRequirementList());
+        ruleProcessorData.setAssessmentRequirements(getAllAssessmentRequirements(sAssessments) != null ? getAllAssessmentRequirements(sAssessments).getAssessmentRequirementList():null);
         //Get All Grad Letter Grades
-        ruleProcessorData.setGradLetterGradeList(getAllLetterGrades().getGradLetterGradeList());
+        ruleProcessorData.setGradLetterGradeList(getAllLetterGrades() != null ? getAllLetterGrades().getGradLetterGradeList():null);
         //Get All Grad Special Cases
         ruleProcessorData.setGradSpecialCaseList(getAllSpecialCases());
         //Get Grad Algorithm Rules from the DB
         List<GradAlgorithmRules> gradAlgorithmRules = getGradAlgorithmRules(gradProgram);
         ruleProcessorData.setGradAlgorithmRules(gradAlgorithmRules);
         //Get All course restrictions
-        ruleProcessorData.setCourseRestrictions(getAllCourseRestrictions(studentCourses).getCourseRestrictions()); 
+        ruleProcessorData.setCourseRestrictions(getAllCourseRestrictions(studentCourses) != null ? getAllCourseRestrictions(studentCourses).getCourseRestrictions():null); 
         //Get all Grad Program Rules
         List<GradProgramRule> programRulesList = getProgramRules(gradProgram);
         ruleProcessorData.setGradProgramRules(programRulesList);
@@ -111,12 +111,11 @@ public class GradAlgorithmService {
         gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
                 ruleProcessorData.getGradLetterGradeList()));
         gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-        //gradStatus.setSchoolOfRecord(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 
         ruleProcessorData.setGradStatus(gradStatus);
         
         //Populating Special Grad Status
-        List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList = new ArrayList<SpecialGradAlgorithmGraduationStatus>();
+        List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList = new ArrayList<>();
         if (ruleProcessorData.isHasSpecialProgramFrenchImmersion())
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"FI",specialProgramStatusList);
         if (ruleProcessorData.isHasSpecialProgramCareerProgram())
@@ -152,14 +151,15 @@ public class GradAlgorithmService {
 	*******************************************************************************************************************/
     
     private List<SpecialGradAlgorithmGraduationStatus> getListOfSpecialProgramStatus(String pen,String gradProgram, String specialProgramCode,List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList) {
-    	List<GradRequirement> nonGradReasons = new ArrayList<GradRequirement>();
-    	List<GradRequirement> reqMet = new ArrayList<GradRequirement>();
+    	List<GradRequirement> nonGradReasons = new ArrayList<>();
+    	List<GradRequirement> reqMet = new ArrayList<>();
     	SpecialGradAlgorithmGraduationStatus gradStudentSpecialAlg = new SpecialGradAlgorithmGraduationStatus();
 		gradStudentSpecialAlg.setPen(pen);
 		gradStudentSpecialAlg.setSpecialProgramID(getSpecialProgramID(gradProgram,specialProgramCode));
 		gradStudentSpecialAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
 		
-		if("FI".equalsIgnoreCase(specialProgramCode)) {
+		switch(specialProgramCode) {
+		case "FI":
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
 			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
 			gradStudentSpecialAlg.setSpecialStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
@@ -169,9 +169,8 @@ public class GradAlgorithmService {
 				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getSpecialStudentCourses().getStudentCourseList(),
 						gradStudentSpecialAlg.getSpecialStudentAssessments().getStudentAssessmentList()));
 			}
-			
-		}
-		if("CP".equalsIgnoreCase(specialProgramCode)) {
+			break;
+		case "CP":
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
 			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
 			gradStudentSpecialAlg.setSpecialStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
@@ -181,27 +180,18 @@ public class GradAlgorithmService {
 				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getSpecialStudentCourses().getStudentCourseList(),
 						gradStudentSpecialAlg.getSpecialStudentAssessments().getStudentAssessmentList()));
 			}
-		}
-		if("AD".equalsIgnoreCase(specialProgramCode)) {
+			break;
+		case "AD":
+		case "BC":
+		case "BD":
 			gradStudentSpecialAlg.setSpecialGraduated(true);
 			if (gradStudentSpecialAlg.isSpecialGraduated()) {
 				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 						ruleProcessorData.getStudentAssessments()));
 			}
-		}
-		if("BC".equalsIgnoreCase(specialProgramCode)) {
-			gradStudentSpecialAlg.setSpecialGraduated(true);
-			if (gradStudentSpecialAlg.isSpecialGraduated()) {
-				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
-						ruleProcessorData.getStudentAssessments()));
-			}
-		}
-		if("BD".equalsIgnoreCase(specialProgramCode)) {
-			gradStudentSpecialAlg.setSpecialGraduated(true);
-			if (gradStudentSpecialAlg.isSpecialGraduated()) {
-				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
-						ruleProcessorData.getStudentAssessments()));
-			}
+			break;
+		default:
+			break;
 		}
 		
 		if(nonGradReasons != null)
@@ -257,10 +247,9 @@ public class GradAlgorithmService {
     
     protected GradAlgorithmGraduationStatus getStudentGraduationStatus(String studentID,String pen) {
         logger.debug("GET Grad Student Graduation Status: " + GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_STUDENT_ID_URL + "/*****" + pen.substring(5));
-        GradAlgorithmGraduationStatus result = restTemplate.exchange(
+        return restTemplate.exchange(
                 String.format(GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_STUDENT_ID_URL,studentID), HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), GradAlgorithmGraduationStatus.class).getBody();
-        return result;
     }
 
     protected GradSearchStudent getStudentDemographics(String pen) {
@@ -423,7 +412,7 @@ public class GradAlgorithmService {
         try {
             gradDate = dateFormat.parse("1700/01/01");
         } catch (ParseException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
 
         studentCourses = studentCourses
@@ -437,12 +426,12 @@ public class GradAlgorithmService {
                     gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                e.getMessage();
             }
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        return dateFormat.format(gradDate).toString();
+        return dateFormat.format(gradDate);
     }
 
     private String getGPA(List<StudentCourse> studentCourseList, List<StudentAssessment> studentAssessmentList,
@@ -451,7 +440,7 @@ public class GradAlgorithmService {
         studentCourseList = studentCourseList.stream().filter(StudentCourse::isUsed).collect(Collectors.toList());
         float totalCredits = studentCourseList.stream().filter(StudentCourse::isUsed).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
         float acquiredCredits = 0;
-        String tempGpaMV = "0";
+        String tempGpaMV =null;
 
         for (StudentCourse sc : studentCourseList) {
             tempGpaMV = "0";
@@ -480,19 +469,17 @@ public class GradAlgorithmService {
         return df.format(finalGPA);
     }
 
-    private String getHonoursFlag(String GPA) {
+    private String getHonoursFlag(String gPA) {
 
-        if (Float.parseFloat(GPA) > 3)
+        if (Float.parseFloat(gPA) > 3)
             return "Y";
         else
             return "N";
     }
 
     private School getSchool(String minCode) {
-
-        School schObj = restTemplate.exchange("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
+        return restTemplate.exchange("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), School.class).getBody();
-        return schObj;
     }
 
     private <T> String getJSONStringFromObject(T inputObject) {
@@ -502,7 +489,7 @@ public class GradAlgorithmService {
         try {
             json = mapper.writeValueAsString(inputObject);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
 
         return json;
