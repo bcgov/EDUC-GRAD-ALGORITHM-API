@@ -111,6 +111,9 @@ public class GradAlgorithmService {
         gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
                 ruleProcessorData.getGradLetterGradeList()));
         gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
+        if(gradStatus.getSchoolAtGrad() == null) {
+        	gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+        }       
 
         ruleProcessorData.setGradStatus(gradStatus);
         
