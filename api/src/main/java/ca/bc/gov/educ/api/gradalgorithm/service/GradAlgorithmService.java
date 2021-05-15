@@ -67,18 +67,22 @@ public class GradAlgorithmService {
         List<StudentAssessment> sAssessments = Arrays.asList(getAllAssessmentsForAStudent(pen));
         ruleProcessorData.setStudentAssessments(sAssessments);
         //Get All course Requirements
-        ruleProcessorData.setCourseRequirements(getAllCourseRequirements(studentCourses) != null ?getAllCourseRequirements(studentCourses).getCourseRequirementList():null);        
+        CourseRequirements cReq = getAllCourseRequirements(studentCourses);
+        ruleProcessorData.setCourseRequirements(cReq != null ?cReq.getCourseRequirementList():null);        
         //Get All Assessment Requirements
-        ruleProcessorData.setAssessmentRequirements(getAllAssessmentRequirements(sAssessments) != null ? getAllAssessmentRequirements(sAssessments).getAssessmentRequirementList():null);
+        AssessmentRequirements aReq = getAllAssessmentRequirements(sAssessments);
+        ruleProcessorData.setAssessmentRequirements(aReq != null ? aReq.getAssessmentRequirementList():null);
         //Get All Grad Letter Grades
-        ruleProcessorData.setGradLetterGradeList(getAllLetterGrades() != null ? getAllLetterGrades().getGradLetterGradeList():null);
+        GradLetterGrades lGrades = getAllLetterGrades();
+        ruleProcessorData.setGradLetterGradeList(lGrades != null ? lGrades.getGradLetterGradeList():null);
         //Get All Grad Special Cases
         ruleProcessorData.setGradSpecialCaseList(getAllSpecialCases());
         //Get Grad Algorithm Rules from the DB
         List<GradAlgorithmRules> gradAlgorithmRules = getGradAlgorithmRules(gradProgram);
         ruleProcessorData.setGradAlgorithmRules(gradAlgorithmRules);
         //Get All course restrictions
-        ruleProcessorData.setCourseRestrictions(getAllCourseRestrictions(studentCourses) != null ? getAllCourseRestrictions(studentCourses).getCourseRestrictions():null); 
+        CourseRestrictions cRes = getAllCourseRestrictions(studentCourses);
+        ruleProcessorData.setCourseRestrictions(cRes != null ? cRes.getCourseRestrictions():null); 
         //Get all Grad Program Rules
         List<GradProgramRule> programRulesList = getProgramRules(gradProgram);
         ruleProcessorData.setGradProgramRules(programRulesList);
