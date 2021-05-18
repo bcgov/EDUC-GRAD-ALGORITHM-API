@@ -135,7 +135,16 @@ public class GradAlgorithmService {
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BC",specialProgramStatusList);
 		
         ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord()));
-
+        List<GradRequirement> dualDogWoodList = ruleProcessorData.getRequirementsMet().stream()
+        		.filter(rule -> rule.getRule().compareTo("400") == 0
+        		|| rule.getRule().compareTo("401") == 0
+        		|| rule.getRule().compareTo("402") == 0
+        		|| rule.getRule().compareTo("403") == 0
+        		|| rule.getRule().compareTo("404") == 0)
+        		.collect(Collectors.toList());
+        if(!dualDogWoodList.isEmpty() && dualDogWoodList.size() == 5) {
+        	graduationData.setDualDogwood(true);
+        }
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
 		graduationData.setGradStatus(ruleProcessorData.getGradStatus());
@@ -144,7 +153,12 @@ public class GradAlgorithmService {
 		graduationData.setStudentCourses(new StudentCourses(ruleProcessorData.getStudentCourses()));
         graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
         graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
+        if(ruleProcessorData.getNonGradReasons() != null)
+        	Collections.sort(ruleProcessorData.getNonGradReasons(), Comparator.comparing(GradRequirement::getRule));        
         graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
+        
+        if(ruleProcessorData.getRequirementsMet() != null)
+        	Collections.sort(ruleProcessorData.getRequirementsMet(), Comparator.comparing(GradRequirement::getRule));        
         graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
         graduationData.setGraduated(ruleProcessorData.isGraduated());
 
