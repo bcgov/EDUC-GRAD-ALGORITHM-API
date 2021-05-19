@@ -102,6 +102,8 @@ public class GradAlgorithmService {
             ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBC(getSpecialProgramRules(gradProgram, "BC"));
         if (ruleProcessorData.isHasSpecialProgramCareerProgram())
             ruleProcessorData.setGradSpecialProgramRulesCareerProgram(getSpecialProgramRules(gradProgram, "CP"));
+        if (ruleProcessorData.isHasSpecialProgramDualDogwood())
+        	ruleProcessorData.setGradSpecialProgramRulesDualDogwood(getSpecialProgramRules(gradProgram, "DD"));
 
         //Calling Rule Processor
         ruleProcessorData = processGradAlgorithmRules(ruleProcessorData);
@@ -133,18 +135,20 @@ public class GradAlgorithmService {
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BD",specialProgramStatusList);
         if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"BC",specialProgramStatusList);
+        if (ruleProcessorData.isHasSpecialProgramDualDogwood())
+        	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"DD",specialProgramStatusList);
 		
         ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord()));
-        List<GradRequirement> dualDogWoodList = ruleProcessorData.getRequirementsMet().stream()
-        		.filter(rule -> rule.getRule().compareTo("400") == 0
-        		|| rule.getRule().compareTo("401") == 0
-        		|| rule.getRule().compareTo("402") == 0
-        		|| rule.getRule().compareTo("403") == 0
-        		|| rule.getRule().compareTo("404") == 0)
-        		.collect(Collectors.toList());
-        if(!dualDogWoodList.isEmpty() && dualDogWoodList.size() == 5) {
-        	graduationData.setDualDogwood(true);
-        }
+//        List<GradRequirement> dualDogWoodList = ruleProcessorData.getRequirementsMet().stream()
+//        		.filter(rule -> rule.getRule().compareTo("400") == 0
+//        		|| rule.getRule().compareTo("401") == 0
+//        		|| rule.getRule().compareTo("402") == 0
+//        		|| rule.getRule().compareTo("403") == 0
+//        		|| rule.getRule().compareTo("404") == 0)
+//        		.collect(Collectors.toList());
+//        if(!dualDogWoodList.isEmpty() && dualDogWoodList.size() == 5) {
+//        	graduationData.setDualDogwood(true);
+//        }
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
 		graduationData.setGradStatus(ruleProcessorData.getGradStatus());
@@ -202,6 +206,17 @@ public class GradAlgorithmService {
 						gradStudentSpecialAlg.getSpecialStudentAssessments().getStudentAssessmentList()));
 			}
 			break;
+		case "DD":
+			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramDualDogwoodGraduated());
+			gradStudentSpecialAlg.setSpecialStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForDualDogwood()));
+			gradStudentSpecialAlg.setSpecialStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessmentsForDualDogwood()));
+			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsDualDogwood();
+			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsDualDogwood();
+			if (gradStudentSpecialAlg.isSpecialGraduated()) {
+				gradStudentSpecialAlg.setSpecialProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getSpecialStudentCourses().getStudentCourseList(),
+						gradStudentSpecialAlg.getSpecialStudentAssessments().getStudentAssessmentList()));
+			}
+			break;
 		case "AD":
 		case "BC":
 		case "BD":
@@ -251,6 +266,9 @@ public class GradAlgorithmService {
             }
             if (sp.getSpecialProgramCode().equalsIgnoreCase("CP")) {
                 ruleProcessorData.setHasSpecialProgramCareerProgram(true);
+            }
+            if (sp.getSpecialProgramCode().equalsIgnoreCase("DD")) {
+                ruleProcessorData.setHasSpecialProgramDualDogwood(true);
             }
         }
         return ruleProcessorData;
