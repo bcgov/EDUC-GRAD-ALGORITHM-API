@@ -27,6 +27,5 @@ public class GraduationData {
     //Grad Message
     //Student Career Programs
     private boolean isGraduated;
-    private boolean dualDogwood;
     
 }
