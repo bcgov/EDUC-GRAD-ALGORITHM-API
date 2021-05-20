@@ -139,16 +139,6 @@ public class GradAlgorithmService {
         	specialProgramStatusList = getListOfSpecialProgramStatus(pen,gradProgram,"DD",specialProgramStatusList);
 		
         ruleProcessorData.setSchool(getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord()));
-//        List<GradRequirement> dualDogWoodList = ruleProcessorData.getRequirementsMet().stream()
-//        		.filter(rule -> rule.getRule().compareTo("400") == 0
-//        		|| rule.getRule().compareTo("401") == 0
-//        		|| rule.getRule().compareTo("402") == 0
-//        		|| rule.getRule().compareTo("403") == 0
-//        		|| rule.getRule().compareTo("404") == 0)
-//        		.collect(Collectors.toList());
-//        if(!dualDogWoodList.isEmpty() && dualDogWoodList.size() == 5) {
-//        	graduationData.setDualDogwood(true);
-//        }
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
 		graduationData.setGradStatus(ruleProcessorData.getGradStatus());
@@ -504,7 +494,9 @@ public class GradAlgorithmService {
         float finalGPA = acquiredCredits / totalCredits;
 
         DecimalFormat df = new DecimalFormat("0.00");
-
+        if(Float.isNaN(finalGPA)) {
+        	return "0.00";
+        }
         return df.format(finalGPA);
     }
 
