@@ -33,9 +33,9 @@ pipeline{
         IMAGE_PROJECT = '77c02f-tools'
         IMAGE_TAG = 'latest'
         APP_SUBDOMAIN_SUFFIX = '77c02f-test'
-        REPO_NAME = 'educ-grad-code-api'
+        REPO_NAME = 'educ-grad-algorithm-api'
         JOB_NAME = 'main'
-        APP_NAME = 'educ-grad-code-api'
+        APP_NAME = 'educ-grad-algorithm-api'
         APP_DOMAIN = 'apps.silver.devops.gov.bc.ca'
     }
 
@@ -45,7 +45,7 @@ pipeline{
                 script {
                     openshift.withCluster() {
                         openshift.withProject(OCP_PROJECT) {
-                            def dcTemplate = openshift.process('-f', 'openshift/api.dc.yaml',
+                            def dcTemplate = openshift.process('-f', 'tools/openshift/api.dc.yaml',
                                     "REPO_NAME=${REPO_NAME}",
                                     "JOB_NAME=${JOB_NAME}",
                                     "NAMESPACE=${IMAGE_PROJECT}",
