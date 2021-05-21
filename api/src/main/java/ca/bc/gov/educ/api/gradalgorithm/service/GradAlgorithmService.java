@@ -110,7 +110,7 @@ public class GradAlgorithmService {
 
         //Populate Grad Status Details
         GradAlgorithmGraduationStatus gradStatus = getStudentGraduationStatus(ruleProcessorData.getGradStudent().getStudentID(),pen);
-        if (isGraduated) {
+        if (isGraduated && !gradProgram.equalsIgnoreCase("SCCP")) {
             gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
                     ruleProcessorData.getStudentAssessments()));
         }
