@@ -107,7 +107,7 @@ public class GradAlgorithmService {
 
         //Calling Rule Processor
         ruleProcessorData = processGradAlgorithmRules(ruleProcessorData);
-
+        isGraduated = ruleProcessorData.isGraduated();
         //Populate Grad Status Details
         GradAlgorithmGraduationStatus gradStatus = getStudentGraduationStatus(ruleProcessorData.getGradStudent().getStudentID(),pen);
         if (isGraduated && !gradProgram.equalsIgnoreCase("SCCP")) {
@@ -155,6 +155,10 @@ public class GradAlgorithmService {
         	Collections.sort(ruleProcessorData.getRequirementsMet(), Comparator.comparing(GradRequirement::getRule));        
         graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
         graduationData.setGraduated(ruleProcessorData.isGraduated());
+        
+        if(graduationData.isGraduated()) {
+        	graduationData.setGradMessage(getGradMessages(gradProgram,"GRADUATED",graduationData.getGradStatus().getProgramCompletionDate()));
+        }
 
         logger.info("\n************* Graduation Algorithm END  ************");
 
@@ -420,6 +424,21 @@ public class GradAlgorithmService {
 
         return result;
     }
+    
+    private String getGradMessages(String gradProgram, String msgType,String gradDate) {
+		StringBuilder strBuilder = new StringBuilder();
+		GradMessaging result = restTemplate.exchange(
+                String.format("https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/gradmessages/pgmCode/%s/msgType/%s",gradProgram,msgType), HttpMethod.GET,
+                new HttpEntity<>(httpHeaders), GradMessaging.class).getBody();
+		if(result != null) {
+			strBuilder.append(String.format(result.getMainMessage(),gradProgram));
+			if(!gradProgram.equalsIgnoreCase("SCCP"))
+				strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),gradDate));
+			
+	        return strBuilder.toString();
+		}
+		return null;
+	}
 
     private RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData) {
 
