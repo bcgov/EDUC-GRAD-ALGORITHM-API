@@ -498,14 +498,20 @@ public class GradAlgorithmService {
 
         for (StudentCourse sc : studentCourseList) {
             tempGpaMV = "0";
-
+            String completedCourseGrade = sc.getCompletedCourseLetterGrade() != null ? sc.getCompletedCourseLetterGrade():"";
             GradLetterGrade letterGrade = gradLetterGradesList
                     .stream()
-                    .filter(lg -> lg.getLetterGrade().compareToIgnoreCase(sc.getInterimLetterGrade()) == 0)
+                    .filter(lg -> lg.getLetterGrade().compareToIgnoreCase(completedCourseGrade) == 0)
                     .findFirst().orElse(null);
 
             if (letterGrade != null) {
                 tempGpaMV = letterGrade.getGpaMarkValue();
+            }else {
+            	if(sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM") 
+            			|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG") 
+            			|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS")) {
+            		tempGpaMV = "0";		
+            	}
             }
 
             float gpaMarkValue = Float.parseFloat(tempGpaMV);
