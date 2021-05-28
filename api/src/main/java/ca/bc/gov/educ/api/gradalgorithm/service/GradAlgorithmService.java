@@ -114,12 +114,14 @@ public class GradAlgorithmService {
             gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
                     ruleProcessorData.getStudentAssessments()));
         }
-        gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
-                ruleProcessorData.getGradLetterGradeList()));
-        gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-        if(gradStatus.getSchoolAtGrad() == null) {
-        	gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
-        }       
+        if(isGraduated) {
+	        gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
+	                ruleProcessorData.getGradLetterGradeList()));
+	        gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
+	        if(gradStatus.getSchoolAtGrad() == null) {
+	        	gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+	        }  
+        }
 
         ruleProcessorData.setGradStatus(gradStatus);
         
