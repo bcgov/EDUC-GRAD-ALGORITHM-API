@@ -110,16 +110,17 @@ public class GradAlgorithmService {
         isGraduated = ruleProcessorData.isGraduated();
         //Populate Grad Status Details
         GradAlgorithmGraduationStatus gradStatus = getStudentGraduationStatus(ruleProcessorData.getGradStudent().getStudentID(),pen);
-        if (isGraduated && !gradProgram.equalsIgnoreCase("SCCP")) {
-            gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
-                    ruleProcessorData.getStudentAssessments()));
-        }
+       
         if(isGraduated) {
-	        gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
-	                ruleProcessorData.getGradLetterGradeList()));
-	        gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-	        if(gradStatus.getSchoolAtGrad() == null) {
-	        	gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+			if (!gradProgram.equalsIgnoreCase("SCCP")) {
+				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+			             ruleProcessorData.getStudentAssessments()));
+				gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
+				        ruleProcessorData.getGradLetterGradeList()));
+				gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
+			}			
+			if(gradStatus.getSchoolAtGrad() == null) {
+				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 	        }  
         }
 
