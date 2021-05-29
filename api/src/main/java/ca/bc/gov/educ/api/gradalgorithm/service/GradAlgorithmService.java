@@ -436,14 +436,15 @@ public class GradAlgorithmService {
                 String.format("https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/gradmessages/pgmCode/%s/msgType/%s",gradProgram,msgType), HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), GradMessaging.class).getBody();
 		if(result != null) {
-			if(honours.equalsIgnoreCase("Y") && !gradProgram.equalsIgnoreCase("SCCP") && isGraduated) {
-				strBuilder.append(String.format(result.getHonours(),gradProgram));
+			if(isGraduated) {
+				if(honours.equalsIgnoreCase("Y") && !gradProgram.equalsIgnoreCase("SCCP") && isGraduated) {
+					strBuilder.append(String.format(result.getHonours(),gradProgram));
+				}
+				if(!gradProgram.equalsIgnoreCase("SCCP"))
+					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),gradDate));
 			}else {
 				strBuilder.append(String.format(result.getMainMessage(),gradProgram));
-			}
-			if(!gradProgram.equalsIgnoreCase("SCCP") && isGraduated)
-				strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),gradDate));
-			
+			}		
 	        return strBuilder.toString();
 		}
 		return null;
