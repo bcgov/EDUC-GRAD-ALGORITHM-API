@@ -444,6 +444,8 @@ public class GradAlgorithmService {
 						strBuilder.append(String.format(result.getMainMessage(),gradProgram));
 					}
 					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),gradDate));
+				}else {
+					strBuilder.append(String.format(result.getMainMessage(),gradProgram));
 				}
 			}else {
 				strBuilder.append(String.format(result.getMainMessage(),gradProgram));
