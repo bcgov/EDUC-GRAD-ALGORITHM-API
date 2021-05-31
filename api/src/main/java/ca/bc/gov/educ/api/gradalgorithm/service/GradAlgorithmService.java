@@ -437,11 +437,16 @@ public class GradAlgorithmService {
                 new HttpEntity<>(httpHeaders), GradMessaging.class).getBody();
 		if(result != null) {
 			if(isGraduated) {
-				if(honours.equalsIgnoreCase("Y") && !gradProgram.equalsIgnoreCase("SCCP") && isGraduated) {
-					strBuilder.append(String.format(result.getHonours(),gradProgram));
-				}
-				if(!gradProgram.equalsIgnoreCase("SCCP"))
+				if(!gradProgram.equalsIgnoreCase("SCCP")) {
+					if(honours.equalsIgnoreCase("Y")) {
+						strBuilder.append(String.format(result.getHonours(),gradProgram));
+					}else {
+						strBuilder.append(String.format(result.getMainMessage(),gradProgram));
+					}
 					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),gradDate));
+				}else {
+					strBuilder.append(String.format(result.getMainMessage(),gradProgram));
+				}
 			}else {
 				strBuilder.append(String.format(result.getMainMessage(),gradProgram));
 			}		
