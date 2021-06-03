@@ -32,6 +32,8 @@ import ca.bc.gov.educ.api.gradalgorithm.struct.*;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
+import static ca.bc.gov.educ.api.gradalgorithm.util.APIUtils.getJSONStringFromObject;
+
 @Service
 public class GradAlgorithmService {
 
@@ -551,19 +553,6 @@ public class GradAlgorithmService {
     private School getSchool(String minCode) {
         return restTemplate.exchange("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/" + minCode, HttpMethod.GET,
                 new HttpEntity<>(httpHeaders), School.class).getBody();
-    }
-
-    private <T> String getJSONStringFromObject(T inputObject) {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = "";
-
-        try {
-            json = mapper.writeValueAsString(inputObject);
-        } catch (JsonProcessingException e) {
-            e.getMessage();
-        }
-
-        return json;
     }
 
     private UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram) {
