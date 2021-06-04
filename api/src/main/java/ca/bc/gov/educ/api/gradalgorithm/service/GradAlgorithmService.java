@@ -88,6 +88,8 @@ public class GradAlgorithmService {
         //Get all Grad Program Rules
         List<GradProgramRule> programRulesList = getProgramRules(gradProgram);
         ruleProcessorData.setGradProgramRules(programRulesList);
+        List<Assessment> assessmentList = getAllAssessments();
+        ruleProcessorData.setAssessmentList(assessmentList);
 
         //Set Projected flag
         ruleProcessorData.setProjected(projected);
@@ -172,10 +174,18 @@ public class GradAlgorithmService {
         return graduationData;
     }
 
+	
 	/******************************************************************************************************************
 	Utility Methods
 	*******************************************************************************************************************/
-    
+   
+    private List<Assessment> getAllAssessments() {
+    	List<Assessment> result = restTemplate.exchange("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment", HttpMethod.GET,
+                new HttpEntity<>(httpHeaders), new ParameterizedTypeReference<List<Assessment>>() {}).getBody();
+        logger.info("**** # of Assessments : " + (result != null ? result.size() : 0));
+
+        return result;
+	}
     private List<SpecialGradAlgorithmGraduationStatus> getListOfSpecialProgramStatus(String pen,String gradProgram, String specialProgramCode,List<SpecialGradAlgorithmGraduationStatus> specialProgramStatusList) {
     	List<GradRequirement> nonGradReasons = new ArrayList<>();
     	List<GradRequirement> reqMet = new ArrayList<>();
