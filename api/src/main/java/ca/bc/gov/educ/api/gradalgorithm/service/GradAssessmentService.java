@@ -1,8 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.AssessmentList;
-import ca.bc.gov.educ.api.gradalgorithm.struct.AssessmentRequirements;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentAssessment;
+import ca.bc.gov.educ.api.gradalgorithm.struct.*;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,22 @@ public class GradAssessmentService extends GradService {
     @Autowired
     RestTemplate restTemplate;
 
-    AssessmentRequirements getAllAssessmentRequirementsWithRestClient(
+    List<Assessment> getAllAssessments(String accessToken) {
+        start();
+        List<Assessment> result = webClient.get()
+                .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment")
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Assessment>>() {})
+                .block();
+        end();
+
+        logger.info("**** # of Assessments : " + (result != null ? result.size() : 0));
+
+        return result;
+    }
+
+    AssessmentRequirements getAllAssessmentRequirementsWithRestTemplate(
             List<StudentAssessment> studentAssessmentList, String accessToken) {
         HttpHeaders httpHeaders = APIUtils.getHeaders(accessToken);
         List<String> assessmentList = studentAssessmentList.stream()
