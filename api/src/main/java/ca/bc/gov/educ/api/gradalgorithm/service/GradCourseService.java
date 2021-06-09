@@ -1,9 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.CourseList;
-import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRequirements;
-import ca.bc.gov.educ.api.gradalgorithm.struct.CourseRestrictions;
-import ca.bc.gov.educ.api.gradalgorithm.struct.StudentCourse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +7,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseList;
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRestrictions;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
 import reactor.core.publisher.Mono;
 
 import java.util.List;

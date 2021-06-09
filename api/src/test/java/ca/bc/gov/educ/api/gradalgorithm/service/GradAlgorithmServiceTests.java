@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudent;
-import ca.bc.gov.educ.api.gradalgorithm.struct.Student;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudent;
+import ca.bc.gov.educ.api.gradalgorithm.dto.Student;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
