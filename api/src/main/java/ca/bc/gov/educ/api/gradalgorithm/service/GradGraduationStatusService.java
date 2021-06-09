@@ -1,7 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradAlgorithmGraduationStatus;
-import ca.bc.gov.educ.api.gradalgorithm.struct.GradStudentSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
