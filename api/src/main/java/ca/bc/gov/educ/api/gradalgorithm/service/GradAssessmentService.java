@@ -1,6 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.struct.*;
+import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,6 @@ public class GradAssessmentService extends GradService {
                 .map(StudentAssessment::getAssessmentCode)
                 .distinct()
                 .collect(Collectors.toList());
-        String json = getJSONStringFromObject(new AssessmentList(assessmentList));
 
         start();
         AssessmentRequirements result = webClient.post()
