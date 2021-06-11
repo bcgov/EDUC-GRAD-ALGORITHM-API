@@ -18,9 +18,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.*;
+import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
+import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRestrictions;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmRules;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradLetterGrade;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradLetterGrades;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradMessaging;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramRule;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradRequirement;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.SpecialGradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessments;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourses;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 
 @Service
@@ -157,7 +174,7 @@ public class GradAlgorithmService {
         GradAlgorithmGraduationStatus gradStatus =
                 gradGraduationStatusService.getStudentGraduationStatus(
                         ruleProcessorData.getGradStudent().getStudentID(), pen, accessToken);
-       
+        String existingProgramCompletionDate = gradStatus.getProgramCompletionDate();
         if(isGraduated) {
 			if (!gradProgram.equalsIgnoreCase("SCCP")) {
 				//This is done for Reports only grad run -Student already graduated no change in graduation date
@@ -171,7 +188,7 @@ public class GradAlgorithmService {
 			}
 			
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
-			if(gradStatus.getProgramCompletionDate() == null && gradStatus.getSchoolAtGrad() == null) {
+			if(existingProgramCompletionDate == null && gradStatus.getSchoolAtGrad() == null) {
 				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 	        }  
         }
@@ -221,7 +238,7 @@ public class GradAlgorithmService {
         	Collections.sort(ruleProcessorData.getNonGradReasons(), Comparator.comparing(GradRequirement::getRule));
         
         //This is done for Reports only grad run
-        if(gradStatus.getProgramCompletionDate() == null) {
+        if(existingProgramCompletionDate == null) {
         	graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
         }
         
@@ -232,7 +249,7 @@ public class GradAlgorithmService {
         graduationData.setGraduated(ruleProcessorData.isGraduated());
         
         //This is done for Reports only grad run - Student already graduated, no change in grad message
-        if(gradStatus.getProgramCompletionDate() == null) {
+        if(existingProgramCompletionDate == null) {
 	        if(graduationData.isGraduated()) {
 	        	graduationData.setGradMessage(
 	        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
