@@ -160,13 +160,18 @@ public class GradAlgorithmService {
        
         if(isGraduated) {
 			if (!gradProgram.equalsIgnoreCase("SCCP")) {
-				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
-			             ruleProcessorData.getStudentAssessments()));
+				//This is done for Reports only grad run -Student already graduated no change in graduation date
+				if(gradStatus.getProgramCompletionDate() == null) {
+					gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+				             ruleProcessorData.getStudentAssessments()));
+				}
 				gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments(),
 				        ruleProcessorData.getGradLetterGradeList()));
 				gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
-			}			
-			if(gradStatus.getSchoolAtGrad() == null) {
+			}
+			
+			//This is done for Reports only grad run -Student already graduated no change in graduation date
+			if(gradStatus.getProgramCompletionDate() == null && gradStatus.getSchoolAtGrad() == null) {
 				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 	        }  
         }
@@ -214,8 +219,11 @@ public class GradAlgorithmService {
 
         if(ruleProcessorData.getNonGradReasons() != null)
         	Collections.sort(ruleProcessorData.getNonGradReasons(), Comparator.comparing(GradRequirement::getRule));
-
-        graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
+        
+        //This is done for Reports only grad run
+        if(gradStatus.getProgramCompletionDate() == null) {
+        	graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
+        }
         
         if(ruleProcessorData.getRequirementsMet() != null)
         	Collections.sort(ruleProcessorData.getRequirementsMet(), Comparator.comparing(GradRequirement::getRule));
@@ -223,16 +231,19 @@ public class GradAlgorithmService {
         graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
         graduationData.setGraduated(ruleProcessorData.isGraduated());
         
-        if(graduationData.isGraduated()) {
-        	graduationData.setGradMessage(
-        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-                            graduationData.getGradStatus().getHonoursStanding(), accessToken)
-            );
-        }else {
-        	graduationData.setGradMessage(
-        	        getGradMessages(gradProgram, "NOT_GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-                            graduationData.getGradStatus().getHonoursStanding(), accessToken)
-            );
+        //This is done for Reports only grad run - Student already graduated, no change in grad message
+        if(gradStatus.getProgramCompletionDate() == null) {
+	        if(graduationData.isGraduated()) {
+	        	graduationData.setGradMessage(
+	        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
+	                            graduationData.getGradStatus().getHonoursStanding(), accessToken)
+	            );
+	        }else {
+	        	graduationData.setGradMessage(
+	        	        getGradMessages(gradProgram, "NOT_GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
+	                            graduationData.getGradStatus().getHonoursStanding(), accessToken)
+	            );
+	        }
         }
 
         logger.info("\n************* Graduation Algorithm END  ************");
