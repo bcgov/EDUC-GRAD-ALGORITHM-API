@@ -26,6 +26,7 @@ public class GraduationData {
     private List<GradRequirement> requirementsMet;
     private String gradMessage;
     //Student Career Programs
+    private boolean dualDogwood;
     private boolean isGraduated;
     
 }
