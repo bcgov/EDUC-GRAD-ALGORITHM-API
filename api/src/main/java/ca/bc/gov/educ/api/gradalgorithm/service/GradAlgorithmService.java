@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirements;
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRequirements;
@@ -175,6 +178,13 @@ public class GradAlgorithmService {
                 gradGraduationStatusService.getStudentGraduationStatus(
                         ruleProcessorData.getGradStudent().getStudentID(), pen, accessToken);
         String existingProgramCompletionDate = gradStatus.getProgramCompletionDate();
+        List<GradRequirement> existingNonGradReasons = null;
+        try {
+			GraduationData existingData = new ObjectMapper().readValue(gradStatus.getStudentGradData(), GraduationData.class);
+			existingNonGradReasons = existingData.getNonGradReasons();
+		} catch (JsonProcessingException e) {
+			e.getMessage();
+		}
         if(isGraduated) {
 			if (!gradProgram.equalsIgnoreCase("SCCP")) {
 				//This is done for Reports only grad run -Student already graduated no change in graduation date
@@ -240,6 +250,18 @@ public class GradAlgorithmService {
         //This is done for Reports only grad run
         if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
         	graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
+        }
+        
+        if(existingNonGradReasons != null && !existingNonGradReasons.isEmpty() && ruleProcessorData.isProjected()) {
+        	for(GradRequirement gR:existingNonGradReasons) {
+        		boolean ruleExists = false;
+        		if(graduationData.getNonGradReasons() != null) {
+        			ruleExists= graduationData.getNonGradReasons().stream().anyMatch(nGR -> nGR.getRule().compareTo(gR.getRule())==0);
+        		}
+    			if(!ruleExists && ruleProcessorData.getRequirementsMet() != null) {        			
+	        		ruleProcessorData.getRequirementsMet().stream().filter(rM -> rM.getRule().compareTo(gR.getRule()) == 0).forEach(rM -> rM.setProjected(true));
+        		}
+        	}
         }
         
         if(ruleProcessorData.getRequirementsMet() != null)

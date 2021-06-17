@@ -13,6 +13,7 @@ public class GradAlgorithmGraduationStatus {
 	private String pen;
     private String program;
     private String programCompletionDate;
+    private String studentGradData;
     private String gpa;
     private String honoursStanding;
     private String recalculateGradStatus; 
