@@ -178,7 +178,7 @@ public class GradAlgorithmService {
         if(isGraduated) {
 			if (!gradProgram.equalsIgnoreCase("SCCP")) {
 				//This is done for Reports only grad run -Student already graduated no change in graduation date
-				if(gradStatus.getProgramCompletionDate() == null) {
+				if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
 					gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 				             ruleProcessorData.getStudentAssessments()));
 				}
@@ -188,7 +188,7 @@ public class GradAlgorithmService {
 			}
 			
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
-			if(existingProgramCompletionDate == null && gradStatus.getSchoolAtGrad() == null) {
+			if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGrad() == null) {
 				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 	        }  
         }
@@ -238,7 +238,7 @@ public class GradAlgorithmService {
         	Collections.sort(ruleProcessorData.getNonGradReasons(), Comparator.comparing(GradRequirement::getRule));
         
         //This is done for Reports only grad run
-        if(existingProgramCompletionDate == null) {
+        if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
         	graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
         }
         
@@ -249,7 +249,7 @@ public class GradAlgorithmService {
         graduationData.setGraduated(ruleProcessorData.isGraduated());
         
         //This is done for Reports only grad run - Student already graduated, no change in grad message
-        if(existingProgramCompletionDate == null) {
+        if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
 	        if(graduationData.isGraduated()) {
 	        	graduationData.setGradMessage(
 	        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
