@@ -21,7 +21,7 @@ public class GradCodeService extends GradService {
         GradMessaging result = webClient.get()
                 .uri(String.format("https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/gradmessages/pgmCode/%s/msgType/%s",
                         gradProgram,msgType))
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GradMessaging.class)
                 .block();

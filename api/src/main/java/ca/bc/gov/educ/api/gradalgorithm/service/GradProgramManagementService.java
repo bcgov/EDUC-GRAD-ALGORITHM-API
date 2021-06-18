@@ -27,7 +27,7 @@ public class GradProgramManagementService extends GradService {
         start();
         GradLetterGrades result = webClient.get()
                 .uri("https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/lettergrade")
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GradLetterGrades.class)
                 .block();
@@ -42,7 +42,7 @@ public class GradProgramManagementService extends GradService {
         List<GradProgramRule> result = webClient.get()
                 .uri("https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/"
                         + "programrules?programCode=" + programCode)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradProgramRule>>(){})
                 .block();
@@ -56,7 +56,7 @@ public class GradProgramManagementService extends GradService {
         start();
         List<GradSpecialCase> result = webClient.get()
                 .uri("https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/specialcase")
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradSpecialCase>>(){})
                 .block();
@@ -73,7 +73,7 @@ public class GradProgramManagementService extends GradService {
         List<GradSpecialProgramRule> result = webClient.get()
                 .uri("https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/"
                         + "specialprogramrules/" + gradProgram + "/" + gradSpecialProgram)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradSpecialProgramRule>>(){})
                 .block();
@@ -90,7 +90,7 @@ public class GradProgramManagementService extends GradService {
         GradSpecialProgram result = webClient.get()
                 .uri("https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/specialprograms/"
                         + gradProgram + "/" + gradSpecialProgram)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GradSpecialProgram.class)
                 .block();

@@ -25,7 +25,7 @@ public class GradRuleProcessorService extends GradService {
         RuleProcessorData result = webClient.post()
                 .uri(GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
                         + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(ruleProcessorData), RuleProcessorData.class)
                 .retrieve()
                 .bodyToMono(RuleProcessorData.class)

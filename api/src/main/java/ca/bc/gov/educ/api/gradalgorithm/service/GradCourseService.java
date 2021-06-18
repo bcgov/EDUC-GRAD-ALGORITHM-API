@@ -36,7 +36,7 @@ public class GradCourseService extends GradService {
         start();
         CourseRequirements result = webClient.post()
                 .uri("https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement/course-list")
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(new CourseList(courseList)), CourseList.class)
                 .retrieve()
                 .bodyToMono(CourseRequirements.class)
@@ -56,7 +56,7 @@ public class GradCourseService extends GradService {
         start();
         CourseRestrictions result = webClient.post()
                 .uri("https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-restriction/course-list")
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .body(Mono.just(new CourseList(courseList)), CourseList.class)
                 .retrieve()
                 .bodyToMono(CourseRestrictions.class)

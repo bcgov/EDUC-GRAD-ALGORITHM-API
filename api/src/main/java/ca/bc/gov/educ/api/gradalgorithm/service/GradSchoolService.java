@@ -22,7 +22,7 @@ public class GradSchoolService extends GradService {
         School schObj = webClient.get()
                 .uri("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/"
                         + minCode)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(School.class)
                 .block();

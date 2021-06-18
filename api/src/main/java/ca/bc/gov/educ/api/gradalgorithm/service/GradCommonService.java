@@ -23,7 +23,7 @@ public class GradCommonService extends GradService {
         start();
         List<GradAlgorithmRules> result = webClient.get()
                 .uri("https://educ-grad-common-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/common/algorithm-rules/main/" + gradProgram)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradAlgorithmRules>>(){})
                 .block();

@@ -33,7 +33,7 @@ public class GradAssessmentService extends GradService {
         start();
         List<Assessment> result = webClient.get()
                 .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment")
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Assessment>>() {})
                 .block();
@@ -69,7 +69,7 @@ public class GradAssessmentService extends GradService {
         start();
         AssessmentRequirements result = webClient.post()
                 .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list")
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .bodyValue(new AssessmentList(assessmentList))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<AssessmentRequirements>(){})

@@ -27,7 +27,7 @@ public class GradStudentAssessmentService extends GradService {
         StudentAssessment[] result = webClient.get()
                 .uri("https://student-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentassessment/pen"
                         + "/" + pen)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<StudentAssessment[]>(){})
                 .block()
