@@ -83,7 +83,7 @@ public class GradAlgorithmServiceTests {
         openMocks(this);
     }
 
-    @Test
+    //@Test
     public void graduateStudentTest() {
         LOG.debug("<{}.graduateStudentTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "12312123123";
