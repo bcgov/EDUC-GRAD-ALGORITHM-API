@@ -1,10 +1,8 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmApiApplication;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStatus;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,39 +18,40 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = EducGradAlgorithmApiApplication.class)
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.yaml")
-public class GradAlgorithmServiceTests {
+public class GradStudentCourseServiceTests {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradAlgorithmServiceTests.class);
-    private static final String CLASS_NAME = GradAlgorithmServiceTests.class.getSimpleName();
+    private static final Logger LOG = LoggerFactory.getLogger(GradStudentCourseServiceTests.class);
+    private static final String CLASS_NAME = GradStudentCourseServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired
-    GradAlgorithmService gradAlgorithmService;
+    GradStudentCourseService gradStudentCourseService;
 
     @MockBean
     WebClient webClient;
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+
+    @Value("${endpoint.student-course-api.get-student-course-by-pen.url}")
+    private String getStudentCourseUrl;
 
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersMock;
@@ -64,9 +63,6 @@ public class GradAlgorithmServiceTests {
     private WebClient.RequestBodySpec requestBodyMock;
     @Mock
     private WebClient.RequestBodyUriSpec requestBodyUriMock;
-
-    @Value("${endpoint.grad-student-api.get-student-by-pen.url}")
-    private String getStudentByPenUrl;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -84,30 +80,28 @@ public class GradAlgorithmServiceTests {
     }
 
     @Test
-    public void graduateStudentTest() {
-        LOG.debug("<{}.graduateStudentTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+    public void getStudentCourseTest() {
+        LOG.debug("<{}.getStudentCourseTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "12312123123";
-        String programCode="2018-EN";
         String accessToken = "accessToken";
 
-        List<GradSearchStudent> gradSearchStudents = new ArrayList();
-        GradSearchStudent gradSearchStudentResponse = new GradSearchStudent();
-        gradSearchStudentResponse.setPen(pen);
-        gradSearchStudentResponse.setLegalFirstName("JOHN");
-        gradSearchStudentResponse.setLegalLastName("SILVER");
-        gradSearchStudents.add(gradSearchStudentResponse);
+        StudentCourse[] studentCourse = new StudentCourse[1];
+        studentCourse[0] = new StudentCourse();
+        studentCourse[0].setCourseCode("COURSE1");
+        studentCourse[0].setCourseName("Course 1");
 
-        ParameterizedTypeReference<List<GradSearchStudent>> responseType = new ParameterizedTypeReference<List<GradSearchStudent>>() {
+        ParameterizedTypeReference<StudentCourse[]> responseType = new ParameterizedTypeReference<StudentCourse[]>() {
         };
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(getStudentByPenUrl + "/" + pen)).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersUriMock.uri(getStudentCourseUrl + "/" + pen)).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(gradSearchStudents));
+        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(studentCourse));
 
-        GraduationData gradData = gradAlgorithmService.graduateStudent(pen, programCode, false, accessToken);
-        assertNotNull(gradData);
-        LOG.debug(">graduateStudentTest");
+        StudentCourse[] result = gradStudentCourseService.getAllCoursesForAStudent(pen, accessToken);
+        assertNotNull(result);
+        assertTrue(result.length > 0);
+        LOG.debug(">getStudentCourseTest");
     }
 }

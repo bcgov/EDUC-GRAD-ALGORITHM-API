@@ -1,7 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmApiApplication;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStatus;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
@@ -11,6 +10,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -36,23 +38,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = EducGradAlgorithmApiApplication.class)
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.yaml")
-public class GradAlgorithmServiceTests {
+public class GradStudentServiceTests {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradAlgorithmServiceTests.class);
-    private static final String CLASS_NAME = GradAlgorithmServiceTests.class.getSimpleName();
+    private static final Logger LOG = LoggerFactory.getLogger(GradStudentServiceTests.class);
+    private static final String CLASS_NAME = GradStudentServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired
-    GradAlgorithmService gradAlgorithmService;
+    GradStudentService gradStudentService;
 
     @MockBean
     WebClient webClient;
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+
+    @Value("${endpoint.grad-student-api.get-student-by-pen.url}")
+    private String getStudentByPenUrl;
 
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersMock;
@@ -64,9 +67,6 @@ public class GradAlgorithmServiceTests {
     private WebClient.RequestBodySpec requestBodyMock;
     @Mock
     private WebClient.RequestBodyUriSpec requestBodyUriMock;
-
-    @Value("${endpoint.grad-student-api.get-student-by-pen.url}")
-    private String getStudentByPenUrl;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -84,10 +84,9 @@ public class GradAlgorithmServiceTests {
     }
 
     @Test
-    public void graduateStudentTest() {
-        LOG.debug("<{}.graduateStudentTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+    public void getStudentDemographicsTest() {
+        LOG.debug("<{}.getStudentDemographicsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "12312123123";
-        String programCode="2018-EN";
         String accessToken = "accessToken";
 
         List<GradSearchStudent> gradSearchStudents = new ArrayList();
@@ -106,8 +105,8 @@ public class GradAlgorithmServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(gradSearchStudents));
 
-        GraduationData gradData = gradAlgorithmService.graduateStudent(pen, programCode, false, accessToken);
-        assertNotNull(gradData);
-        LOG.debug(">graduateStudentTest");
+        GradSearchStudent result = gradStudentService.getStudentDemographics(pen, accessToken);
+        assertNotNull(result);
+        LOG.debug(">getStudentDemographicsTest");
     }
 }

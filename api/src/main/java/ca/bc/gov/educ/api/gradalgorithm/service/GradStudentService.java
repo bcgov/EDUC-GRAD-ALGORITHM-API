@@ -49,7 +49,7 @@ public class GradStudentService extends GradService {
         start();
         List<GradSearchStudent> resultList = webClient.get()
                 .uri(GradAlgorithmAPIConstants.GET_GRADSTUDENT_BY_PEN_URL + "/" + pen)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradSearchStudent>>(){})
                 .block();
