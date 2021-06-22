@@ -132,6 +132,8 @@ endpoint:
         url: https://educ-grad-common-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/common/studentreport
       update-grad-student-certificate:
         url: https://educ-grad-common-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/common/studentcertificate
+      algorithm-rules-main-grad-program:
+        url: https://educ-grad-common-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/common/algorithm-rules/main/%s
     grad-code-api:
       get-certificate-name: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/certificatetype/%s
   grad-program-management-api:

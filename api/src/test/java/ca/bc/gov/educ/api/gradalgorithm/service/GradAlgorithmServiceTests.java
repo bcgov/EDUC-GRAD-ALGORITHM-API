@@ -1,6 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmApiApplication;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
@@ -9,6 +8,7 @@ import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.slf4j.Logger;
@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -36,9 +35,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = EducGradAlgorithmApiApplication.class)
+@SpringBootTest
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yaml")
 public class GradAlgorithmServiceTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(GradAlgorithmServiceTests.class);
@@ -185,4 +183,7 @@ public class GradAlgorithmServiceTests {
         assertNotNull(gradData);
         LOG.debug(">graduateStudentTest");
     }
+
+    @Test
+    public void dummyTest() {}
 }

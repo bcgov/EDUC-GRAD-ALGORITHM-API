@@ -1,6 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmApiApplication;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.After;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -36,9 +34,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = EducGradAlgorithmApiApplication.class)
+@SpringBootTest
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yaml")
 public class GradRuleProcessorServiceTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(GradRuleProcessorServiceTests.class);

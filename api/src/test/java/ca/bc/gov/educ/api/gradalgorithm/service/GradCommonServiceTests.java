@@ -1,6 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmRules;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,12 +20,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -33,20 +34,20 @@ import static org.mockito.MockitoAnnotations.openMocks;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class GradStudentAssessmentsServiceTests {
+public class GradCommonServiceTests {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradStudentAssessmentsServiceTests.class);
-    private static final String CLASS_NAME = GradStudentAssessmentsServiceTests.class.getSimpleName();
+    private static final Logger LOG = LoggerFactory.getLogger(GradCommonServiceTests.class);
+    private static final String CLASS_NAME = GradCommonServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired
-    GradStudentAssessmentService gradStudentAssessmentService;
+    GradCommonService gradCommonService;
 
     @MockBean
     WebClient webClient;
 
-    @Value("${endpoint.student-assessment-api.get-student-assessment-by-pen.url}")
-    private String getStudentAssessmentUrl;
+    @Value("${endpoint.gradalgorithm-api.grad-common-api.algorithm-rules-main-grad-program.url}")
+    private String getAlgorithmRulesMainGradProgramUrl;
 
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersMock;
@@ -75,28 +76,27 @@ public class GradStudentAssessmentsServiceTests {
     }
 
     @Test
-    public void getStudentAssessmentsTest() {
-        LOG.debug("<{}.getStudentCourseTest at {}", CLASS_NAME, dateFormat.format(new Date()));
-        String pen = "12312123123";
+    public void getGradAlgorithmRulesTest() {
+        LOG.debug("<{}.getGradAlgorithmRulesTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        String gradProgram = "GRAD_PROGRAM_1";
         String accessToken = "accessToken";
 
-        StudentAssessment[] studentAssessments = new StudentAssessment[1];
-        studentAssessments[0] = new StudentAssessment();
-        studentAssessments[0].setAssessmentCode("ASSESSMENT_1");
-        studentAssessments[0].setAssessmentName("Assessment 1");
+        List<GradAlgorithmRules> gradAlgorithmRules = new ArrayList();
+        GradAlgorithmRules algorithmRules = new GradAlgorithmRules();
+        algorithmRules.setId(UUID.randomUUID());
+        gradAlgorithmRules.add(algorithmRules);
 
-        ParameterizedTypeReference<StudentAssessment[]> responseType = new ParameterizedTypeReference<StudentAssessment[]>() {
+        ParameterizedTypeReference<List<GradAlgorithmRules>> responseType = new ParameterizedTypeReference<List<GradAlgorithmRules>>() {
         };
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(getStudentAssessmentUrl + "/" + pen)).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersUriMock.uri(String.format(getAlgorithmRulesMainGradProgramUrl, gradProgram))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(studentAssessments));
+        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(gradAlgorithmRules));
 
-        List<StudentAssessment> result = gradStudentAssessmentService.getAllAssessmentsForAStudent(pen, accessToken);
+        List<GradAlgorithmRules> result = gradCommonService.getGradAlgorithmRules(gradProgram, accessToken);
         assertNotNull(result);
-        assertTrue(result.size() > 0);
-        LOG.debug(">getStudentCourseTest");
+        LOG.debug(">getGradAlgorithmRulesTest");
     }
 }
