@@ -1,23 +1,18 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseList;
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRequirements;
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRestrictions;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
-import reactor.core.publisher.Mono;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ca.bc.gov.educ.api.gradalgorithm.util.APIUtils.getJSONStringFromObject;
 
 @Service
 public class GradCourseService extends GradService {
@@ -37,7 +32,7 @@ public class GradCourseService extends GradService {
         CourseRequirements result = webClient.post()
                 .uri("https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement/course-list")
                 .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(new CourseList(courseList)), CourseList.class)
+                .body(BodyInserters.fromValue(new CourseList(courseList)))
                 .retrieve()
                 .bodyToMono(CourseRequirements.class)
                 .block();
@@ -57,7 +52,7 @@ public class GradCourseService extends GradService {
         CourseRestrictions result = webClient.post()
                 .uri("https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-restriction/course-list")
                 .headers(h -> h.setBearerAuth(accessToken))
-                .body(Mono.just(new CourseList(courseList)), CourseList.class)
+                .body(BodyInserters.fromValue(new CourseList(courseList)))
                 .retrieve()
                 .bodyToMono(CourseRestrictions.class)
                 .block();

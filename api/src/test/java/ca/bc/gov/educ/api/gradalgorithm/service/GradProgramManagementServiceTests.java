@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
@@ -139,5 +140,49 @@ public class GradProgramManagementServiceTests {
         List<GradSpecialCase> result = gradProgramManagementService.getAllSpecialCases(accessToken);
         assertNotNull(result);
         LOG.debug(">getAllSpecialCasesTest");
+    }
+
+    @Test
+    public void getSpecialProgramRulesTest() {
+        LOG.debug("<{}.getSpecialProgramRulesTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        String gradProgram = "GRAD_PROG_1";
+        String gradSpecialProgram = "GRAD_SPEC__PROG_1";
+        String accessToken = "accessToken";
+
+        List<GradSpecialProgramRule> entity = new ArrayList<>();
+
+        ParameterizedTypeReference<List<GradSpecialProgramRule>> responseType = new ParameterizedTypeReference<List<GradSpecialProgramRule>>() {
+        };
+
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/specialprogramrules/" + gradProgram + "/" + gradSpecialProgram)).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(entity));
+
+        List<GradSpecialProgramRule> result = gradProgramManagementService.getSpecialProgramRules(gradProgram, gradSpecialProgram, accessToken);
+        assertNotNull(result);
+        LOG.debug(">getSpecialProgramRulesTest");
+    }
+
+    @Test
+    public void getSpecialProgramIDTest() {
+        LOG.debug("<{}.getSpecialProgramRulesTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        String gradProgram = "GRAD_PROG_1";
+        String gradSpecialProgram = "GRAD_SPEC__PROG_1";
+        String accessToken = "accessToken";
+
+        GradSpecialProgram entity = new GradSpecialProgram();
+        entity.setId(UUID.randomUUID());
+
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/specialprograms/" + gradProgram + "/" + gradSpecialProgram)).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(GradSpecialProgram.class)).thenReturn(Mono.just(entity));
+
+        UUID result = gradProgramManagementService.getSpecialProgramID(gradProgram, gradSpecialProgram, accessToken);
+        assertNotNull(result);
+        LOG.debug(">getSpecialProgramRulesTest");
     }
 }
