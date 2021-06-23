@@ -1,6 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,7 +20,6 @@ import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
@@ -83,9 +80,6 @@ public class GradShoolServiceTests {
         School school = new School();
         school.setMinCode(mincode);
         school.setSchoolName("My School");
-
-        ParameterizedTypeReference<List<GradSearchStudent>> responseType = new ParameterizedTypeReference<List<GradSearchStudent>>() {
-        };
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(getSchoolByMincodeUrl, mincode))).thenReturn(this.requestHeadersMock);
