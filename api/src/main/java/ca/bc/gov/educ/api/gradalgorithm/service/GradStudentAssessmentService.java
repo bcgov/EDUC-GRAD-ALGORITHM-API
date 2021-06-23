@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +8,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GET_STUDENT_ASSESSMENT_BY_PEN;
 
 @Service
 public class GradStudentAssessmentService extends GradService {
@@ -25,8 +25,7 @@ public class GradStudentAssessmentService extends GradService {
 
         start();
         StudentAssessment[] result = webClient.get()
-                .uri("https://student-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/studentassessment/pen"
-                        + "/" + pen)
+                .uri(GET_STUDENT_ASSESSMENT_BY_PEN + "/" + pen)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<StudentAssessment[]>(){})

@@ -28,6 +28,8 @@ public class GradAlgorithmAPIConstants {
     public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES;
     public static String GET_GRADSTATUS_BY_STUDENT_ID_URL;
+    public static String GET_STUDENT_ASSESSMENT_BY_PEN;
+    public static String GET_SCHOOL_BY_MINCODE;
 
 
     //Attribute Constants
@@ -128,7 +130,16 @@ public class GradAlgorithmAPIConstants {
     public void setGraduationStatusApiEndpointGetGradStatus(String graduationStatusApiEndpointGetGradStatus) {
     	GET_GRADSTATUS_BY_STUDENT_ID_URL = graduationStatusApiEndpointGetGradStatus;
     }
-    
+
+    @Value("${endpoint.student-assessment-api.get-student-assessment-by-pen.url}")
+    public void setGradStudentAssessmentByPenUrl(String gradStudentAssessmentByPenUrl) {
+        GET_STUDENT_ASSESSMENT_BY_PEN = gradStudentAssessmentByPenUrl;
+    }
+
+    @Value("${endpoint.school-api.school-by-min-code.url}")
+    public void setGetSchoolByMincodeUrl(String getSchoolByMincodeUrl) {
+        GET_SCHOOL_BY_MINCODE = getSchoolByMincodeUrl;
+    }
     
 
 //Application Properties Constants
