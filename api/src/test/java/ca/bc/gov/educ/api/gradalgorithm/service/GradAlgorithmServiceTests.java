@@ -352,14 +352,10 @@ public class GradAlgorithmServiceTests {
 
         /** Start gget Student Graduation Status **/
 
-        GradAlgorithmGraduationStatus gradAlgorithmGraduationStatus = new GradAlgorithmGraduationStatus();
-        gradAlgorithmGraduationStatus.setPen(gradSearchStudent.getPen());
-        gradAlgorithmGraduationStatus.setStudentID(UUID.fromString(gradSearchStudent.getStudentID()));
-        gradAlgorithmGraduationStatus.setProgram(gradSearchStudent.getProgram());
-        gradAlgorithmGraduationStatus.setStudentGradData("{ \"gradStudent\" : null, \"nonGradReasons:\" [], \"programCompletionDate\": \"201806\" }");
+        GradAlgorithmGraduationStatus gradAlgorithmGraduationStatus = ruleProcessorData.getGradStatus();
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(getGraduationStatusUrl, studentID.toString()))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersUriMock.uri(String.format(getGraduationStatusUrl, studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradAlgorithmGraduationStatus.class)).thenReturn(Mono.just(gradAlgorithmGraduationStatus));
@@ -382,7 +378,7 @@ public class GradAlgorithmServiceTests {
 
         GradMessaging gradMessaging = new GradMessaging();
         gradMessaging.setProgramCode(programCode);
-        gradMessaging.setGradDate("201806");
+        gradMessaging.setGradDate("202006");
         gradMessaging.setMainMessage("This is graduation message");
         gradMessaging.setMessageType(messageType);
 
