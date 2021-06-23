@@ -35,10 +35,11 @@ public class GradStudentAssessmentService extends GradService {
         end();
 
         logger.info("**** # of Assessments: " + (result != null ? result.length : 0));
-
-        for (StudentAssessment studentAssessment : result) {
-            studentAssessment.setGradReqMet("");
-            studentAssessment.setGradReqMetDetail("");
+        if(result != null) {
+	        for (StudentAssessment studentAssessment : result) {
+	            studentAssessment.setGradReqMet("");
+	            studentAssessment.setGradReqMetDetail("");
+	        }
         }
 
         return Arrays.asList(result != null ? result.clone() : new StudentAssessment[0]);
