@@ -74,9 +74,9 @@ public class GradAssessmentService extends GradService {
         AssessmentRequirements result = webClient.post()
                 .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list")
                 .headers(h -> h.setBearerAuth(accessToken))
-                .bodyValue(BodyInserters.fromValue(new AssessmentList(assessmentList)))
+                .body(BodyInserters.fromValue(new AssessmentList(assessmentList)))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<AssessmentRequirements>(){})
+                .bodyToMono(AssessmentRequirements.class)
                 .block()
                 ;
         end();

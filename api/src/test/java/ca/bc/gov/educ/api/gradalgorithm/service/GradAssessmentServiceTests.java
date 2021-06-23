@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
+import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirement;
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirements;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
 import org.junit.After;
@@ -106,7 +107,14 @@ public class GradAssessmentServiceTests {
         String accessToken = "accessToken";
 
         AssessmentRequirements entity = new AssessmentRequirements();
-        entity.setAssessmentRequirementList(new ArrayList());
+        List<AssessmentRequirement> assessmentRequirementList = new ArrayList<>();
+        entity.setAssessmentRequirementList(assessmentRequirementList);
+
+        List<StudentAssessment> studentAssessmentList = new ArrayList<>();
+        StudentAssessment assessment = new StudentAssessment();
+        assessment.setAssessmentCode("ASSESSMENT_1");
+        assessment.setAssessmentName("My Assessment");
+        studentAssessmentList.add(assessment);
 
         when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.uri(getAssessmentRequirementsUrl)).thenReturn(this.requestBodyUriMock);
@@ -115,8 +123,6 @@ public class GradAssessmentServiceTests {
         when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(AssessmentRequirements.class)).thenReturn(Mono.just(entity));
-
-        List<StudentAssessment> studentAssessmentList = new ArrayList<>();
 
         AssessmentRequirements result = gradAssessmentService.getAllAssessmentRequirements(studentAssessmentList, accessToken);
         assertNotNull(result);
