@@ -1,9 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -68,6 +66,10 @@ public class GradAlgorithmServiceTests {
     private String getStudentCourseByPenUrl;
     @Value("${endpoint.student-assessment-api.get-student-assessment-by-pen.url}")
     private String getStudentAssessmentUrl;
+    @Value("${endpoint.course-api.course-requirements-api.url}")
+    private String getCourseRequirementsUrl;
+    @Value("${endpoint.course-api.course-restriction-api.url}")
+    private String getCourseRestrictionUrl;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -147,6 +149,24 @@ public class GradAlgorithmServiceTests {
         /** End Get All Assessments for a Student **/
 
         /** Start Get All course Requirements **/
+
+        CourseRequirements entity = new CourseRequirements();
+        List<CourseRequirement> courseRequirementList = new ArrayList<>();
+        entity.setCourseRequirementList(courseRequirementList);
+
+        List<StudentCourse> studentCourseList = new ArrayList<>();
+        StudentCourse course = new StudentCourse();
+        course.setCourseCode("COURSE_1");
+        course.setCourseName("My Course");
+        studentCourseList.add(course);
+
+        when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
+        when(this.requestBodyUriMock.uri(getCourseRequirementsUrl + "/course-list")).thenReturn(this.requestBodyUriMock);
+        when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
+        when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
+        when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(CourseRequirements.class)).thenReturn(Mono.just(entity));
 
         /** End Get All course Requirements **/
 

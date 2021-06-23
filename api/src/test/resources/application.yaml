@@ -76,6 +76,11 @@ endpoint:
   school-api:
     school-by-min-code:
       url: https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school/%s
+  assessment-api:
+    assessment-api-base:
+      url: https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment
+    assessment-api-requirement-assessments:
+      url: https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list
   code-api:
     country:
       country-by-country-code:
@@ -87,6 +92,9 @@ endpoint:
         url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/province/%s
       all-provinces:
         url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/province
+    grad-messages:
+      grad-messages-program-code:
+        url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/gradmessages/pgmCode/%s/msgType/%s
   program-rule-api:
     get-program-rules:
       url: https://program-rule-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program-rules

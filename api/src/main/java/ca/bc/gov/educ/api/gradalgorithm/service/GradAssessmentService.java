@@ -1,6 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.*;
+import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
+import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentList;
+import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -70,7 +74,7 @@ public class GradAssessmentService extends GradService {
         AssessmentRequirements result = webClient.post()
                 .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list")
                 .headers(h -> h.setBearerAuth(accessToken))
-                .bodyValue(new AssessmentList(assessmentList))
+                .bodyValue(BodyInserters.fromValue(new AssessmentList(assessmentList)))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<AssessmentRequirements>(){})
                 .block()
