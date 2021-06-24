@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ca.bc.gov.educ.api.gradalgorithm.util.APIUtils.getJSONStringFromObject;
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GRAD_GET_ASSESSMENT_BASE_URL;
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GRAD_GET_ASSESSMENT_REQUIREMENTS_URL;
 
 @Service
 public class GradAssessmentService extends GradService {
@@ -36,7 +38,7 @@ public class GradAssessmentService extends GradService {
     List<Assessment> getAllAssessments(String accessToken) {
         start();
         List<Assessment> result = webClient.get()
-                .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment")
+                .uri(GRAD_GET_ASSESSMENT_BASE_URL)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Assessment>>() {})
@@ -55,9 +57,11 @@ public class GradAssessmentService extends GradService {
                 .map(StudentAssessment::getAssessmentCode)
                 .distinct()
                 .collect(Collectors.toList());
+
         String json = getJSONStringFromObject(new AssessmentList(assessmentList));
+
         AssessmentRequirements result = restTemplate.exchange(
-                "https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list",
+                GRAD_GET_ASSESSMENT_REQUIREMENTS_URL,
                 HttpMethod.POST, new HttpEntity<>(json, httpHeaders), AssessmentRequirements.class).getBody();
         logger.info("**** # of Assessment Requirements: " + (result != null ? result.getAssessmentRequirementList().size() : 0));
 
@@ -72,7 +76,7 @@ public class GradAssessmentService extends GradService {
 
         start();
         AssessmentRequirements result = webClient.post()
-                .uri("https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/requirement/assessment-list")
+                .uri(GRAD_GET_ASSESSMENT_REQUIREMENTS_URL)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(BodyInserters.fromValue(new AssessmentList(assessmentList)))
                 .retrieve()

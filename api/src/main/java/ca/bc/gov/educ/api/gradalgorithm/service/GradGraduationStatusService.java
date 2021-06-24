@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GRAD_STATUS_BASE_URL;
+
 @Service
 public class GradGraduationStatusService extends GradService {
 
@@ -24,7 +26,7 @@ public class GradGraduationStatusService extends GradService {
 
         start();
         List<GradStudentSpecialProgram> result = webClient.get()
-                .uri(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/pen/%s", pen))
+                .uri(String.format(GRAD_STATUS_BASE_URL + "/specialprogram/pen/%s", pen))
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradStudentSpecialProgram>>(){})
@@ -56,7 +58,7 @@ public class GradGraduationStatusService extends GradService {
 
         start();
         List<GradStudentSpecialProgram> result = webClient.get()
-                .uri(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/studentid/%s", studentID))
+                .uri(String.format(GRAD_STATUS_BASE_URL + "/specialprogram/studentid/%s", studentID))
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradStudentSpecialProgram>>(){})

@@ -14,6 +14,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GRAD_COURSE_REQUIREMENTS_API_URL;
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GRAD_COURSE_RESTRICTIONS_API_URL;
+
 @Service
 public class GradCourseService extends GradService {
 
@@ -30,7 +33,7 @@ public class GradCourseService extends GradService {
 
         start();
         CourseRequirements result = webClient.post()
-                .uri("https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-requirement/course-list")
+                .uri(GRAD_COURSE_REQUIREMENTS_API_URL + "/course-list")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(BodyInserters.fromValue(new CourseList(courseList)))
                 .retrieve()
@@ -50,7 +53,7 @@ public class GradCourseService extends GradService {
 
         start();
         CourseRestrictions result = webClient.post()
-                .uri("https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-restriction/course-list")
+                .uri(GRAD_COURSE_RESTRICTIONS_API_URL + "/course-list")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(BodyInserters.fromValue(new CourseList(courseList)))
                 .retrieve()
