@@ -1,10 +1,3 @@
-#Keycloak/OAuth properties
-security:
-  oauth2:
-    resource:
-      jwt:
-        key-value: ${KEYCLOAK_PUBLIC_KEY}
-
 #DB Properties
 spring:
   jmx:
@@ -12,20 +5,16 @@ spring:
   datasource:
     hikari:
       pool-name: grad-algorithm-api-cp
-      maximum-pool-size: ${MAXIMUM_POOL_SIZE}
-      connection-timeout: ${CONNECTION_TIMEOUT}
-      max-lifetime: ${MAX_LIFETIME}
-    url: ${JDBC_URL}
-    username: ${ORACLE_USERNAME}
-    password: ${ORACLE_PASSWORD}
-    driver-class: oracle.jdbc.driver.OracleDriver
+      maximum-pool-size: 1
+      connection-timeout: 6000
+      max-lifetime: 600000
   jpa:
     show-sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+    generate-ddl: true
   mvc:
-    log-request-details: ${SPRING_SHOW_REQUEST_DETAILS}
+    log-request-details: true
   jackson:
     deserialization:
       fail-on-unknown-properties: false
@@ -46,22 +35,14 @@ logging:
         gov:
           educ:
             api:
-              gradalgorithm: ${APP_LOG_LEVEL}
+              graduation: INFO
     org:
       springframework:
-        web: ${SPRING_WEB_LOG_LEVEL}
-        security: ${SPRING_SECURITY_LOG_LEVEL}
+        web: INFO
+        security: INFO
         boot:
           autoconfigure:
-            logging: ${SPRING_BOOT_AUTOCONFIG_LOG_LEVEL}
-
-#Local properties
-server:
-  undertow:
-    threads:
-      worker: 128
-      io: 16
-  #port: ${HTTP_PORT}
+            logging: INFO
 
 #API Documentation
 springdoc:
@@ -70,7 +51,8 @@ springdoc:
   swagger-ui:
     path: /api/v1/api-docs-ui.html
     operationsSorter: alpha
-
+  
+#Endpoints
 #Endpoint properties
 endpoint:
   grad-student-api:
@@ -136,8 +118,9 @@ endpoint:
       run-special-match-rules: run-special-match-rules
       run-grad-algorithm-rules: run-grad-algorithm-rules
   grad-graduation-status-api:
-    grad-status-base: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus
-    get-graduation-status: 
+    grad-status-base:
+      url: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus
+    get-graduation-status:
       url: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/studentid/%s/algorithm
   gradalgorithm-api:
     gradalgorithm: https://grad-algorithm-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/graduatestudent?pen=%s&gradProgram=%s
@@ -161,8 +144,8 @@ endpoint:
         url: https://educ-grad-common-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/common/algorithm-rules/main/%s
     grad-code-api:
       get-certificate-name: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/certificatetype/%s
-    grad-program-management-api:
-      program_management_base:
-        url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement
-      program_name_by_program_code:
-        url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/programs/%s
+  grad-program-management-api:
+    program_management_base:
+      url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement
+    program_name_by_program_code:
+      url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/programs/%s
