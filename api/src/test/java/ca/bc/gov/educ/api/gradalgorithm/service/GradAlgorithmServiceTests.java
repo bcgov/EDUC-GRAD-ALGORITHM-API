@@ -1,8 +1,8 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,15 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,10 +34,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class GradAlgorithmServiceTests {
+public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(GradAlgorithmServiceTests.class);
     private static final String CLASS_NAME = GradAlgorithmServiceTests.class.getSimpleName();
@@ -54,8 +50,6 @@ public class GradAlgorithmServiceTests {
     WebClient webClient;
     @Autowired
     private GradAlgorithmAPIConstants constants;
-    @Autowired
-    JsonTransformer jsonTransformer;
 
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersMock;
@@ -391,26 +385,5 @@ public class GradAlgorithmServiceTests {
         GraduationData gradData = gradAlgorithmService.graduateStudent(pen, programCode, false, accessToken);
         assertNotNull(gradData);
         LOG.debug(">graduateStudentTest");
-    }
-
-    @Test
-    public void dummyTest() {}
-
-    protected RuleProcessorData createRuleProcessorData(String jsonPath) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(jsonPath);
-        String json = readInputStream(inputStream);
-        return (RuleProcessorData)jsonTransformer.unmarshall(json, RuleProcessorData.class);
-    }
-
-    private String readInputStream(InputStream is) throws Exception {
-        StringBuffer sb = new StringBuffer();
-        InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-        BufferedReader reader = new BufferedReader(streamReader);
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-        return sb.toString();
     }
 }
