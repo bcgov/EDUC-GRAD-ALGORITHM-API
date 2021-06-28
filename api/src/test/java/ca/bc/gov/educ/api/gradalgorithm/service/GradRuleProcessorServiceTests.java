@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.After;
@@ -20,10 +21,6 @@ import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -36,7 +33,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class GradRuleProcessorServiceTests {
+public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(GradRuleProcessorServiceTests.class);
     private static final String CLASS_NAME = GradRuleProcessorServiceTests.class.getSimpleName();
@@ -97,23 +94,5 @@ public class GradRuleProcessorServiceTests {
         RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken);
         assertNotNull(result);
         LOG.debug(">getRuleProcessorTest");
-    }
-
-    protected RuleProcessorData createRuleProcessorData(String jsonPath) throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(jsonPath);
-        String json = readInputStream(inputStream);
-        return (RuleProcessorData)jsonTransformer.unmarshall(json, RuleProcessorData.class);
-    }
-
-    private String readInputStream(InputStream is) throws Exception {
-        StringBuffer sb = new StringBuffer();
-        InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-        BufferedReader reader = new BufferedReader(streamReader);
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-        return sb.toString();
     }
 }
