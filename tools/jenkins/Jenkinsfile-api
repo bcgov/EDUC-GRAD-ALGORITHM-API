@@ -52,7 +52,7 @@ pipeline{
       PROD_HOST_ROUTE = "${APP_NAME}-${PROD}.${APP_DOMAIN}"
   }
   stages{
-    /*stage('Unit Tests') {
+    stage('Unit Tests') {
       steps {
         script {
           def pom = readMavenPom file: 'api/pom.xml'
@@ -66,7 +66,8 @@ pipeline{
           """
         }
       }
-    }*/
+    }
+
     stage('Build App') {
       steps {
         script {
