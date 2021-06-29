@@ -1,12 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.School;
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GET_SCHOOL_BY_MINCODE;
 
 @Service
 public class GradSchoolService extends GradService {
@@ -20,9 +21,8 @@ public class GradSchoolService extends GradService {
 
         start();
         School schObj = webClient.get()
-                .uri("https://educ-grad-school-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school" + "/"
-                        + minCode)
-                .header("Authorization", "Bearer " + accessToken)
+                .uri(String.format(GET_SCHOOL_BY_MINCODE, minCode))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(School.class)
                 .block();

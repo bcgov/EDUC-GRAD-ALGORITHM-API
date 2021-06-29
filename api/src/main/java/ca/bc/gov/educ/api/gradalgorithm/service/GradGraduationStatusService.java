@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GRAD_STATUS_BASE_URL;
+
 @Service
 public class GradGraduationStatusService extends GradService {
 
@@ -24,8 +26,8 @@ public class GradGraduationStatusService extends GradService {
 
         start();
         List<GradStudentSpecialProgram> result = webClient.get()
-                .uri(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/pen/%s", pen))
-                .header("Authorization", "Bearer " + accessToken)
+                .uri(String.format(GRAD_STATUS_BASE_URL + "/specialprogram/pen/%s", pen))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradStudentSpecialProgram>>(){})
                 .block();
@@ -41,7 +43,7 @@ public class GradGraduationStatusService extends GradService {
         start();
         GradAlgorithmGraduationStatus result = webClient.get()
                 .uri(String.format(GradAlgorithmAPIConstants.GET_GRADSTATUS_BY_STUDENT_ID_URL,studentID))
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GradAlgorithmGraduationStatus.class)
                 .block();
@@ -56,8 +58,8 @@ public class GradGraduationStatusService extends GradService {
 
         start();
         List<GradStudentSpecialProgram> result = webClient.get()
-                .uri(String.format("https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/specialprogram/studentid/%s", studentID))
-                .header("Authorization", "Bearer " + accessToken)
+                .uri(String.format(GRAD_STATUS_BASE_URL + "/specialprogram/studentid/%s", studentID))
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<GradStudentSpecialProgram>>(){})
                 .block();

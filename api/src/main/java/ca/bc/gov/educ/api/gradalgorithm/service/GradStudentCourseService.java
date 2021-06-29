@@ -54,7 +54,7 @@ public class GradStudentCourseService extends GradService {
         start();
         StudentCourse[] result = webClient.get()
                 .uri(GradAlgorithmAPIConstants.GET_STUDENT_COURSES_BY_PEN_URL + "/" + pen)
-                .header("Authorization", "Bearer " + accessToken)
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<StudentCourse[]>(){})
                 .block();

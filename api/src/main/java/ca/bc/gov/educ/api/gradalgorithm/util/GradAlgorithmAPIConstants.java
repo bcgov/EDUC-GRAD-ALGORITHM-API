@@ -28,10 +28,18 @@ public class GradAlgorithmAPIConstants {
     public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES;
     public static String RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES;
     public static String GET_GRADSTATUS_BY_STUDENT_ID_URL;
-
+    public static String GET_STUDENT_ASSESSMENT_BY_PEN;
+    public static String GET_SCHOOL_BY_MINCODE;
+    public static String PROGRAM_MANAGEMENT_BASE_URL;
+    public static String GRAD_STATUS_BASE_URL;
+    public static String GRAD_COURSE_REQUIREMENTS_API_URL;
+    public static String GRAD_COURSE_RESTRICTIONS_API_URL;
+    public static String GRAD_ALGORITHM_RULES_MAIN_GRAD_PROGRAM_URL;
+    public static String GRAD_CODE_GRAD_MESSAGES_PROGRAM_CODE_URL;
+    public static String GRAD_GET_ASSESSMENT_BASE_URL;
+    public static String GRAD_GET_ASSESSMENT_REQUIREMENTS_URL;
 
     //Attribute Constants
-
 
     //Default Attribute value constants
     public static final String DEFAULT_CREATED_BY = "GradAlgorithmAPI";
@@ -48,6 +56,7 @@ public class GradAlgorithmAPIConstants {
     public static final String RULE_TYPE_MIN_CREDITS_ELECTIVE = "MinCreditsElective";
     public static final String RULE_TYPE_ACTIVE_FLAG_Y = "Y";
     public static final String RULE_TYPE_ACTIVE_FLAG_N = "N";
+
 
     @Value("${endpoint.grad-student-api.get-student-by-pen.url}")
     public void setGetGradstudentByPenUrl(String getGradstudentByPenUrl) {
@@ -128,9 +137,54 @@ public class GradAlgorithmAPIConstants {
     public void setGraduationStatusApiEndpointGetGradStatus(String graduationStatusApiEndpointGetGradStatus) {
     	GET_GRADSTATUS_BY_STUDENT_ID_URL = graduationStatusApiEndpointGetGradStatus;
     }
-    
-    
 
+    @Value("${endpoint.student-assessment-api.get-student-assessment-by-pen.url}")
+    public void setGradStudentAssessmentByPenUrl(String gradStudentAssessmentByPenUrl) {
+        GET_STUDENT_ASSESSMENT_BY_PEN = gradStudentAssessmentByPenUrl;
+    }
+
+    @Value("${endpoint.school-api.school-by-min-code.url}")
+    public void setGetSchoolByMincodeUrl(String getSchoolByMincodeUrl) {
+        GET_SCHOOL_BY_MINCODE = getSchoolByMincodeUrl;
+    }
+
+    @Value("${endpoint.grad-program-management-api.program_management_base.url}")
+    public void setProgramManagementBaseUrl(String programManagementBaseUrl) {
+        PROGRAM_MANAGEMENT_BASE_URL = programManagementBaseUrl;
+    }
+
+    @Value("${endpoint.grad-graduation-status-api.grad-status-base.url}")
+    public void setGetGraduaationStatusBaseUrl(String getGraduaationStatusBaseUrl) {
+        GRAD_STATUS_BASE_URL = getGraduaationStatusBaseUrl;
+    }
+
+    @Value("${endpoint.course-api.course-requirements-api.url}")
+    public void setGetCourseRequirementsUrl(String getCourseRequirementsUrl) {
+        GRAD_COURSE_REQUIREMENTS_API_URL = getCourseRequirementsUrl;
+    }
+    @Value("${endpoint.course-api.course-restriction-api.url}")
+    public void setGetCourseRestrictionUrl(String getCourseRestrictionUrl) {
+        GRAD_COURSE_RESTRICTIONS_API_URL = getCourseRestrictionUrl;
+    }
+
+    @Value("${endpoint.gradalgorithm-api.grad-common-api.algorithm-rules-main-grad-program.url}")
+    public void setGetAlgorithmRulesMainGradProgramUrl(String getAlgorithmRulesMainGradProgramUrl) {
+        GRAD_ALGORITHM_RULES_MAIN_GRAD_PROGRAM_URL = getAlgorithmRulesMainGradProgramUrl;
+    }
+
+    @Value("${endpoint.code-api.grad-messages.grad-messages-program-code.url}")
+    public void setGetCodeGradMessagesProgramCodeUrl(String getCodeGradMessagesProgramCodeUrl) {
+        GRAD_CODE_GRAD_MESSAGES_PROGRAM_CODE_URL = getCodeGradMessagesProgramCodeUrl;
+    }
+
+    @Value("${endpoint.assessment-api.assessment-api-base.url}")
+    public void setGetAssessmentBaseUrl(String getAssessmentBaseUrl) {
+        GRAD_GET_ASSESSMENT_BASE_URL = getAssessmentBaseUrl;
+    }
+    @Value("${endpoint.assessment-api.assessment-api-requirement-assessments.url}")
+    public void setGetAssessmentRequirementsUrl(String getAssessmentRequirementsUrl) {
+        GRAD_GET_ASSESSMENT_REQUIREMENTS_URL = getAssessmentRequirementsUrl;
+    }
 //Application Properties Constants
 
 }
