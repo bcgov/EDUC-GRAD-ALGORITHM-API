@@ -148,7 +148,7 @@ public class GradAlgorithmAPIConstants {
         GET_SCHOOL_BY_MINCODE = getSchoolByMincodeUrl;
     }
 
-    @Value("${endpoint.grad-program-management-api.program_management_base.url}")
+    @Value("${endpoint.gradalgorithm-api.grad-program-management-api.program_management_base.url}")
     public void setProgramManagementBaseUrl(String programManagementBaseUrl) {
         PROGRAM_MANAGEMENT_BASE_URL = programManagementBaseUrl;
     }
