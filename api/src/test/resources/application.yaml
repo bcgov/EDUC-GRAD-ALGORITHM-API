@@ -120,7 +120,7 @@ endpoint:
   grad-graduation-status-api:
     grad-status-base:
       url: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus
-    get-graduation-status:
+    get-graduation-status: 
       url: https://educ-grad-graduation-status-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/gradstatus/studentid/%s/algorithm
   gradalgorithm-api:
     gradalgorithm: https://grad-algorithm-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/graduatestudent?pen=%s&gradProgram=%s
@@ -144,8 +144,8 @@ endpoint:
         url: https://educ-grad-common-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/common/algorithm-rules/main/%s
     grad-code-api:
       get-certificate-name: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/certificatetype/%s
-  grad-program-management-api:
-    program_management_base:
-      url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement
-    program_name_by_program_code:
-      url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/programs/%s
+    grad-program-management-api:
+      program_management_base:
+        url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement
+      program_name_by_program_code:
+        url: https://educ-grad-program-management-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/programmanagement/programs/%s
