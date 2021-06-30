@@ -74,7 +74,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     private String getCourseRestrictionUrl;
     @Value("${endpoint.assessment-api.assessment-api-requirement-assessments.url}")
     private String getAssessmentRequirementsUrl;
-    @Value("${endpoint.grad-program-management-api.program_management_base.url}")
+    @Value("${endpoint.gradalgorithm-api.grad-program-management-api.program_management_base.url}")
     private String programManagementBaseUrl;
     @Value("${endpoint.gradalgorithm-api.grad-common-api.algorithm-rules-main-grad-program.url}")
     private String getAlgorithmRulesMainGradProgramUrl;

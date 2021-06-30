@@ -46,7 +46,7 @@ public class GradProgramManagementServiceTests {
     @MockBean
     WebClient webClient;
 
-    @Value("${endpoint.grad-program-management-api.program_management_base.url}")
+    @Value("${endpoint.gradalgorithm-api.grad-program-management-api.program_management_base.url}")
     private String programManagementBaseUrl;
 
     @Mock
