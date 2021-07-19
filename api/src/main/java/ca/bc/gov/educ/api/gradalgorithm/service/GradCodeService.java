@@ -12,7 +12,7 @@ import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.GR
 @Service
 public class GradCodeService extends GradService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradCommonService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GradCodeService.class);
 
     @Autowired
     private WebClient webClient;

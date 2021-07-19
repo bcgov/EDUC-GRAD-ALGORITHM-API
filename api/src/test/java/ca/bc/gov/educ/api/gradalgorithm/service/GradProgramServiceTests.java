@@ -34,14 +34,14 @@ import static org.mockito.MockitoAnnotations.openMocks;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class GradProgramManagementServiceTests {
+public class GradProgramServiceTests {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradProgramManagementServiceTests.class);
-    private static final String CLASS_NAME = GradProgramManagementServiceTests.class.getSimpleName();
+    private static final Logger LOG = LoggerFactory.getLogger(GradProgramServiceTests.class);
+    private static final String CLASS_NAME = GradProgramServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired
-    GradProgramManagementService gradProgramManagementService;
+    GradProgramService gradProgramService;
 
     @MockBean
     WebClient webClient;
@@ -76,26 +76,6 @@ public class GradProgramManagementServiceTests {
     }
 
     @Test
-    public void getAllLetterGradesTest() {
-        LOG.debug("<{}.getAllLetterGradesTest at {}", CLASS_NAME, dateFormat.format(new Date()));
-        String accessToken = "accessToken";
-
-        GradLetterGrades entity = new GradLetterGrades();
-        List<GradLetterGrade> gradLetterGradeList = new ArrayList<>();
-        entity.setGradLetterGradeList(gradLetterGradeList);
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/lettergrade")).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(GradLetterGrades.class)).thenReturn(Mono.just(entity));
-
-        GradLetterGrades result = gradProgramManagementService.getAllLetterGrades(accessToken);
-        assertNotNull(result);
-        LOG.debug(">getAllLetterGradesTest");
-    }
-
-    @Test
     public void getProgramRulesTest() {
         LOG.debug("<{}.getProgramRulesTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String programCode = "PROG_CODE_1";
@@ -112,31 +92,9 @@ public class GradProgramManagementServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(entity));
 
-        List<GradProgramRule> result = gradProgramManagementService.getProgramRules(programCode, accessToken);
+        List<GradProgramRule> result = gradProgramService.getProgramRules(programCode, accessToken);
         assertNotNull(result);
         LOG.debug(">getProgramRulesTest");
-    }
-
-    @Test
-    public void getAllSpecialCasesTest() {
-        LOG.debug("<{}.getAllSpecialCasesTest at {}", CLASS_NAME, dateFormat.format(new Date()));
-        String programCode = "PROG_CODE_1";
-        String accessToken = "accessToken";
-
-        List<GradSpecialCase> entity = new ArrayList<>();
-
-        ParameterizedTypeReference<List<GradSpecialCase>> responseType = new ParameterizedTypeReference<List<GradSpecialCase>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/specialcase")).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(entity));
-
-        List<GradSpecialCase> result = gradProgramManagementService.getAllSpecialCases(accessToken);
-        assertNotNull(result);
-        LOG.debug(">getAllSpecialCasesTest");
     }
 
     @Test
@@ -157,7 +115,7 @@ public class GradProgramManagementServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(entity));
 
-        List<GradSpecialProgramRule> result = gradProgramManagementService.getSpecialProgramRules(gradProgram, gradSpecialProgram, accessToken);
+        List<GradSpecialProgramRule> result = gradProgramService.getSpecialProgramRules(gradProgram, gradSpecialProgram, accessToken);
         assertNotNull(result);
         LOG.debug(">getSpecialProgramRulesTest");
     }
@@ -178,7 +136,7 @@ public class GradProgramManagementServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradSpecialProgram.class)).thenReturn(Mono.just(entity));
 
-        UUID result = gradProgramManagementService.getSpecialProgramID(gradProgram, gradSpecialProgram, accessToken);
+        UUID result = gradProgramService.getSpecialProgramID(gradProgram, gradSpecialProgram, accessToken);
         assertNotNull(result);
         LOG.debug(">getSpecialProgramRulesTest");
     }

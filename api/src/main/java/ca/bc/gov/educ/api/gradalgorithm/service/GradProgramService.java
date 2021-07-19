@@ -14,26 +14,13 @@ import java.util.UUID;
 import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.PROGRAM_MANAGEMENT_BASE_URL;
 
 @Service
-public class GradProgramManagementService extends GradService {
+public class GradProgramService extends GradService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradProgramManagementService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GradProgramService.class);
 
     @Autowired
     private WebClient webClient;
 
-    GradLetterGrades getAllLetterGrades(String accessToken) {
-        start();
-        GradLetterGrades result = webClient.get()
-                .uri(PROGRAM_MANAGEMENT_BASE_URL + "/lettergrade")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(GradLetterGrades.class)
-                .block();
-        end();
-
-        logger.info("**** # of Letter Grades: " + (result != null ? result.getGradLetterGradeList().size() : 0));
-        return result;
-    }
 
     List<GradProgramRule> getProgramRules(String programCode, String accessToken) {
         start();
@@ -45,21 +32,6 @@ public class GradProgramManagementService extends GradService {
                 .block();
         end();
         logger.info("**** # of Program Rules: " + (result != null ? result.size() : 0));
-
-        return result;
-    }
-
-    List<GradSpecialCase> getAllSpecialCases(String accessToken) {
-        start();
-        List<GradSpecialCase> result = webClient.get()
-                .uri(PROGRAM_MANAGEMENT_BASE_URL + "/specialcase")
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<GradSpecialCase>>(){})
-                .block();
-        end();
-
-        logger.info("**** # of Special Cases: " + (result != null ? result.size() : 0));
 
         return result;
     }

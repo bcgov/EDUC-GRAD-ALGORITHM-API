@@ -38,6 +38,9 @@ public class GradAlgorithmAPIConstants {
     public static String GRAD_CODE_GRAD_MESSAGES_PROGRAM_CODE_URL;
     public static String GRAD_GET_ASSESSMENT_BASE_URL;
     public static String GRAD_GET_ASSESSMENT_REQUIREMENTS_URL;
+    
+    //new
+    public static String STUDENT_GRADUATION_BASE_URL;
 
     //Attribute Constants
 
@@ -184,6 +187,12 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.assessment-api.assessment-api-requirement-assessments.url}")
     public void setGetAssessmentRequirementsUrl(String getAssessmentRequirementsUrl) {
         GRAD_GET_ASSESSMENT_REQUIREMENTS_URL = getAssessmentRequirementsUrl;
+    }   
+    
+    //new
+    @Value("${endpoint.gradalgorithm-api.grad-student-graduation-api.get_algorithm_data.url}")
+    public void setStudentGraduationBaseUrl(String studentGraduationBaseURL) {
+        STUDENT_GRADUATION_BASE_URL = studentGraduationBaseURL;
     }
 //Application Properties Constants
 

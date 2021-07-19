@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 public class RuleProcessorData {
 
     private GradSearchStudent gradStudent;
-    private List<GradAlgorithmRules> gradAlgorithmRules;
     private List<GradProgramRule> gradProgramRules;
     private List<GradSpecialProgramRule> gradSpecialProgramRulesFrenchImmersion;
     private List<GradSpecialProgramRule> gradSpecialProgramRulesAdvancedPlacement;
@@ -35,8 +34,6 @@ public class RuleProcessorData {
     private List<CourseRestriction> courseRestrictions;
     private List<AssessmentRequirement> assessmentRequirements;
     private List<Assessment> assessmentList;
-    private List<GradLetterGrade> gradLetterGradeList;
-    private List<GradSpecialCase> gradSpecialCaseList;
     private List<GradRequirement> nonGradReasons;
     private List<GradRequirement> requirementsMet;
     private List<GradRequirement> nonGradReasonsSpecialProgramsFrenchImmersion;
@@ -62,5 +59,12 @@ public class RuleProcessorData {
     private SpecialGradAlgorithmGraduationStatus gradSpecialProgramStatus;
     private School school;
     private boolean isProjected;
+    
+    
+    
+    //new
+    private List<LetterGrade> letterGradeList;
+    private List<SpecialCase> specialCaseList;
+    private List<ProgramAlgorithmRule> algorithmRules;
 
 }

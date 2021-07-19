@@ -201,47 +201,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         /** End Get All Assessment Requirements **/
 
         /** Start Get All Grad Letter Grades **/
-
-        GradLetterGrades gradLetterGrades = new GradLetterGrades();
-        List<GradLetterGrade> gradLetterGradeList = ruleProcessorData.getGradLetterGradeList();
-        gradLetterGrades.setGradLetterGradeList(gradLetterGradeList);
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/lettergrade")).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(GradLetterGrades.class)).thenReturn(Mono.just(gradLetterGrades));
-
         /** End Get All Grad Letter Grades **/
 
         /** Start Get All Grad Special Cases **/
-
-        List<GradSpecialCase> gradSpecialCases = ruleProcessorData.getGradSpecialCaseList();
-
-        ParameterizedTypeReference<List<GradSpecialCase>> responseType = new ParameterizedTypeReference<List<GradSpecialCase>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/specialcase")).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(gradSpecialCases));
-
         /** End Get All Grad Special Cases **/
 
-        /** Start Get Grad Algorithm Rules from the DB **/
-
-        List<GradAlgorithmRules> gradAlgorithmRules = ruleProcessorData.getGradAlgorithmRules();
-
-        ParameterizedTypeReference<List<GradAlgorithmRules>> gradAlgorithmRulesResponseType = new ParameterizedTypeReference<List<GradAlgorithmRules>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(getAlgorithmRulesMainGradProgramUrl, programCode))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(gradAlgorithmRulesResponseType)).thenReturn(Mono.just(gradAlgorithmRules));
-
+        /** Start Get Grad Algorithm Rules from the DB **
         /** End Get Grad Algorithm Rules from the DB **/
 
         /** Start Get All course restrictions **/
