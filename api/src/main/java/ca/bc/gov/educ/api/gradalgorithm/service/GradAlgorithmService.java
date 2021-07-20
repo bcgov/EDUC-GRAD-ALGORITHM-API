@@ -4,12 +4,15 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -405,7 +408,8 @@ public class GradAlgorithmService {
 					}else {
 						strBuilder.append(String.format(result.getMainMessage(),gradProgram));
 					}
-					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),gradDate));
+					
+					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDate(),formatGradDate(gradDate)));
 				}else {
 					strBuilder.append(String.format(result.getMainMessage(),gradProgram));
 				}
@@ -416,6 +420,15 @@ public class GradAlgorithmService {
 		}
 		return null;
 	}
+    
+    private String formatGradDate(String gradDate) {
+    	String monthName = null;
+    	LocalDate currentDate = LocalDate.parse(gradDate);
+        Month month = currentDate.getMonth(); 
+        int year = currentDate.getYear(); 
+        monthName = month +" "+ year;
+        return monthName;
+    }
 
     private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
