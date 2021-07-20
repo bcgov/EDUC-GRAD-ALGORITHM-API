@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -431,7 +432,7 @@ public class GradAlgorithmService {
     	LocalDate currentDate = LocalDate.parse(gradDate);
         Month month = currentDate.getMonth(); 
         int year = currentDate.getYear(); 
-        monthName = month +" "+ year;
+        monthName = month.getDisplayName(TextStyle.FULL,Locale.ENGLISH) +" "+ year;
         return monthName;
     }
 
