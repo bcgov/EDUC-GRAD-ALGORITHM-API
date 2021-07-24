@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
@@ -78,6 +79,7 @@ public class GradStudentServiceTests {
     public void getStudentDemographicsTest() {
         LOG.debug("<{}.getStudentDemographicsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "12312123123";
+        String studentID = new UUID(1, 1).toString();
         String accessToken = "accessToken";
 
         List<GradSearchStudent> gradSearchStudents = new ArrayList();
@@ -96,7 +98,7 @@ public class GradStudentServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(gradSearchStudents));
 
-        GradSearchStudent result = gradStudentService.getStudentDemographics(pen, accessToken);
+        GradSearchStudent result = gradStudentService.getStudentDemographics(UUID.fromString(studentID), accessToken);
         assertNotNull(result);
         LOG.debug(">getStudentDemographicsTest");
     }

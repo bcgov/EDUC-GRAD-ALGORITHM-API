@@ -1,7 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStatus;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -78,28 +80,7 @@ public class GradGraduationStatusServiceTests {
         openMocks(this);
     }
 
-    @Test
-    public void getStudentSpecialProgramsTest() {
-        LOG.debug("<{}.getStudentSpecialProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
-        String pen = "1111111111";
-        String accessToken = "accessToken";
-
-        List<GradStudentSpecialProgram> entity = new ArrayList<>();
-
-        ParameterizedTypeReference<List<GradStudentSpecialProgram>> speciaalProgramResponseType = new ParameterizedTypeReference<List<GradStudentSpecialProgram>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(getGraduaationStatusBaseUrl + "/specialprogram/pen/%s", pen))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(speciaalProgramResponseType)).thenReturn(Mono.just(entity));
-
-        List<GradStudentSpecialProgram> result = gradGraduationStatusService.getStudentSpecialPrograms(pen, accessToken);
-        assertNotNull(result);
-        LOG.debug(">getStudentSpecialProgramsTest");
-    }
-
+   
     @Test
     public void getStudentGraduationStatusTest() {
         LOG.debug("<{}.getStudentSpecialProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
@@ -107,7 +88,7 @@ public class GradGraduationStatusServiceTests {
         UUID studentID = UUID.randomUUID();
         String accessToken = "accessToken";
 
-        GradAlgorithmGraduationStatus entity = new GradAlgorithmGraduationStatus();
+        GradAlgorithmGraduationStudentRecord entity = new GradAlgorithmGraduationStudentRecord();
         entity.setPen(pen);
         entity.setStudentID(studentID);
 
@@ -115,9 +96,9 @@ public class GradGraduationStatusServiceTests {
         when(this.requestHeadersUriMock.uri(String.format(getGraduationStatusUrl, studentID.toString()))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(GradAlgorithmGraduationStatus.class)).thenReturn(Mono.just(entity));
+        when(this.responseMock.bodyToMono(GradAlgorithmGraduationStudentRecord.class)).thenReturn(Mono.just(entity));
 
-        GradAlgorithmGraduationStatus result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString(), pen, accessToken);
+        GradAlgorithmGraduationStudentRecord result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString(), accessToken);
         assertNotNull(result);
         LOG.debug(">getStudentSpecialProgramsTest");
     }
@@ -140,7 +121,7 @@ public class GradGraduationStatusServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(specialProgramResponseType)).thenReturn(Mono.just(entity));
 
-        List<GradStudentSpecialProgram> result = gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken);
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken);
         assertNotNull(result);
         LOG.debug(">getStudentSpecialProgramsByIdTest");
     }

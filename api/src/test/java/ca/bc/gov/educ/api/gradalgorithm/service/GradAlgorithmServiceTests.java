@@ -1,8 +1,17 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
-import ca.bc.gov.educ.api.gradalgorithm.dto.*;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,19 +29,24 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
+import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirement;
+import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRequirement;
+import ca.bc.gov.educ.api.gradalgorithm.dto.CourseRequirements;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.School;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import reactor.core.publisher.Mono;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -211,46 +225,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
         /** Start Get All course restrictions **/
 
-        CourseRestrictions courseRestrictions = new CourseRestrictions();
-        List<CourseRestriction> courseRestrictionList = ruleProcessorData.getCourseRestrictions();
-        courseRestrictions.setCourseRestrictions(courseRestrictionList);
-
-        when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
-        when(this.requestBodyUriMock.uri(getCourseRestrictionUrl + "/course-list")).thenReturn(this.requestBodyUriMock);
-        when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
-        when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
-        when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(CourseRestrictions.class)).thenReturn(Mono.just(courseRestrictions));
-
         /** End Get All course restrictions **/
 
         /** Start Get all Grad Program Rules **/
 
-        List<GradProgramRule> gradProgramRules = ruleProcessorData.getGradProgramRules();
-
-        ParameterizedTypeReference<List<GradProgramRule>> gradProgramRulesResponseType = new ParameterizedTypeReference<List<GradProgramRule>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/programrules?programCode=" + programCode)).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(gradProgramRulesResponseType)).thenReturn(Mono.just(gradProgramRules));
-
         /** End Get all Grad Program Rules **/
 
         /** Start Get all Assessments **/
-        List<Assessment> assessmentList = ruleProcessorData.getAssessmentList();
-
-        ParameterizedTypeReference<List<Assessment>> speciaalProgramResponseType = new ParameterizedTypeReference<List<Assessment>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(getAssessmentBaseUrl)).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(speciaalProgramResponseType)).thenReturn(Mono.just(assessmentList));
 
         /** End Get all Assessments **/
 
@@ -284,17 +265,6 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
         /** Start Get special Grad Program Rules **/
 
-        List<GradSpecialProgramRule> gradSpecialProgramRules = new ArrayList<>();
-
-        ParameterizedTypeReference<List<GradSpecialProgramRule>> gradSpecialProgramRulesResponseType = new ParameterizedTypeReference<List<GradSpecialProgramRule>>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(programManagementBaseUrl + "/specialprogramrules/" + programCode + "/" + gradSpecialProgram.getSpecialProgramCode())).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(gradSpecialProgramRulesResponseType)).thenReturn(Mono.just(gradSpecialProgramRules));
-
         /** End Get special Grad Program Rules **/
 
         /** Start Process Grad Algorithm Rules ***/
@@ -311,13 +281,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
         /** Start gget Student Graduation Status **/
 
-        GradAlgorithmGraduationStatus gradAlgorithmGraduationStatus = ruleProcessorData.getGradStatus();
+        GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = ruleProcessorData.getGradStatus();
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(getGraduationStatusUrl, studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(GradAlgorithmGraduationStatus.class)).thenReturn(Mono.just(gradAlgorithmGraduationStatus));
+        when(this.responseMock.bodyToMono(GradAlgorithmGraduationStudentRecord.class)).thenReturn(Mono.just(gradAlgorithmGraduationStatus));
 
         /** End gget Student Graduation Status **/
 
@@ -333,21 +303,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
         /** End get School**/
 
-        String messageType = "NOT_GRADUATED";
-
-        GradMessaging gradMessaging = new GradMessaging();
-        gradMessaging.setProgramCode(programCode);
-        gradMessaging.setGradDate("202006");
-        gradMessaging.setMainMessage("This is graduation message");
-        gradMessaging.setMessageType(messageType);
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(getCodeGradMessagesProgramCodeUrl, programCode, messageType))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(GradMessaging.class)).thenReturn(Mono.just(gradMessaging));
-
-        GraduationData gradData = gradAlgorithmService.graduateStudent(pen, programCode, false, accessToken);
+        GraduationData gradData = gradAlgorithmService.graduateStudent(UUID.fromString(studentID), programCode, false, accessToken);
         assertNotNull(gradData);
         LOG.debug(">graduateStudentTest");
     }

@@ -1,17 +1,17 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.*;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-import java.util.UUID;
-
-import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.PROGRAM_MANAGEMENT_BASE_URL;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.OptionalProgram;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradProgramService extends GradService {
@@ -21,47 +21,38 @@ public class GradProgramService extends GradService {
     @Autowired
     private WebClient webClient;
 
+    @Autowired
+    private GradAlgorithmAPIConstants constants;
 
-    List<GradProgramRule> getProgramRules(String programCode, String accessToken) {
-        start();
-        List<GradProgramRule> result = webClient.get()
-                .uri(PROGRAM_MANAGEMENT_BASE_URL + "/programrules?programCode=" + programCode)
+    
+    GradProgramAlgorithmData getProgramDataForAlgorithm(String programCode,String optionalProgramCode,String accessToken) {
+    	start();
+    	String url = constants.getProgramData() + "programCode=%s";
+    	if(StringUtils.isNotBlank(optionalProgramCode)) {
+    		url = url + "&optionalProgramCode=%s";
+    	}
+    	
+    	GradProgramAlgorithmData result = webClient.get()
+                .uri(String.format(url,programCode,optionalProgramCode))
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<GradProgramRule>>(){})
+                .bodyToMono(GradProgramAlgorithmData.class)
                 .block();
         end();
-        logger.info("**** # of Program Rules: " + (result != null ? result.size() : 0));
-
-        return result;
-    }
-
-    List<GradSpecialProgramRule> getSpecialProgramRules(
-            String gradProgram, String gradSpecialProgram, String accessToken) {
-        start();
-        List<GradSpecialProgramRule> result = webClient.get()
-                .uri(PROGRAM_MANAGEMENT_BASE_URL + "/specialprogramrules/" + gradProgram + "/" + gradSpecialProgram)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<GradSpecialProgramRule>>(){})
-                .block();
-        end();
-
-        if(result != null)
-            logger.info("**** # of Special Program Rules: " + result.size());
-
+        logger.info("**** # of Program Rules: " + (result != null ? result.getProgramRules().size() : 0));
+        logger.info("**** # of Special Program Rules: " + (result != null ? result.getOptionalProgramRules().size() : 0));
         return result;
     }
 
     UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram, String accessToken) {
         start();
-        GradSpecialProgram result = webClient.get()
-                .uri(PROGRAM_MANAGEMENT_BASE_URL + "/specialprograms/" + gradProgram + "/" + gradSpecialProgram)
+        OptionalProgram result = webClient.get()
+                .uri(String.format(constants.getOptionalProgram(), gradProgram,gradSpecialProgram))
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
-                .bodyToMono(GradSpecialProgram.class)
+                .bodyToMono(OptionalProgram.class)
                 .block();
         end();
-        return result != null ? result.getId() : null;
+        return result != null ? result.getOptionalProgramID() : null;
     }
 }

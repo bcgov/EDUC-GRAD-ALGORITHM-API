@@ -17,6 +17,9 @@ public class GradRuleProcessorService extends GradService {
 
     @Autowired
     private WebClient webClient;
+    
+    @Autowired
+    private GradAlgorithmAPIConstants constants;
 
     RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData, String accessToken) {
         logger.info("**** Processing Grad Algorithm Rules");
@@ -24,8 +27,7 @@ public class GradRuleProcessorService extends GradService {
         start();
 
         RuleProcessorData result = webClient.post()
-                .uri(GradAlgorithmAPIConstants.RULE_ENGINE_API_BASE_URL + "/"
-                        + GradAlgorithmAPIConstants.RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES)
+                .uri(constants.getRuleEngineBaseURL() + "/" + constants.getRunRules())
                 .headers(h -> h.setBearerAuth(accessToken))
                 .body(BodyInserters.fromValue(ruleProcessorData))
                 .retrieve()

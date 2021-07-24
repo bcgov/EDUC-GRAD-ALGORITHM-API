@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 public class RuleProcessorData {
 
     private GradSearchStudent gradStudent;
-    private List<GradProgramRule> gradProgramRules;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesFrenchImmersion;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesAdvancedPlacement;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBD;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBC;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesCareerProgram;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesDualDogwood;
+    private List<ProgramRequirement> gradProgramRules;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesFrenchImmersion;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesAdvancedPlacement;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesInternationalBaccalaureateBD;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesInternationalBaccalaureateBC;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesCareerProgram;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesDualDogwood;
     private List<StudentCourse> studentCourses;
     private List<StudentCourse> studentCoursesForFrenchImmersion;
     private List<StudentCourse> studentCoursesForCareerProgram;
@@ -55,8 +55,8 @@ public class RuleProcessorData {
     private boolean hasSpecialProgramInternationalBaccalaureateBC;
     private boolean hasSpecialProgramCareerProgram;
     private boolean hasSpecialProgramDualDogwood;
-    private GradAlgorithmGraduationStatus gradStatus;
-    private SpecialGradAlgorithmGraduationStatus gradSpecialProgramStatus;
+    private GradAlgorithmGraduationStudentRecord gradStatus;
+    private GradAlgorithmOptionalStudentProgram gradSpecialProgramStatus;
     private School school;
     private boolean isProjected;
     
