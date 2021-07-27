@@ -170,8 +170,10 @@ public class GradAlgorithmService {
         String existingProgramCompletionDate = gradStatus.getProgramCompletionDate();
         List<GradRequirement> existingNonGradReasons = null;
         try {
-			GraduationData existingData = new ObjectMapper().readValue(gradStatus.getStudentGradData(), GraduationData.class);
-			existingNonGradReasons = existingData.getNonGradReasons();
+			if(gradStatus.getStudentGradData() != null) {
+				GraduationData existingData = new ObjectMapper().readValue(gradStatus.getStudentGradData(), GraduationData.class);
+				existingNonGradReasons = existingData.getNonGradReasons();
+			}
 		} catch (JsonProcessingException e) {
 			e.getMessage();
 		}
