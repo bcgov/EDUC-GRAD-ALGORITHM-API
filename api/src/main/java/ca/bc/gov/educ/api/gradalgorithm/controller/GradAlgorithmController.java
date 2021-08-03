@@ -1,5 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.controller;
 
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +37,14 @@ public class GradAlgorithmController {
 
     @GetMapping("/graduatestudent")
     @PreAuthorize("#oauth2.hasScope('RUN_GRAD_ALGORITHM')")
-    public GraduationData graduateStudent(@RequestParam(name = "pen") String pen,
+    public GraduationData graduateStudent(@RequestParam(name = "studentID") String studentID,
                                           @RequestParam(name = "gradProgram") String gradProgram,
                                           @RequestParam(required = false) boolean projected) {
         logger.debug("**** GRAD ALGORITHM Started ****");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
         String accessToken = details.getTokenValue();
-        return gradAlgorithmService.graduateStudent(pen, gradProgram, projected, accessToken);
+        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, accessToken);
     }
 
 }
