@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -48,7 +49,7 @@ public class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
         assertNotNull(ruleProcessorData);
         assertNotNull(ruleProcessorData.getGradStudent());
 
-        String pen = ruleProcessorData.getGradStudent().getPen();
+        String studentID = ruleProcessorData.getGradStudent().getStudentID();
         String gradProgram = ruleProcessorData.getGradStudent().getProgram();
 
         GraduationData entity = new GraduationData();
@@ -64,9 +65,9 @@ public class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
         Mockito.when(authentication.getDetails()).thenReturn(details);
         SecurityContextHolder.setContext(securityContext);
 
-        Mockito.when(gradAlgorithmService.graduateStudent(pen, gradProgram, false, null)).thenReturn(entity);
-        gradAlgorithmController.graduateStudent(pen, gradProgram, false);
-        Mockito.verify(gradAlgorithmService).graduateStudent(pen, gradProgram, false, null);
+        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, null)).thenReturn(entity);
+        gradAlgorithmController.graduateStudent(studentID, gradProgram, false);
+        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, null);
 
         LOG.debug(">graduateStudentTest");
     }

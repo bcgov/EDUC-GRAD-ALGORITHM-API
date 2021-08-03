@@ -1,34 +1,20 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
-import lombok.Data;
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.UUID;
+import lombok.Data;
 
 @Data
 @Component
 public class CourseRequirement {
 
-    private UUID courseRequirementId;
-    private String courseCode;
+	private UUID courseRequirementId;
+	private String courseCode;
     private String courseLevel;
-    private String ruleCode;
-    private boolean reqMet;
-    private String createdBy;
-    private Date createdTimestamp;
-    private String updatedBy;
-    private Date updatedTimestamp;
-
-    @Override
-    public String toString() {
-        return "\nCourseRequirement {" +
-                "courseRequirementId='" + courseRequirementId + '\'' +
-                ", courseCode='" + courseCode + '\'' +
-                ", courseLevel='" + courseLevel + '\'' +
-                ", ruleCode=" + ruleCode +
-                "}";
-    }
+    private CourseRequirementCode ruleCode;
+    private String courseName;
 
     public String getCourseCode() {
         if (courseCode != null)
@@ -40,5 +26,9 @@ public class CourseRequirement {
         if (courseLevel != null)
             courseLevel = courseLevel.trim();
         return courseLevel;
+    }
+    
+    public String getCourseName() {
+    	return courseName != null ? courseName.trim():null;
     }
 }

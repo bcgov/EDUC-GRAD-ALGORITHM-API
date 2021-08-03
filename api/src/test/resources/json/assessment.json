@@ -1,0 +1,189 @@
+{
+	"assessmentRequirements": [
+		{
+			"assessmentRequirementId": "b247fbd2-3d5d-fd0e-e053-98e9228e3dbe",
+			"assessmentCode": "NME",
+			"ruleCode": {
+				"assmtRequirementCode": "116",
+				"label": null,
+				"description": "Numeracy 10 Assessment",
+				"effectiveDate": 1624147200000,
+				"expiryDate": 4102358400000
+			}
+		},
+		{
+			"assessmentRequirementId": "b247fbd2-3d61-fd0e-e053-98e9228e3dbe",
+			"assessmentCode": "LTE10",
+			"ruleCode": {
+				"assmtRequirementCode": "115",
+				"label": null,
+				"description": "Literacy 10 Assessment",
+				"effectiveDate": 1624147200000,
+				"expiryDate": 946598400000
+			}
+		},
+		{
+			"assessmentRequirementId": "b247fbd2-3d63-fd0e-e053-98e9228e3dbe",
+			"assessmentCode": "LTE12",
+			"ruleCode": {
+				"assmtRequirementCode": "118",
+				"label": null,
+				"description": "Literacy 12 Assessment",
+				"effectiveDate": 1624147200000,
+				"expiryDate": 946598400000
+			}
+		},
+		{
+			"assessmentRequirementId": "b29a121c-ee49-d1f0-e053-98e9228ef4a6",
+			"assessmentCode": "LTE10",
+			"ruleCode": {
+				"assmtRequirementCode": "403",
+				"label": null,
+				"description": "Literacy 10 Assessment",
+				"effectiveDate": 1624147200000,
+				"expiryDate": 946598400000
+			}
+		},
+		{
+			"assessmentRequirementId": "b29a121c-ee4a-d1f0-e053-98e9228ef4a6",
+			"assessmentCode": "LTE12",
+			"ruleCode": {
+				"assmtRequirementCode": "404",
+				"label": null,
+				"description": "Literacy 12 Assessment",
+				"effectiveDate": 1624147200000,
+				"expiryDate": 946598400000
+			}
+		}
+	],
+	"assessments": [
+		{
+			"assessmentCode": "LTE10",
+			"assessmentName": "LITERACY ASSESSMENT 10",
+			"language": "E",
+			"startDate": 1567296000000,
+			"endDate": null
+		},
+		{
+			"assessmentCode": "LTE12",
+			"assessmentName": "LITERACY ASSESSMENT 12",
+			"language": "E",
+			"startDate": 1598918400000,
+			"endDate": null
+		},
+		{
+			"assessmentCode": "LTF12",
+			"assessmentName": "EVALUATION DE LITTERATIE 12 - IMMERSION",
+			"language": "F",
+			"startDate": 1598918400000,
+			"endDate": null
+		},
+		{
+			"assessmentCode": "LTP10",
+			"assessmentName": "EVALUATION DE LITTERATIE 10 - PREMIERE",
+			"language": "F",
+			"startDate": 1567296000000,
+			"endDate": null
+		},
+		{
+			"assessmentCode": "LTP12",
+			"assessmentName": "EVALUATION DE LITTERATIE 12 - PREMIERE",
+			"language": "F",
+			"startDate": 1598918400000,
+			"endDate": null
+		},
+		{
+			"assessmentCode": "NME",
+			"assessmentName": "NUMERACY ASSESSMENT",
+			"language": "E",
+			"startDate": 1535760000000,
+			"endDate": 1567296000000
+		},
+		{
+			"assessmentCode": "NME10",
+			"assessmentName": "NUMERACY ASSESSMENT 10",
+			"language": "E",
+			"startDate": 1567296000000,
+			"endDate": null
+		},
+		{
+			"assessmentCode": "NMF",
+			"assessmentName": "EVALUATION DE NUMERATIE",
+			"language": "F",
+			"startDate": 1535760000000,
+			"endDate": 1567296000000
+		},
+		{
+			"assessmentCode": "NMF10",
+			"assessmentName": "EVALUATION DE NUMERATIE 10",
+			"language": "F",
+			"startDate": 1567296000000,
+			"endDate": null
+		}
+	],
+	"studentAssessments": [
+		{
+			"pen": "127951309",
+			"assessmentCode": "LTE10",
+			"assessmentName": "LITERACY ASSESSMENT 10",
+			"sessionDate": "2019/11",
+			"gradReqMet": "",
+			"gradReqMetDetail": "",
+			"specialCase": "E",
+			"exceededWriteFlag": " ",
+			"proficiencyScore": null,
+			"wroteFlag": null,
+			"rawScore": null,
+			"percentComplete": null,
+			"irtScore": null,
+			"equivalentCode": null,
+			"used": false,
+			"projected": false,
+			"failed": false,
+			"notCompleted": false,
+			"duplicate": false
+		},
+		{
+			"pen": "127951309",
+			"assessmentCode": "LTE12",
+			"assessmentName": "LITERACY ASSESSMENT 12",
+			"sessionDate": "2021/06",
+			"gradReqMet": "",
+			"gradReqMetDetail": "",
+			"specialCase": " ",
+			"exceededWriteFlag": " ",
+			"proficiencyScore": 0.0,
+			"wroteFlag": null,
+			"rawScore": null,
+			"percentComplete": null,
+			"irtScore": null,
+			"equivalentCode": null,
+			"used": false,
+			"projected": false,
+			"failed": false,
+			"notCompleted": false,
+			"duplicate": false
+		},
+		{
+			"pen": "127951309",
+			"assessmentCode": "NME",
+			"assessmentName": "NUMERACY ASSESSMENT",
+			"sessionDate": "2019/06",
+			"gradReqMet": "",
+			"gradReqMetDetail": "",
+			"specialCase": " ",
+			"exceededWriteFlag": " ",
+			"proficiencyScore": 4.0,
+			"wroteFlag": null,
+			"rawScore": null,
+			"percentComplete": null,
+			"irtScore": null,
+			"equivalentCode": null,
+			"used": false,
+			"projected": false,
+			"failed": false,
+			"notCompleted": false,
+			"duplicate": false
+		}
+	]
+}

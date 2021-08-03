@@ -1,6 +1,8 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,9 +43,9 @@ public class GradShoolServiceTests {
 
     @MockBean
     WebClient webClient;
-
-    @Value("${endpoint.school-api.school-by-min-code.url}")
-    private String getSchoolByMincodeUrl;
+    
+    @Autowired
+    private GradAlgorithmAPIConstants constants;
 
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersMock;
@@ -82,7 +84,7 @@ public class GradShoolServiceTests {
         school.setSchoolName("My School");
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(getSchoolByMincodeUrl, mincode))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getSchoolByMincode(), mincode))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(School.class)).thenReturn(Mono.just(school));

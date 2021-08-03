@@ -17,14 +17,13 @@ import lombok.NoArgsConstructor;
 public class RuleProcessorData {
 
     private GradSearchStudent gradStudent;
-    private List<GradAlgorithmRules> gradAlgorithmRules;
-    private List<GradProgramRule> gradProgramRules;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesFrenchImmersion;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesAdvancedPlacement;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBD;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesInternationalBaccalaureateBC;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesCareerProgram;
-    private List<GradSpecialProgramRule> gradSpecialProgramRulesDualDogwood;
+    private List<ProgramRequirement> gradProgramRules;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesFrenchImmersion;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesAdvancedPlacement;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesInternationalBaccalaureateBD;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesInternationalBaccalaureateBC;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesCareerProgram;
+    private List<OptionalProgramRequirement> gradSpecialProgramRulesDualDogwood;
     private List<StudentCourse> studentCourses;
     private List<StudentCourse> studentCoursesForFrenchImmersion;
     private List<StudentCourse> studentCoursesForCareerProgram;
@@ -35,8 +34,6 @@ public class RuleProcessorData {
     private List<CourseRestriction> courseRestrictions;
     private List<AssessmentRequirement> assessmentRequirements;
     private List<Assessment> assessmentList;
-    private List<GradLetterGrade> gradLetterGradeList;
-    private List<GradSpecialCase> gradSpecialCaseList;
     private List<GradRequirement> nonGradReasons;
     private List<GradRequirement> requirementsMet;
     private List<GradRequirement> nonGradReasonsSpecialProgramsFrenchImmersion;
@@ -58,9 +55,16 @@ public class RuleProcessorData {
     private boolean hasSpecialProgramInternationalBaccalaureateBC;
     private boolean hasSpecialProgramCareerProgram;
     private boolean hasSpecialProgramDualDogwood;
-    private GradAlgorithmGraduationStatus gradStatus;
-    private SpecialGradAlgorithmGraduationStatus gradSpecialProgramStatus;
+    private GradAlgorithmGraduationStudentRecord gradStatus;
+    private GradAlgorithmOptionalStudentProgram gradSpecialProgramStatus;
     private School school;
     private boolean isProjected;
+    
+    
+    
+    //new
+    private List<LetterGrade> letterGradeList;
+    private List<SpecialCase> specialCaseList;
+    private List<ProgramAlgorithmRule> algorithmRules;
 
 }
