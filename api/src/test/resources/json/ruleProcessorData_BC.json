@@ -3430,7 +3430,7 @@
 	"hasSpecialProgramFrenchImmersion": false,
 	"hasSpecialProgramAdvancedPlacement": false,
 	"hasSpecialProgramInternationalBaccalaureateBD": false,
-	"hasSpecialProgramInternationalBaccalaureateBC": false,
+	"hasSpecialProgramInternationalBaccalaureateBC": true,
 	"hasSpecialProgramCareerProgram": false,
 	"hasSpecialProgramDualDogwood": false,
 	"gradStatus": null,

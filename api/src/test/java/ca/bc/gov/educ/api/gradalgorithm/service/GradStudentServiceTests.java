@@ -1,6 +1,8 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -46,8 +48,8 @@ public class GradStudentServiceTests {
     @MockBean
     WebClient webClient;
 
-    @Value("${endpoint.grad-student-api.get-student-by-pen.url}")
-    private String getStudentByPenUrl;
+    @Autowired
+    private GradAlgorithmAPIConstants constants;
 
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersMock;
@@ -82,21 +84,19 @@ public class GradStudentServiceTests {
         String studentID = new UUID(1, 1).toString();
         String accessToken = "accessToken";
 
-        List<GradSearchStudent> gradSearchStudents = new ArrayList();
         GradSearchStudent gradSearchStudentResponse = new GradSearchStudent();
         gradSearchStudentResponse.setPen(pen);
         gradSearchStudentResponse.setLegalFirstName("JOHN");
         gradSearchStudentResponse.setLegalLastName("SILVER");
-        gradSearchStudents.add(gradSearchStudentResponse);
 
         ParameterizedTypeReference<List<GradSearchStudent>> responseType = new ParameterizedTypeReference<List<GradSearchStudent>>() {
         };
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(getStudentByPenUrl + "/" + pen)).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getStudentDemographics(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(responseType)).thenReturn(Mono.just(gradSearchStudents));
+        when(this.responseMock.bodyToMono(GradSearchStudent.class)).thenReturn(Mono.just(gradSearchStudentResponse));
 
         GradSearchStudent result = gradStudentService.getStudentDemographics(UUID.fromString(studentID), accessToken);
         assertNotNull(result);

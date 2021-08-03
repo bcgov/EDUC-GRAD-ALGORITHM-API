@@ -3429,7 +3429,7 @@
 	"requirementsMetSpecialProgramsDualDogwood": null,
 	"hasSpecialProgramFrenchImmersion": false,
 	"hasSpecialProgramAdvancedPlacement": false,
-	"hasSpecialProgramInternationalBaccalaureateBD": false,
+	"hasSpecialProgramInternationalBaccalaureateBD": true,
 	"hasSpecialProgramInternationalBaccalaureateBC": false,
 	"hasSpecialProgramCareerProgram": false,
 	"hasSpecialProgramDualDogwood": false,

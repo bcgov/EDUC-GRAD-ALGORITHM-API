@@ -1,0 +1,436 @@
+{
+	"programRules": [
+		{
+			"programRequirementID": "c722e6e1-96da-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "100",
+				"label": "16 Gr 12 credits",
+				"description": "Students must complete a minimum of 16 credits at the Grade 12 level ",
+				"requirementTypeCode": {
+					"reqTypeCode": "MC",
+					"label": "Min Credits",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "16",
+				"notMetDesc": "Fewer than 16 Gr 12 credits",
+				"requiredLevel": "12",
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96db-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "101",
+				"label": "Language Arts 10",
+				"description": "Credits must be earned in the Language Arts 10 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Language Arts 10",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96dc-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "102",
+				"label": "Language Arts 11",
+				"description": "Credits must be earned in the Language Arts 11 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Language Arts 11",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96dd-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "103",
+				"label": "Language Arts 12",
+				"description": "Credits must be earned in the Language Arts 12 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Language Arts 12",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96de-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "104",
+				"label": "Social Studies 10",
+				"description": "Credits must be earned in the Social Studies 10 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Social Studies 10",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96df-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "105",
+				"label": "Social Studies 11 or 12",
+				"description": "Credits must be earned in the Social Studies 11 or 12 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Social Studies 11 or 12",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e0-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "106",
+				"label": "Mathematics 10",
+				"description": "Credits must be earned in the Mathematics 10 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Mathematics 10",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e1-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "107",
+				"label": "Mathematics 11 or 12",
+				"description": "Credits must be earned in the Mathematics 11 or 12 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Mathematics 11 or 12",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e2-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "108",
+				"label": "Science 10",
+				"description": "Credits must be earned in the Science 10 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Science 10",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e3-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "109",
+				"label": "Science 11 or 12",
+				"description": "Credits must be earned in the Science 11 or 12 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Science 11 or 12",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e4-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "110",
+				"label": "Physical and Health Education 10",
+				"description": "Credits must be earned in the Physical and Health Education 10 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Physical and Health Education 10",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e5-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "111",
+				"label": "Arts Education/ADST credits",
+				"description": "Credits must be earned in the  Arts Education and/or an Applied Design, Skills, and Technologies 10, 11, or 12 subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "Fewer than 4 Arts Education/Applied Design, Skills, and Technologies",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e6-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "112",
+				"label": "Career Life Education",
+				"description": "Credits must be earned in the Career Life Education subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Career Life Education",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e7-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "113",
+				"label": "Career Life Connections",
+				"description": "Credits must be earned in the Career Life Connections subject area",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "4",
+				"notMetDesc": "No Career Life Connections",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e8-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "115",
+				"label": "Literacy 10 Assessment",
+				"description": "Students must write a Grade 10 Literacy Assessment in order to graduate",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "0",
+				"notMetDesc": "No Literacy 10 Assessment",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "A",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96e9-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "116",
+				"label": "Numeracy 10 Assessment",
+				"description": "Students must write a Grade 10 Numeracy Assessments in order to graduate",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "0",
+				"notMetDesc": "No Numeracy 10 Assessment",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "A",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96ea-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "117",
+				"label": "28 Elective credits",
+				"description": "Students must complete a minimum of 28 elective credits",
+				"requirementTypeCode": {
+					"reqTypeCode": "MCE",
+					"label": "Min Credits Elective",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "28",
+				"notMetDesc": "Fewer than 28 Elective credits",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "Y",
+				"requirementCategory": "C",
+				"passed": false
+			}
+		},
+		{
+			"programRequirementID": "c722e6e1-96eb-63a3-e053-98e9228e6e46",
+			"graduationProgramCode": "2018-EN",
+			"programRequirementCode": {
+				"proReqCode": "118",
+				"label": "Literacy 12 Assessment",
+				"description": "Students must write a Grade 12 Literacy Assessments in order to graduate",
+				"requirementTypeCode": {
+					"reqTypeCode": "M",
+					"label": "Match",
+					"displayOrder": 0,
+					"description": null,
+					"effectiveDate": 1623654000000,
+					"expiryDate": 946627200000
+				},
+				"requiredCredits": "0",
+				"notMetDesc": "No Literacy 12 Assessment",
+				"requiredLevel": null,
+				"languageOfInstruction": null,
+				"activeRequirement": "N",
+				"requirementCategory": "A",
+				"passed": false
+			}
+		}
+	]
+}

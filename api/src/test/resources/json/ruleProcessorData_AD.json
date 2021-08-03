@@ -3428,7 +3428,7 @@
 	"nonGradReasonsSpecialProgramsDualDogwood": null,
 	"requirementsMetSpecialProgramsDualDogwood": null,
 	"hasSpecialProgramFrenchImmersion": false,
-	"hasSpecialProgramAdvancedPlacement": false,
+	"hasSpecialProgramAdvancedPlacement": true,
 	"hasSpecialProgramInternationalBaccalaureateBD": false,
 	"hasSpecialProgramInternationalBaccalaureateBC": false,
 	"hasSpecialProgramCareerProgram": false,

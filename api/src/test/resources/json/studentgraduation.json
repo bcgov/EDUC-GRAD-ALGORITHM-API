@@ -1,0 +1,352 @@
+{
+	"letterGrade": [
+		{
+			"grade": "A",
+			"gpaMarkValue": "4",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "B",
+			"gpaMarkValue": "3",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "C+",
+			"gpaMarkValue": "2.5",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "C",
+			"gpaMarkValue": "2",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "C-",
+			"gpaMarkValue": "1",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "RM",
+			"gpaMarkValue": "0",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "F",
+			"gpaMarkValue": "0",
+			"passFlag": "N"
+		},
+		{
+			"grade": "NM",
+			"gpaMarkValue": "0",
+			"passFlag": "N"
+		},
+		{
+			"grade": "WR",
+			"gpaMarkValue": "0",
+			"passFlag": "N"
+		},
+		{
+			"grade": "SG",
+			"gpaMarkValue": "0",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "TS",
+			"gpaMarkValue": "0",
+			"passFlag": "Y"
+		},
+		{
+			"grade": "I",
+			"gpaMarkValue": "0",
+			"passFlag": "N"
+		},
+		{
+			"grade": "P",
+			"gpaMarkValue": "1",
+			"passFlag": "Y"
+		}
+	],
+	"specialCase": [
+		{
+			"spCase": "X",
+			"label": null,
+			"displayOrder": 0,
+			"description": "Not Completed",
+			"passFlag": "N",
+			"effectiveDate": 1623456000000,
+			"expiryDate": 4102358400000
+		},
+		{
+			"spCase": "Q",
+			"label": null,
+			"displayOrder": 0,
+			"description": "Disqualified",
+			"passFlag": "N",
+			"effectiveDate": 1623456000000,
+			"expiryDate": 946598400000
+		},
+		{
+			"spCase": "M",
+			"label": null,
+			"displayOrder": 0,
+			"description": "Met",
+			"passFlag": "Y",
+			"effectiveDate": 1623456000000,
+			"expiryDate": 946598400000
+		},
+		{
+			"spCase": "E",
+			"label": null,
+			"displayOrder": 0,
+			"description": "Exempt",
+			"passFlag": "Y",
+			"effectiveDate": 1623456000000,
+			"expiryDate": 946598400000
+		},
+		{
+			"spCase": "A",
+			"label": null,
+			"displayOrder": 0,
+			"description": "Aegrotat",
+			"passFlag": "Y",
+			"effectiveDate": 1623456000000,
+			"expiryDate": 946598400000
+		}
+	],
+	"programAlgorithmRules": [
+		{
+			"programAlgoRuleID": "c70b587f-af3b-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 10,
+			"algorithmRuleCode": {
+				"algoRuleCode": "INCOMPLETE_CRSE_RULE",
+				"ruleImplementation": "IncompleteCoursesRule",
+				"label": "Rule for Incomplete Courses",
+				"description": "The student achievement record session date is earlier than a month ago and the achievement was not written or given a special case",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af3c-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 11,
+			"algorithmRuleCode": {
+				"algoRuleCode": "INCOMPLETE_ASSMT_RULE",
+				"ruleImplementation": "IncompleteAssessmentsRule",
+				"label": "Rule for Incomplete Assessments",
+				"description": "The student achievement record session date is earlier than a month ago and the achievement was not written or given a special case",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af3d-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 20,
+			"algorithmRuleCode": {
+				"algoRuleCode": "CRSE_REGISTRATION_RULE",
+				"ruleImplementation": "RegistrationsRule",
+				"label": "Registrations",
+				"description": "The student achievement record session date is from a month ago or later and the achievement was not written or given a special case",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af3e-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 21,
+			"algorithmRuleCode": {
+				"algoRuleCode": "ASSMT_REGISTRATION_RULE",
+				"ruleImplementation": "AssessmentRegistrationsRule",
+				"label": "Assessment Registrations",
+				"description": "The student achievement record session date is from a month ago or later and the achievement was not written or given a special case",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af3f-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 30,
+			"algorithmRuleCode": {
+				"algoRuleCode": "FAILED_CRSE_RULE",
+				"ruleImplementation": "FailedCoursesRule",
+				"label": "Failed",
+				"description": "Based on letter grade table or special case table showing which letter grades or special case are deemed a pass vs fail",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af40-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 31,
+			"algorithmRuleCode": {
+				"algoRuleCode": "FAILED_ASSMT_RULE",
+				"ruleImplementation": "FailedAssessmentsRule",
+				"label": "Failed Assessments",
+				"description": "Based on letter grade table or special case table showing which letter grades or special case are deemed a pass vs fail",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af41-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 40,
+			"algorithmRuleCode": {
+				"algoRuleCode": "DUPLICATE_CRSE_RULE",
+				"ruleImplementation": "DuplicateCoursesRule",
+				"label": "Duplicate",
+				"description": "If duplicate course code and course level the course with the highest number of credits, highest final %, earliest session date is used",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af42-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 41,
+			"algorithmRuleCode": {
+				"algoRuleCode": "DUPLICATE_ASSMT_RULE",
+				"ruleImplementation": "DuplicateAssessmentsRule",
+				"label": "Duplicate Assessments",
+				"description": "If duplicate assessment code and the assessment with the highest proficiency score, highest special case,earliest ssion date is used",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af43-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 50,
+			"algorithmRuleCode": {
+				"algoRuleCode": "CP_CRSE_RULE",
+				"ruleImplementation": "CPCoursesRule",
+				"label": "CPCourses",
+				"description": "Career Preparation (“CP”) courses are not eligible for 2018 program even though they are reported on the transcript ",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af44-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 60,
+			"algorithmRuleCode": {
+				"algoRuleCode": "LD_CRSE_RULE",
+				"ruleImplementation": "LDCoursesRule",
+				"label": "LDCourses",
+				"description": "Locally Developed (LD – “X”) courses are not eligible for 2018 program even though they are reported on the transcript",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af45-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 70,
+			"algorithmRuleCode": {
+				"algoRuleCode": "RESTRICTED_CRSE_RULE",
+				"ruleImplementation": "RestrictedCoursesRule",
+				"label": "RestrictedCourses",
+				"description": "If course is restricted against another course the course with the highest number of credits, highest final %, earliest session date is used ",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af46-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 80,
+			"algorithmRuleCode": {
+				"algoRuleCode": "MIN_CREDITS_RULE",
+				"ruleImplementation": "MinCreditsRule",
+				"label": "MinCredits",
+				"description": "Student requires a minimum of 16 grade 12 level credits",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af47-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 90,
+			"algorithmRuleCode": {
+				"algoRuleCode": "MATCH_CREDITS_RULE",
+				"ruleImplementation": "MatchCreditsRule",
+				"label": "MatchCredits",
+				"description": "Student must meet a minimum of 4-credits from each of the specified non-elective subject areas",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af48-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 91,
+			"algorithmRuleCode": {
+				"algoRuleCode": "ASSMT_MATCH_CREDITS_RULE",
+				"ruleImplementation": "AssessmentsMatchCreditsRule",
+				"label": "AssessmentsMatchCredits",
+				"description": "Student must meet a minimum of 4-credits from each of the specified non-elective subject areas",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af49-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 100,
+			"algorithmRuleCode": {
+				"algoRuleCode": "MIN_ELECTIVE_CREDITS_RULE",
+				"ruleImplementation": "MinElectiveCreditsRule",
+				"label": "MinElectiveCredits",
+				"description": "Student must meet a minimum of 28 elective credits",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af4a-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 110,
+			"algorithmRuleCode": {
+				"algoRuleCode": "FI_MATCH_CREDITS_RULE",
+				"ruleImplementation": "FrenchImmersionMatchRule",
+				"label": "FrenchImmersionMatchCredits",
+				"description": "Student must meet a minimum of 4-credits from each of the specified French immersion non-elective subject areas",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af4b-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 120,
+			"algorithmRuleCode": {
+				"algoRuleCode": "FI_MIN_ELECTIVE_CREDITS_RULE",
+				"ruleImplementation": "FrenchImmersionMinElectiveCreditsRule",
+				"label": "FrenchImmersionMinElectiveCredit",
+				"description": "Student must meet a minimum of 12 elective credits from courses taught in French – 4 credits at the grade 11 or 12 level",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		},
+		{
+			"programAlgoRuleID": "c70b587f-af4c-d11b-e053-9ae9228eda21",
+			"graduationProgramCode": "2018-EN",
+			"sortOrder": 130,
+			"algorithmRuleCode": {
+				"algoRuleCode": "CP_MATCH_CREDITS_RULE",
+				"ruleImplementation": "CareerProgramMatchRule",
+				"label": "CareerProgramMatchCredits",
+				"description": "Student must have a course that meets a minimum of 3 credits that is considered a work experience course",
+				"displayOrder": 0,
+				"isActiveRule": "Y"
+			}
+		}
+	]
+}
