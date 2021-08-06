@@ -13,6 +13,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
@@ -51,6 +52,14 @@ public class EducGradAlgorithmTestBase {
 		String json = readInputStream(inputStream);
 		return (AssessmentAlgorithmData)jsonTransformer.unmarshall(json, AssessmentAlgorithmData.class);
 	}
+	
+	protected GradStudentAlgorithmData createGradStudentAlgorithmData(String jsonPath) throws Exception {
+		ClassLoader classLoader = getClass().getClassLoader();
+		InputStream inputStream = classLoader.getResourceAsStream(jsonPath);
+		String json = readInputStream(inputStream);
+		return (GradStudentAlgorithmData)jsonTransformer.unmarshall(json, GradStudentAlgorithmData.class);
+	}
+	
 	
 	protected GradProgramAlgorithmData createProgramAlgorithmData(String jsonPath) throws Exception {
 		ClassLoader classLoader = getClass().getClassLoader();

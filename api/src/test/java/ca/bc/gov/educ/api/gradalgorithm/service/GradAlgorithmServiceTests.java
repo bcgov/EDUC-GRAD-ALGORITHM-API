@@ -42,6 +42,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSpecialProgram;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.OptionalProgramRequirement;
@@ -123,16 +124,15 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-EN";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
-    	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus.json");
     	School school = createSchoolData("json/school.json");
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -143,13 +143,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
-    	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
+        Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "", accessToken)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken)).thenReturn(ruleProcessorDatas);
-		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradAlgorithmGraduationStatus);
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken)).thenReturn(school);
 		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
 	    assertNotNull(gradData);
@@ -162,12 +161,11 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-EN";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_FI.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_special_pgm.json");
-    	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus.json");
     	School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradSpecialResponseList = new ArrayList<StudentOptionalProgram>();
@@ -180,7 +178,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	gradSpecialResponseList.add(sp);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -193,13 +191,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
-    	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
+        Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "FI", accessToken)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken)).thenReturn(ruleProcessorDatas);
-		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradAlgorithmGraduationStatus);
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken)).thenReturn(school);
 		
 		Mockito.when(gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken)).thenReturn(gradSpecialResponseList);
@@ -214,12 +211,11 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-EN";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_AD.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
-    	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus.json");
     	School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradSpecialResponseList = new ArrayList<StudentOptionalProgram>();
@@ -232,7 +228,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	gradSpecialResponseList.add(sp);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -245,14 +241,14 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
     	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "AD", accessToken)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken)).thenReturn(ruleProcessorDatas);
-		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradAlgorithmGraduationStatus);
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken)).thenReturn(school);
+		
 		
 		Mockito.when(gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken)).thenReturn(gradSpecialResponseList);
 		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
@@ -266,12 +262,11 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-EN";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_BD.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
-    	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus.json");
     	School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradSpecialResponseList = new ArrayList<StudentOptionalProgram>();
@@ -284,7 +279,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	gradSpecialResponseList.add(sp);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -297,13 +292,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
     	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "BD", accessToken)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken)).thenReturn(ruleProcessorDatas);
-		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradAlgorithmGraduationStatus);
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken)).thenReturn(school);
 		
 		Mockito.when(gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken)).thenReturn(gradSpecialResponseList);
@@ -318,12 +312,11 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-EN";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_BC.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
-    	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus.json");
     	School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradSpecialResponseList = new ArrayList<StudentOptionalProgram>();
@@ -336,7 +329,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	gradSpecialResponseList.add(sp);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -349,13 +342,14 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
+        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradStudentAlgorithmData.getGradStudent());
     	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "BC", accessToken)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken)).thenReturn(ruleProcessorDatas);
-		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradAlgorithmGraduationStatus);
+		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradStudentAlgorithmData.getGraduationStudentRecord());
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken)).thenReturn(school);
 		
 		Mockito.when(gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken)).thenReturn(gradSpecialResponseList);
@@ -370,12 +364,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-EN";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_CP.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+    	
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_special_pgm_cp.json");
-    	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus.json");
     	School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradSpecialResponseList = new ArrayList<StudentOptionalProgram>();
@@ -388,7 +382,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	gradSpecialResponseList.add(sp);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -401,13 +395,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
     	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "CP", accessToken)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken)).thenReturn(ruleProcessorDatas);
-		Mockito.when(gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorDatas.getGradStudent().getStudentID(), accessToken)).thenReturn(gradAlgorithmGraduationStatus);
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken)).thenReturn(school);
 		
 		Mockito.when(gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken)).thenReturn(gradSpecialResponseList);
@@ -422,7 +415,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	String gradProgram = "2018-PF";
     	String accessToken = "accessToken";
     	RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_DD.json");
-    	GradSearchStudent gradSearchStudent = createGradStudentData("json/gradstudent_pf.json");
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecordPF.json");
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
@@ -440,7 +433,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	gradSpecialResponseList.add(sp);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
-    	ruleProcessorData.setGradStudent(gradSearchStudent);
+    	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -453,8 +446,8 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
-        Mockito.when(gradStudentService.getStudentDemographics(studentID, accessToken)).thenReturn(gradSearchStudent);
-    	Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
+        Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken)).thenReturn(gradStudentAlgorithmData);
+        Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken)).thenReturn(assessmentAlgorithmData);
 		Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken)).thenReturn(courseAlgorithmData);
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "DD", accessToken)).thenReturn(programAlgorithmData);

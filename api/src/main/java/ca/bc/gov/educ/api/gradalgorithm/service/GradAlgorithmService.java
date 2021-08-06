@@ -30,6 +30,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmOptionalStudentProgram;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradRequirement;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.LetterGrade;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
@@ -81,8 +82,9 @@ public class GradAlgorithmService {
     public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String accessToken) {
         logger.info("\n************* New Graduation Algorithm START  ************");
         //Get Student Demographics
-        ruleProcessorData = new RuleProcessorData();  
-        ruleProcessorData.setGradStudent(gradStudentService.getStudentDemographics(studentID, accessToken)); 
+        ruleProcessorData = new RuleProcessorData();
+        GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID,accessToken);
+        ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent()); 
         String pen=ruleProcessorData.getGradStudent().getPen();
         logger.info("**** PEN: ****" + pen.substring(5));
         logger.info("**** Grad Program: " + gradProgram);
@@ -166,7 +168,7 @@ public class GradAlgorithmService {
         isGraduated = ruleProcessorData.isGraduated();
         
         //Populate Grad Status Details
-        GradAlgorithmGraduationStudentRecord gradStatus = gradGraduationStatusService.getStudentGraduationStatus(ruleProcessorData.getGradStudent().getStudentID(), accessToken);
+        GradAlgorithmGraduationStudentRecord gradStatus = gradStudentAlgorithmData.getGraduationStudentRecord();
         String existingProgramCompletionDate = gradStatus.getProgramCompletionDate();
         List<GradRequirement> existingNonGradReasons = null;
         try {
