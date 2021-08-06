@@ -72,6 +72,9 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.grad-student-api.get-graduation-status.url}")
     private String graduationStudentRecord;
     
+    @Value("${endpoint.grad-student-api.get-grad-student-algo-data.url}")
+    private String gradStudentAlgorithmData;
+    
 //Application Properties Constants
 
 }
