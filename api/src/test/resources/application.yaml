@@ -35,7 +35,7 @@ logging:
         gov:
           educ:
             api:
-              graduation: INFO
+              gradalgorithm: INFO
     org:
       springframework:
         web: INFO
@@ -81,6 +81,8 @@ endpoint:
       url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/stdid/%s
     get-graduation-status: 
       url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/studentid/%s/algorithm
+    get-grad-student-algo-data: 
+      url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/algorithmdata/%s
     get-graduation-student-record:
       get-optional-programs:
         url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/specialprogram/studentid/%s
