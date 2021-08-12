@@ -179,6 +179,7 @@ public class GradAlgorithmService {
 		} catch (JsonProcessingException e) {
 			e.getMessage();
 		}
+        gradStatus.setStudentGradData(null);
         if(isGraduated) {
 			if (!gradProgram.equalsIgnoreCase("SCCP")) {
 				//This is done for Reports only grad run -Student already graduated no change in graduation date
