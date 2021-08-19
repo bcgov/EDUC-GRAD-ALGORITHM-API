@@ -303,7 +303,7 @@ public class GradAlgorithmService {
 		case "FI":
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
 			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
-			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
+			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessmentsForFrenchImmersion()));
 			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsFrenchImmersion();
 			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsFrenchImmersion();
 			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
