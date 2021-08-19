@@ -30,6 +30,7 @@ public class RuleProcessorData {
     private List<StudentCourse> studentCoursesForDualDogwood;
     private List<StudentAssessment> studentAssessments;
     private List<StudentAssessment> studentAssessmentsForDualDogwood;
+    private List<StudentAssessment> studentAssessmentsForFrenchImmersion;
     private List<CourseRequirement> courseRequirements;
     private List<CourseRestriction> courseRestrictions;
     private List<AssessmentRequirement> assessmentRequirements;
