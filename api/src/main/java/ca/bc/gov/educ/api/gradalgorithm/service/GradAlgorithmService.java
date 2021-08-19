@@ -314,7 +314,7 @@ public class GradAlgorithmService {
 		case "CP":
 			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
 			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
-			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
+			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
 			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
 			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
 			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
@@ -337,6 +337,8 @@ public class GradAlgorithmService {
 		case "BC":
 		case "BD":
 			gradStudentSpecialAlg.setSpecialGraduated(true);
+			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
+			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses());
 			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
 				gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 						ruleProcessorData.getStudentAssessments()));
