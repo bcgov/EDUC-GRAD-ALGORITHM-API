@@ -171,10 +171,12 @@ public class GradAlgorithmService {
         GradAlgorithmGraduationStudentRecord gradStatus = gradStudentAlgorithmData.getGraduationStudentRecord();
         String existingProgramCompletionDate = gradStatus.getProgramCompletionDate();
         List<GradRequirement> existingNonGradReasons = null;
+        String existingGradMessage = null;
         try {
 			if(gradStatus.getStudentGradData() != null) {
 				GraduationData existingData = new ObjectMapper().readValue(gradStatus.getStudentGradData(), GraduationData.class);
 				existingNonGradReasons = existingData.getNonGradReasons();
+				existingGradMessage = existingData.getGradMessage();
 			}
 		} catch (JsonProcessingException e) {
 			e.getMessage();
@@ -263,7 +265,9 @@ public class GradAlgorithmService {
 
         graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
         graduationData.setGraduated(ruleProcessorData.isGraduated());
-        
+        if(graduationData.getGradStatus().getProgramCompletionDate() == null && gradProgram.equalsIgnoreCase("SCCP")) {
+        	graduationData.setGraduated(false);
+        }
         //This is done for Reports only grad run - Student already graduated, no change in grad message
         if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
 	        if(graduationData.isGraduated()) {
@@ -277,6 +281,15 @@ public class GradAlgorithmService {
 	                            graduationData.getGradStatus().getHonoursStanding(), accessToken)
 	            );
 	        }
+        }
+        if(existingProgramCompletionDate != null && gradProgram.equalsIgnoreCase("SCCP")) {
+        	graduationData.setGradMessage(
+        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
+                            graduationData.getGradStatus().getHonoursStanding(), accessToken)
+            );
+        }
+        if(existingGradMessage != null && existingProgramCompletionDate != null) {
+        	graduationData.setGradMessage(existingGradMessage);
         }
 
         logger.info("\n************* Graduation Algorithm END  ************");
