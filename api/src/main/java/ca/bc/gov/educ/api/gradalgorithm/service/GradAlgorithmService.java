@@ -288,7 +288,7 @@ public class GradAlgorithmService {
                             graduationData.getGradStatus().getHonoursStanding(), accessToken)
             );
         }
-        if(existingGradMessage != null && existingProgramCompletionDate != null && !gradProgram.equalsIgnoreCase("SCCP")) {
+        if(existingGradMessage != null && existingProgramCompletionDate != null) {
         	graduationData.setGradMessage(existingGradMessage);
         }
 
