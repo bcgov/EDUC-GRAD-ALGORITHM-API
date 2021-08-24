@@ -140,6 +140,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -186,6 +187,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setGradSpecialProgramRulesFrenchImmersion(programAlgorithmData.getOptionalProgramRules());
         ruleProcessorData.setHasSpecialProgramFrenchImmersion(true);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
@@ -236,6 +238,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setGradSpecialProgramRulesAdvancedPlacement(programAlgorithmData.getOptionalProgramRules());
         ruleProcessorData.setHasSpecialProgramAdvancedPlacement(true);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
@@ -287,6 +290,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBD(programAlgorithmData.getOptionalProgramRules());
         ruleProcessorData.setHasSpecialProgramInternationalBaccalaureateBD(true);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
@@ -337,6 +341,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBC(programAlgorithmData.getOptionalProgramRules());
         ruleProcessorData.setHasSpecialProgramInternationalBaccalaureateBC(true);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
@@ -390,6 +395,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setGradSpecialProgramRulesCareerProgram(programAlgorithmData.getOptionalProgramRules());
         ruleProcessorData.setHasSpecialProgramCareerProgram(true);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
@@ -441,6 +447,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setGradSpecialProgramRulesDualDogwood(programAlgorithmData.getOptionalProgramRules());
         ruleProcessorData.setHasSpecialProgramDualDogwood(true);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
