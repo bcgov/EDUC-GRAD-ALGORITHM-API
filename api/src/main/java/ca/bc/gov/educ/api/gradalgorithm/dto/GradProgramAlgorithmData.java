@@ -9,4 +9,5 @@ public class GradProgramAlgorithmData {
 
 	private List<ProgramRequirement> programRules;
 	private List<OptionalProgramRequirement> optionalProgramRules;
+	private GraduationProgramCode gradProgram;
 }
