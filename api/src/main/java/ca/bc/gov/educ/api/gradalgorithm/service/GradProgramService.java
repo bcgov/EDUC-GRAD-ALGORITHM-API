@@ -39,8 +39,9 @@ public class GradProgramService extends GradService {
                 .bodyToMono(GradProgramAlgorithmData.class)
                 .block();
         end();
-        logger.info("**** # of Program Rules: " + (result != null ? result.getProgramRules() != null ? result.getProgramRules().size() : 0:0));
+        logger.info("**** # of Program Rules		: " + (result != null ? result.getProgramRules() != null ? result.getProgramRules().size() : 0:0));
         logger.info("**** # of Special Program Rules: " + (result != null ? result.getOptionalProgramRules() != null ? result.getOptionalProgramRules().size() : 0:0));
+        logger.info("**** # of Program 				: " + (result != null ? result.getGradProgram() != null ? result.getGradProgram().getProgramName() :"":""));
         return result;
     }
 
