@@ -84,7 +84,9 @@ public class GradAlgorithmService {
         //Get Student Demographics
         ruleProcessorData = new RuleProcessorData();
         GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID,accessToken);
-        ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent()); 
+        ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+        GradAlgorithmGraduationStudentRecord gradStatus = gradStudentAlgorithmData.getGraduationStudentRecord();
+        ruleProcessorData.setGradStatus(gradStatus);
         String pen=ruleProcessorData.getGradStudent().getPen();
         logger.info("**** PEN: ****" + pen.substring(5));
         logger.info("**** Grad Program: " + gradProgram);
@@ -175,7 +177,6 @@ public class GradAlgorithmService {
         isGraduated = ruleProcessorData.isGraduated();
         
         //Populate Grad Status Details
-        GradAlgorithmGraduationStudentRecord gradStatus = gradStudentAlgorithmData.getGraduationStudentRecord();
         String existingProgramCompletionDate = gradStatus.getProgramCompletionDate();
         List<GradRequirement> existingNonGradReasons = null;
         String existingGradMessage = null;
@@ -295,7 +296,7 @@ public class GradAlgorithmService {
                             graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken)
             );
         }
-        if(existingGradMessage != null && existingProgramCompletionDate != null) {
+        if(existingGradMessage != null && existingProgramCompletionDate != null && !gradProgram.equalsIgnoreCase("SCCP")) {
         	graduationData.setGradMessage(existingGradMessage);
         }
 
