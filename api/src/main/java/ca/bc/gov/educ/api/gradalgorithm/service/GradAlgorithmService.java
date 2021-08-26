@@ -205,7 +205,11 @@ public class GradAlgorithmService {
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
 			if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGrad() == null) {
 				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
-	        }  
+	        } 
+			
+			if(existingProgramCompletionDate != null && gradProgram.equalsIgnoreCase("SCCP")) {
+				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+			}
         }
 
         ruleProcessorData.setGradStatus(gradStatus);
