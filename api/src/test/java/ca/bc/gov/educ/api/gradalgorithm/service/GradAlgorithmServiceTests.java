@@ -133,6 +133,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -180,6 +181,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -231,6 +233,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -283,6 +286,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -334,6 +338,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -388,6 +393,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
@@ -440,6 +446,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+    	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
         ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
         ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());  
