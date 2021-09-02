@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
+import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
@@ -22,23 +23,28 @@ public class GradCourseService extends GradService {
     private GradAlgorithmAPIConstants constants;
     
     CourseAlgorithmData getCourseDataForAlgorithm(String pen,String accessToken) {
-    	start();
-    	CourseAlgorithmData result = webClient.get()
-                .uri(String.format(constants.getCourseData(),pen))
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(CourseAlgorithmData.class)
-                .block();
-        end();
-        if(!result.getStudentCourses().isEmpty()) {
-	        for (StudentCourse studentCourse : result.getStudentCourses()) {
-	            studentCourse.setGradReqMet("");
-	            studentCourse.setGradReqMetDetail("");
+	    try 
+	    {
+    		start();
+	    	CourseAlgorithmData result = webClient.get()
+	                .uri(String.format(constants.getCourseData(),pen))
+	                .headers(h -> h.setBearerAuth(accessToken))
+	                .retrieve()
+	                .bodyToMono(CourseAlgorithmData.class)
+	                .block();
+	        end();
+	        if(!result.getStudentCourses().isEmpty()) {
+		        for (StudentCourse studentCourse : result.getStudentCourses()) {
+		            studentCourse.setGradReqMet("");
+		            studentCourse.setGradReqMetDetail("");
+		        }
 	        }
-        }
-        logger.info("**** # of Student Courses: " + (result.getStudentCourses() != null ? result.getStudentCourses().size() : 0));
-        logger.info("**** # of Course Requirements: " + (result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0));
-        logger.info("**** # of Course Restrictions: " + (result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0));
-        return result;
+	        logger.info("**** # of Student Courses: " + (result.getStudentCourses() != null ? result.getStudentCourses().size() : 0));
+	        logger.info("**** # of Course Requirements: " + (result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0));
+	        logger.info("**** # of Course Restrictions: " + (result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0));
+	        return result;
+	    } catch (Exception e) {
+		throw new GradBusinessRuleException("GRAD-COURSE-API IS DOWN");
+	    }
     }
 }

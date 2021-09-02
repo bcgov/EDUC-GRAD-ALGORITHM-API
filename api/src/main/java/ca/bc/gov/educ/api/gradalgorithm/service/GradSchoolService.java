@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
+import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
@@ -22,14 +23,19 @@ public class GradSchoolService extends GradService {
 
     School getSchool(String minCode, String accessToken) {
     	logger.debug("getSchool");
-        start();
-        School schObj = webClient.get()
-                .uri(String.format(constants.getSchoolByMincode(), minCode))
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(School.class)
-                .block();
-        end();
-        return schObj;
+    	try
+    	{
+	        start();
+	        School schObj = webClient.get()
+	                .uri(String.format(constants.getSchoolByMincode(), minCode))
+	                .headers(h -> h.setBearerAuth(accessToken))
+	                .retrieve()
+	                .bodyToMono(School.class)
+	                .block();
+	        end();
+	        return schObj;
+    	} catch (Exception e) {
+			throw new GradBusinessRuleException("GRAD-TRAX-API IS DOWN");
+		}
     }
 }

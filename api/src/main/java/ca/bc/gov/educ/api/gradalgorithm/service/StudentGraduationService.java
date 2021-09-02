@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
+import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
@@ -22,23 +23,29 @@ public class StudentGraduationService extends GradService {
     private GradAlgorithmAPIConstants constants;
 
     StudentGraduationAlgorithmData getAllAlgorithmData(String programCode,String accessToken) {
-        start();
-        StudentGraduationAlgorithmData result = webClient.get()
-                .uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(StudentGraduationAlgorithmData.class)
-                .block();
-        end();
-
-        logger.info("**** # of Letter Grades  : " + (result != null ? result.getLetterGrade().size() : 0));
-        logger.info("**** # of Special Cases  : " + (result != null ? result.getSpecialCase().size() : 0));
-        logger.info("**** # of Algorithm Rules: " + (result != null ? result.getProgramAlgorithmRules().size() : 0));
-        return result;
+        try 
+        {
+	    	start();
+	        StudentGraduationAlgorithmData result = webClient.get()
+	                .uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)
+	                .headers(h -> h.setBearerAuth(accessToken))
+	                .retrieve()
+	                .bodyToMono(StudentGraduationAlgorithmData.class)
+	                .block();
+	        end();
+	
+	        logger.info("**** # of Letter Grades  : " + (result != null ? result.getLetterGrade().size() : 0));
+	        logger.info("**** # of Special Cases  : " + (result != null ? result.getSpecialCase().size() : 0));
+	        logger.info("**** # of Algorithm Rules: " + (result != null ? result.getProgramAlgorithmRules().size() : 0));
+	        return result;
+        } catch (Exception e) {
+			throw new GradBusinessRuleException("GRAD-STUDENT-GRADUATION-API IS DOWN");
+		}
     }
     
     TranscriptMessage getGradMessages(String gradProgram, String msgType, String accessToken) {
-
+    	try
+    	{
         start();
         TranscriptMessage result = webClient.get()
                 .uri(String.format(constants.getGraduationMessage(), gradProgram, msgType))
@@ -49,6 +56,9 @@ public class StudentGraduationService extends GradService {
         end();
 
         return result;
+    	} catch (Exception e) {
+			throw new GradBusinessRuleException("GRAD-STUDENT-GRADUATION-API IS DOWN");
+		}
     }
     
 }
