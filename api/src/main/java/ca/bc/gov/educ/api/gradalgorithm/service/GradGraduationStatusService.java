@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
+import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
@@ -25,7 +26,8 @@ public class GradGraduationStatusService extends GradService {
     private GradAlgorithmAPIConstants constants;
 
     GradAlgorithmGraduationStudentRecord getStudentGraduationStatus(String studentID,String accessToken) {
-        start();
+        
+    	start();
         GradAlgorithmGraduationStudentRecord result = webClient.get()
                 .uri(String.format(constants.getGraduationStudentRecord(),studentID))
                 .headers(h -> h.setBearerAuth(accessToken))
@@ -40,17 +42,21 @@ public class GradGraduationStatusService extends GradService {
     }
 
     List<StudentOptionalProgram> getStudentSpecialProgramsById(String studentID, String accessToken) {
-
-        start();
-        List<StudentOptionalProgram> result = webClient.get()
-                .uri(String.format(constants.getStudentOptionalPrograms(), studentID))
-                .headers(h -> h.setBearerAuth(accessToken))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<StudentOptionalProgram>>(){})
-                .block();
-        end();
-
-        logger.info("**** # of Special Programs: " + (result != null ? result.size() : 0));
-        return result;
+    	try
+    	{
+	        start();
+	        List<StudentOptionalProgram> result = webClient.get()
+	                .uri(String.format(constants.getStudentOptionalPrograms(), studentID))
+	                .headers(h -> h.setBearerAuth(accessToken))
+	                .retrieve()
+	                .bodyToMono(new ParameterizedTypeReference<List<StudentOptionalProgram>>(){})
+	                .block();
+	        end();
+	
+	        logger.info("**** # of Special Programs: " + (result != null ? result.size() : 0));
+	        return result;
+    	} catch (Exception e) {
+			throw new GradBusinessRuleException("GRAD-STUDENT-API IS DOWN");
+		}
     }
 }
