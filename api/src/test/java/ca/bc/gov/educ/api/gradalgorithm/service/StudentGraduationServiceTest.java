@@ -24,6 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import reactor.core.publisher.Mono;
@@ -39,6 +40,9 @@ public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
 
     @Autowired
     StudentGraduationService studentGraduationService;
+    
+    @Autowired
+    private ExceptionMessage exception;
 
     @MockBean
     WebClient webClient;
@@ -85,6 +89,6 @@ public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(StudentGraduationAlgorithmData.class)).thenReturn(Mono.just(studentGraduationAlgorithmData));
         
-        studentGraduationService.getAllAlgorithmData(programCode, accessToken);
+        studentGraduationService.getAllAlgorithmData(programCode, accessToken,exception);
     }
 }

@@ -6,22 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradSchoolService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradSchoolService.class);
-
+    
     @Autowired
     private WebClient webClient;
     
     @Autowired
     private GradAlgorithmAPIConstants constants;
 
-    School getSchool(String minCode, String accessToken) {
+    School getSchool(String minCode, String accessToken,ExceptionMessage exception) {
     	logger.debug("getSchool");
     	try
     	{
@@ -35,7 +35,9 @@ public class GradSchoolService extends GradService {
 	        end();
 	        return schObj;
     	} catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-TRAX-API IS DOWN");
+    		exception.setExceptionName("GRAD-TRAX-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
 		}
     }
 }

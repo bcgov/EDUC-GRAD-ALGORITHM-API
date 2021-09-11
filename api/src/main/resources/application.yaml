@@ -96,14 +96,14 @@ endpoint:
       url: https://educ-grad-student-graduation-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/transcript/gradmessages/pgmCode/%s/msgType/%s
   grad-student-api:
     get-student-by-studentid:
-      url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/stdid/%s
+      url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/stdid/%s
     get-graduation-status: 
-      url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/studentid/%s/algorithm
+      url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/studentid/%s/algorithm
     get-grad-student-algo-data: 
-      url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/algorithmdata/%s
+      url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/algorithmdata/%s
     get-graduation-student-record:
       get-optional-programs:
-        url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/specialprogram/studentid/%s
+        url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/specialprogram/studentid/%s
   rule-engine-api:
     base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
     api-keyword: api

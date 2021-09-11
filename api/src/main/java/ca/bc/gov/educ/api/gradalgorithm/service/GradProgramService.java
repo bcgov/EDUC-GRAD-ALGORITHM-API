@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.OptionalProgram;
 import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
@@ -18,15 +19,17 @@ import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 public class GradProgramService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradProgramService.class);
-
+    
     @Autowired
     private WebClient webClient;
 
     @Autowired
     private GradAlgorithmAPIConstants constants;
+    
+    private static final String EXCEPTION_MESSAGE = "GRAD-PROGRAM-API IS DOWN";
 
     
-    GradProgramAlgorithmData getProgramDataForAlgorithm(String programCode,String optionalProgramCode,String accessToken) {
+    GradProgramAlgorithmData getProgramDataForAlgorithm(String programCode,String optionalProgramCode,String accessToken,ExceptionMessage exception) {
     	try {
 	    	start();
 	    	String url = constants.getProgramData() + "programCode=%s";
@@ -46,11 +49,13 @@ public class GradProgramService extends GradService {
 	        logger.info("**** # of Program 				: " + (result != null ? result.getGradProgram() != null ? result.getGradProgram().getProgramName() :"":""));
 	        return result;
     	} catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-PROGRAM-API IS DOWN");
+    		exception.setExceptionName(EXCEPTION_MESSAGE);
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			throw new GradBusinessRuleException(EXCEPTION_MESSAGE);
 		}
     }
 
-    UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram, String accessToken) {
+    UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram, String accessToken,ExceptionMessage exception) {
         try {
 	    	start();
 	        OptionalProgram result = webClient.get()
@@ -62,7 +67,9 @@ public class GradProgramService extends GradService {
 	        end();
 	        return result != null ? result.getOptionalProgramID() : null;
         } catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-PROGRAM-API IS DOWN");
+        	exception.setExceptionName(EXCEPTION_MESSAGE);
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
 		}
     }
 }

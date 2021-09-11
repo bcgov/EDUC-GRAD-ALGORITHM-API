@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
 import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
@@ -15,14 +16,16 @@ import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 public class StudentGraduationService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentGraduationService.class);
-
+    
     @Autowired
     private WebClient webClient;
     
     @Autowired
     private GradAlgorithmAPIConstants constants;
+    
+    private static final String EXCEPTION_MESSAGE = "GRAD-STUDENT-GRADUATION-API IS DOWN";
 
-    StudentGraduationAlgorithmData getAllAlgorithmData(String programCode,String accessToken) {
+    StudentGraduationAlgorithmData getAllAlgorithmData(String programCode,String accessToken, ExceptionMessage exception) {
         try 
         {
 	    	start();
@@ -39,11 +42,13 @@ public class StudentGraduationService extends GradService {
 	        logger.info("**** # of Algorithm Rules: " + (result != null ? result.getProgramAlgorithmRules().size() : 0));
 	        return result;
         } catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-STUDENT-GRADUATION-API IS DOWN");
+        	exception.setExceptionName(EXCEPTION_MESSAGE);
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			throw new GradBusinessRuleException(EXCEPTION_MESSAGE);
 		}
     }
     
-    TranscriptMessage getGradMessages(String gradProgram, String msgType, String accessToken) {
+    TranscriptMessage getGradMessages(String gradProgram, String msgType, String accessToken,ExceptionMessage exception) {
     	try
     	{
         start();
@@ -57,7 +62,9 @@ public class StudentGraduationService extends GradService {
 
         return result;
     	} catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-STUDENT-GRADUATION-API IS DOWN");
+    		exception.setExceptionName(EXCEPTION_MESSAGE);
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
 		}
     }
     
