@@ -7,22 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradRuleProcessorService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradRuleProcessorService.class);
-
+    
     @Autowired
     private WebClient webClient;
     
     @Autowired
     private GradAlgorithmAPIConstants constants;
 
-    RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData, String accessToken) {
+    RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData, String accessToken,ExceptionMessage exception) {
         logger.info("**** Processing Grad Algorithm Rules");
         try
         {
@@ -37,7 +37,9 @@ public class GradRuleProcessorService extends GradService {
 	        end();
 	        return result;
         } catch (Exception e) {
-			throw new GradBusinessRuleException("RULE-ENGINE-API IS DOWN");
+        	exception.setExceptionName("RULE-ENGINE-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
 		}
     }
 }

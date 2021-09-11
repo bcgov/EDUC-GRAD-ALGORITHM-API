@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
@@ -47,6 +48,9 @@ public class GradGraduationStatusServiceTests {
     @Autowired
     GradGraduationStatusService gradGraduationStatusService;
 
+    @Autowired
+    private ExceptionMessage exception;
+    
     @MockBean
     WebClient webClient;
 
@@ -120,7 +124,7 @@ public class GradGraduationStatusServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(specialProgramResponseType)).thenReturn(Mono.just(entity));
 
-        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken);
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken,exception);
         assertNotNull(result);
         LOG.debug(">getStudentSpecialProgramsByIdTest");
     }

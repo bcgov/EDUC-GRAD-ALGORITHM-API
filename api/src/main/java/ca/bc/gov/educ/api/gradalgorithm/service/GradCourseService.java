@@ -7,22 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradCourseService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradCourseService.class);
-
+    
     @Autowired
     private WebClient webClient;
     
     @Autowired
     private GradAlgorithmAPIConstants constants;
     
-    CourseAlgorithmData getCourseDataForAlgorithm(String pen,String accessToken) {
+    CourseAlgorithmData getCourseDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
 	    try 
 	    {
     		start();
@@ -44,7 +44,9 @@ public class GradCourseService extends GradService {
 	        logger.info("**** # of Course Restrictions: " + (result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0));
 	        return result;
 	    } catch (Exception e) {
-		throw new GradBusinessRuleException("GRAD-COURSE-API IS DOWN");
+	    	exception.setExceptionName("GRAD-COURSE-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+	    	return null;
 	    }
     }
 }

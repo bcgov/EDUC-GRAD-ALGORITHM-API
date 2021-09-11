@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradStudentService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradStudentService.class);
-
+    
     @Autowired
     private WebClient webClient;
 
@@ -41,7 +41,7 @@ public class GradStudentService extends GradService {
     }
 
 
-	public GradStudentAlgorithmData getGradStudentData(UUID studentID,String accessToken) {
+	public GradStudentAlgorithmData getGradStudentData(UUID studentID,String accessToken, ExceptionMessage exception) {
 		try {
 			start();
 			GradStudentAlgorithmData result = webClient.get()
@@ -56,7 +56,9 @@ public class GradStudentService extends GradService {
 	                + (result.getGradStudent() != null ? result.getGradStudent().getLegalLastName().trim() : null));
 	        return result;
 		} catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-STUDENT-API IS DOWN");
+			exception.setExceptionName("GRAD-STUDENT-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
 		}        
 	}
 }
