@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.After;
@@ -41,6 +42,10 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
 
     @Autowired
     GradRuleProcessorService gradRuleProcessorService;
+    
+    @Autowired
+    private ExceptionMessage exception;
+    
     @Autowired
     JsonTransformer jsonTransformer;
 
@@ -91,7 +96,7 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(RuleProcessorData.class)).thenReturn(Mono.just(ruleProcessorData));
 
-        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken);
+        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception);
         assertNotNull(result);
         LOG.debug(">getRuleProcessorTest");
     }

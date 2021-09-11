@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
@@ -40,6 +41,9 @@ public class GradShoolServiceTests {
 
     @Autowired
     GradSchoolService gradSchoolService;
+    
+    @Autowired
+    private ExceptionMessage exception;
 
     @MockBean
     WebClient webClient;
@@ -89,7 +93,7 @@ public class GradShoolServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(School.class)).thenReturn(Mono.just(school));
 
-        School result = gradSchoolService.getSchool(mincode, accessToken);
+        School result = gradSchoolService.getSchool(mincode, accessToken,exception);
         assertNotNull(result);
         LOG.debug(">getSchoolTest");
     }

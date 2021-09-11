@@ -26,6 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.OptionalProgram;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
@@ -43,6 +44,9 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
     @Autowired
     GradProgramService gradProgramService;
 
+    @Autowired
+    private ExceptionMessage exception;
+    
     @MockBean
     WebClient webClient;
     
@@ -92,7 +96,7 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradProgramAlgorithmData.class)).thenReturn(Mono.just(programAlgorithmData));
         
-        gradProgramService.getProgramDataForAlgorithm(programCode,optionalProgramCode, accessToken);
+        gradProgramService.getProgramDataForAlgorithm(programCode,optionalProgramCode, accessToken,exception);
     }
     
     @Test
@@ -110,6 +114,6 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(OptionalProgram.class)).thenReturn(Mono.just(op));
         
-        gradProgramService.getSpecialProgramID(gradProgram,gradSpecialProgram, accessToken);
+        gradProgramService.getSpecialProgramID(gradProgram,gradSpecialProgram, accessToken,exception);
     }
 }

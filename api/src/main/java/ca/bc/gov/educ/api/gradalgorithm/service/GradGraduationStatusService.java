@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,16 +10,16 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradGraduationStatusService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradGraduationStatusService.class);
-
+    
     @Autowired
     private WebClient webClient;
     
@@ -41,7 +42,7 @@ public class GradGraduationStatusService extends GradService {
         return result;
     }
 
-    List<StudentOptionalProgram> getStudentSpecialProgramsById(String studentID, String accessToken) {
+    List<StudentOptionalProgram> getStudentSpecialProgramsById(String studentID, String accessToken,ExceptionMessage exception) {
     	try
     	{
 	        start();
@@ -54,9 +55,11 @@ public class GradGraduationStatusService extends GradService {
 	        end();
 	
 	        logger.info("**** # of Special Programs: " + (result != null ? result.size() : 0));
-	        return result;
+	        return result == null ? new ArrayList<>():result;
     	} catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-STUDENT-API IS DOWN");
+    		exception.setExceptionName("GRAD-STUDENT-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+    		return new ArrayList<>();
 		}
     }
 }

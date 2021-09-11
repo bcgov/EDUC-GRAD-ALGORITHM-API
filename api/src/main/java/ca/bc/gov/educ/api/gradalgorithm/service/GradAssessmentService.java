@@ -7,22 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
 public class GradAssessmentService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradAssessmentService.class);
-
+    
     @Autowired
     private WebClient webClient;
 
     @Autowired
     private GradAlgorithmAPIConstants constants;
     
-    AssessmentAlgorithmData getAssessmentDataForAlgorithm(String pen,String accessToken) {
+    AssessmentAlgorithmData getAssessmentDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
     	try 
     	{
 	    	start();
@@ -45,7 +45,9 @@ public class GradAssessmentService extends GradService {
 	        logger.info("**** # of Assessments: " + (result.getAssessments() != null ? result.getAssessments().size() : 0));
 	        return result;
     	} catch (Exception e) {
-			throw new GradBusinessRuleException("GRAD-ASSESSMENT-API IS DOWN");
+    		exception.setExceptionName("GRAD-ASSESSMENT-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+    		return null;
 		}
     }
 }
