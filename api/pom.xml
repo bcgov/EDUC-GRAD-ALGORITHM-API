@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov.educ</groupId>
-	<artifactId>grad-algorithm-api</artifactId>
+	<artifactId>educ-grad-algorithm-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>educ-grad-algorithm-api</name>
 	<description>Graduation Algorithm API for GRAD team</description>
