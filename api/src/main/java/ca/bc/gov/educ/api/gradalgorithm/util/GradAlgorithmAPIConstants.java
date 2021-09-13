@@ -3,35 +3,21 @@ package ca.bc.gov.educ.api.gradalgorithm.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 @Component
+@Getter
+@Setter
 public class GradAlgorithmAPIConstants {
     //API end-point Mapping constants
     public static final String API_ROOT_MAPPING = "";
     public static final String API_VERSION = "v1";
     public static final String GRAD_ALGORITHM_API_ROOT_MAPPING = "/api/" + API_VERSION + "/grad-algorithm";
 
-    public static String GET_GRADSTUDENT_BY_PEN_URL;
-    public static String GET_STUDENT_COURSES_BY_PEN_URL;
-    public static String RULE_ENGINE_API_BASE_URL;
-    public static String RULE_ENGINE_API_ENDPOINT_FIND_NOT_COMPLETED;
-    public static String RULE_ENGINE_API_ENDPOINT_FIND_PROJECTED;
-    public static String RULE_ENGINE_API_ENDPOINT_FIND_FAILED;
-    public static String RULE_ENGINE_API_ENDPOINT_FIND_DUPLICATES;
-    public static String RULE_ENGINE_API_ENDPOINT_FIND_CP;
-    public static String RULE_ENGINE_API_ENDPOINT_FIND_LD;
-    public static String RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES;
-    public static String RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES;
-    public static String RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES;
-    public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES;
-    public static String RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES;
-    public static String RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES;
-    public static String GET_GRADSTATUS_BY_STUDENT_ID_URL;
-
-
     //Attribute Constants
-
 
     //Default Attribute value constants
     public static final String DEFAULT_CREATED_BY = "GradAlgorithmAPI";
@@ -49,88 +35,46 @@ public class GradAlgorithmAPIConstants {
     public static final String RULE_TYPE_ACTIVE_FLAG_Y = "Y";
     public static final String RULE_TYPE_ACTIVE_FLAG_N = "N";
 
-    @Value("${endpoint.grad-student-api.get-student-by-pen.url}")
-    public void setGetGradstudentByPenUrl(String getGradstudentByPenUrl) {
-        GET_GRADSTUDENT_BY_PEN_URL = getGradstudentByPenUrl;
-    }
-
-    @Value("${endpoint.student-course-api.get-student-course-by-pen.url}")
-    public void setGetStudentCoursesByPenUrl(String getStudentCoursesByPenUrl) {
-        GET_STUDENT_COURSES_BY_PEN_URL = getStudentCoursesByPenUrl;
-    }
-
+    
     @Value("${endpoint.rule-engine-api.base-url}")
-    public void setRuleEngineApiBaseUrl(String ruleEngineApiBaseUrl) {
-        RULE_ENGINE_API_BASE_URL = ruleEngineApiBaseUrl;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.find-not-completed}")
-    public void setRuleEngineApiEndpointFindNotCompleted(String ruleEngineApiEndpointFindNotCompleted) {
-        RULE_ENGINE_API_ENDPOINT_FIND_NOT_COMPLETED = ruleEngineApiEndpointFindNotCompleted;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.find-projected}")
-    public void setRuleEngineApiEndpointFindProjected(String ruleEngineApiEndpointFindProjected) {
-        RULE_ENGINE_API_ENDPOINT_FIND_PROJECTED = ruleEngineApiEndpointFindProjected;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.find-failed}")
-    public void setRuleEngineApiEndpointFindFailed(String ruleEngineApiEndpointFindFailed) {
-        RULE_ENGINE_API_ENDPOINT_FIND_FAILED = ruleEngineApiEndpointFindFailed;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.find-duplicates}")
-    public void setRuleEngineApiEndpointFindDuplicates(String ruleEngineApiEndpointFindDuplicates) {
-        RULE_ENGINE_API_ENDPOINT_FIND_DUPLICATES = ruleEngineApiEndpointFindDuplicates;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.find-cp}")
-    public void setRuleEngineApiEndpointFindCp(String ruleEngineApiEndpointFindCp) {
-        RULE_ENGINE_API_ENDPOINT_FIND_CP = ruleEngineApiEndpointFindCp;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.find-ld}")
-    public void setRuleEngineApiEndpointFindLd(String ruleEngineApiEndpointFindLd) {
-        RULE_ENGINE_API_ENDPOINT_FIND_LD = ruleEngineApiEndpointFindLd;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.run-min-credits-rules}")
-    public void setRuleEngineApiEndpointRunMinCreditRules(String ruleEngineApiEndpointRunMinCreditRules) {
-        RULE_ENGINE_API_ENDPOINT_RUN_MIN_CREDIT_RULES = ruleEngineApiEndpointRunMinCreditRules;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.run-match-rules}")
-    public void setRuleEngineApiEndpointRunMatchRules(String ruleEngineApiEndpointRunMatchRules) {
-        RULE_ENGINE_API_ENDPOINT_RUN_MATCH_RULES = ruleEngineApiEndpointRunMatchRules;
-    }
-
-    @Value("${endpoint.rule-engine-api.endpoints.run-min-elective-credits-rules}")
-    public void setRuleEngineApiEndpointRunMinElectiveCreditsRules(String ruleEngineApiEndpointRunMinElectiveCreditsRules) {
-        RULE_ENGINE_API_ENDPOINT_RUN_MIN_ELECTIVE_CREDITS_RULES = ruleEngineApiEndpointRunMinElectiveCreditsRules;
-    }
-   
-    @Value("${endpoint.rule-engine-api.endpoints.run-special-min-elective-credits-rules}")
-    public void setRuleEngineApiEndpointRunSpecialMinElectiveCreditsRules(String ruleEngineApiEndpointRunSpecialMinElectiveCreditsRules) {
-        RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MIN_ELECTIVE_CREDITS_RULES = ruleEngineApiEndpointRunSpecialMinElectiveCreditsRules;
-    }
+    private String ruleEngineBaseURL;
     
-    @Value("${endpoint.rule-engine-api.endpoints.run-special-match-rules}")
-    public void setRuleEngineApiEndpointRunSpecialMatchRules(String ruleEngineApiEndpointRunSpecialMatchRules) {
-        RULE_ENGINE_API_ENDPOINT_RUN_SPECIAL_MATCH_RULES = ruleEngineApiEndpointRunSpecialMatchRules;
-    }
-
     @Value("${endpoint.rule-engine-api.endpoints.run-grad-algorithm-rules}")
-    public void setRuleEngineApiEndpointRunGradAlgorithmRules(String ruleEngineApiEndpointRunGradAlgorithmRules) {
-        RULE_ENGINE_API_ENDPOINT_RUN_GRAD_ALGORITHM_RULES = ruleEngineApiEndpointRunGradAlgorithmRules;
-    }
+    private String runRules;
     
-    @Value("${endpoint.grad-graduation-status-api.get-graduation-status.url}")
-    public void setGraduationStatusApiEndpointGetGradStatus(String graduationStatusApiEndpointGetGradStatus) {
-    	GET_GRADSTATUS_BY_STUDENT_ID_URL = graduationStatusApiEndpointGetGradStatus;
-    }
+    @Value("${endpoint.grad-trax-api.school-by-min-code.url}")
+    private String schoolByMincode;
     
+    @Value("${endpoint.grad-program-api.get-program-algorithm-data.url}")
+    private String programData;
     
-
+    @Value("${endpoint.grad-program-api.get-optional-program.url}")
+    private String optionalProgram;
+    
+    @Value("${endpoint.grad-course-api.get-course-algorithm-data.url}")
+    private String courseData;
+    
+    @Value("${endpoint.grad-assessment-api.get-assessment-algorithm-data.url}")
+    private String assessmentData;
+    
+    @Value("${endpoint.grad-student-graduation-api.get-graduation-message.url}")
+    private String graduationMessage;
+    
+    @Value("${endpoint.grad-student-graduation-api.get-algorithm-data.url}")
+    private String studentGraduationAlgorithmURL;
+    
+    @Value("${endpoint.grad-student-api.get-student-by-studentid.url}")
+    private String studentDemographics;
+    
+    @Value("${endpoint.grad-student-api.get-graduation-student-record.get-optional-programs.url}")
+    private String studentOptionalPrograms;
+    
+    @Value("${endpoint.grad-student-api.get-graduation-status.url}")
+    private String graduationStudentRecord;
+    
+    @Value("${endpoint.grad-student-api.get-grad-student-algo-data.url}")
+    private String gradStudentAlgorithmData;
+    
 //Application Properties Constants
 
 }
