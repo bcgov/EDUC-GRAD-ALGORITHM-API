@@ -75,37 +75,37 @@ springdoc:
 endpoint:
   grad-trax-api:
     school-by-min-code:
-      url: https://educ-grad-trax-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/school/%s
+      url: ${GRAD_TRAX_API}api/v1/school/%s
   grad-program-api:
     get-program-algorithm-data:
-      url: https://educ-grad-program-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program/algorithmdata?
+      url: ${GRAD_PROGRAM_API}api/v1/program/algorithmdata?
     get-optional-program:
-      url: https://educ-grad-program-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program/optionalprograms/%s/%s
+      url: ${GRAD_PROGRAM_API}api/v1/program/optionalprograms/%s/%s
     optional_program_name_by_optional_program_id:
-      url: https://educ-grad-program-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program/optionalprograms/id/%s
+      url: ${GRAD_PROGRAM_API}api/v1/program/optionalprograms/id/%s
   grad-course-api:
     get-course-algorithm-data:
-      url: https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course-algorithm/pen/%s
+      url: ${GRAD_COURSE_API}api/v1/course-algorithm/pen/%s
   grad-assessment-api:
     get-assessment-algorithm-data:
-      url: https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/assessment-algorithm/pen/%s
+      url: ${GRAD_ASSESSMENT_API}api/v1/assessment/assessment-algorithm/pen/%s
   grad-student-graduation-api:
     get-algorithm-data:
-      url: https://educ-grad-student-graduation-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/algo
+      url: ${GRAD_STUDENT_GRADUATION_API}api/v1/algo
     get-graduation-message:
-      url: https://educ-grad-student-graduation-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/transcript/gradmessages/pgmCode/%s/msgType/%s
+      url: ${GRAD_STUDENT_GRADUATION_API}api/v1/transcript/gradmessages/pgmCode/%s/msgType/%s
   grad-student-api:
     get-student-by-studentid:
-      url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/stdid/%s
+      url: ${GRAD_STUDENT_API}api/v1/student/stdid/%s
     get-graduation-status: 
-      url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/studentid/%s/algorithm
+      url: ${GRAD_STUDENT_API}api/v1/student/studentid/%s/algorithm
     get-grad-student-algo-data: 
-      url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/algorithmdata/%s
+      url: ${GRAD_STUDENT_API}api/v1/student/algorithmdata/%s
     get-graduation-student-record:
       get-optional-programs:
-        url: https://educ-grad-student-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/specialprogram/studentid/%s
+        url: ${GRAD_STUDENT_API}api/v1/student/specialprogram/studentid/%s
   rule-engine-api:
-    base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
+    base-domain: ${GRAD_RULE_PROCESSOR_API}
     api-keyword: api
     version: v1
     root: rule-engine
