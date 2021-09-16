@@ -51,7 +51,7 @@ public class GradProgramService extends GradService {
     	} catch (Exception e) {
     		exception.setExceptionName(EXCEPTION_MESSAGE);
 			exception.setExceptionDetails(e.getLocalizedMessage());
-			throw new GradBusinessRuleException(EXCEPTION_MESSAGE);
+			return null;
 		}
     }
 
