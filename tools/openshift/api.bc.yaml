@@ -32,6 +32,7 @@ objects:
           type: Docker
           pullSecret:
             name: artifactory-creds
+      runPolicy: SerialLatestOnly
       output:
         to:
           kind: ImageStreamTag
