@@ -212,7 +212,7 @@ public class GradAlgorithmService {
 		}
         gradStatus.setStudentGradData(null);
         if(isGraduated) {
-			if (!gradProgram.equalsIgnoreCase("SCCP")) {
+			if (!gradProgram.equalsIgnoreCase("SCCP") && !gradProgram.equalsIgnoreCase("NOPROG")) {
 				//This is done for Reports only grad run -Student already graduated no change in graduation date
 				if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
 					gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
@@ -228,7 +228,7 @@ public class GradAlgorithmService {
 				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 	        } 
 			
-			if(existingProgramCompletionDate != null && gradProgram.equalsIgnoreCase("SCCP")) {
+			if(existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase("SCCP") || gradProgram.equalsIgnoreCase("NOPROG"))) {
 				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 			}
         }
@@ -315,13 +315,13 @@ public class GradAlgorithmService {
 	            );
 	        }
         }
-        if(existingProgramCompletionDate != null && gradProgram.equalsIgnoreCase("SCCP")) {
+        if(existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase("SCCP") || gradProgram.equalsIgnoreCase("NOPROG"))) {
         	graduationData.setGradMessage(
         	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
                             graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken)
             );
         }
-        if(existingGradMessage != null && existingProgramCompletionDate != null && !gradProgram.equalsIgnoreCase("SCCP")) {
+        if(existingGradMessage != null && existingProgramCompletionDate != null && !gradProgram.equalsIgnoreCase("SCCP") && !gradProgram.equalsIgnoreCase("NOPROG")) {
         	graduationData.setGradMessage(existingGradMessage);
         }
         
