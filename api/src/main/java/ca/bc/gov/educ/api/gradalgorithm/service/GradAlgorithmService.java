@@ -50,9 +50,6 @@ public class GradAlgorithmService {
 
     @Autowired
     RuleProcessorData ruleProcessorData;
-    
-    @Autowired
-    private ExceptionMessage exception;
 
     @Autowired
     GraduationData graduationData;
@@ -87,7 +84,7 @@ public class GradAlgorithmService {
         logger.info("\n************* New Graduation Algorithm START  ************");
         //Get Student Demographics
         ruleProcessorData = new RuleProcessorData();
-        exception = new ExceptionMessage();
+        ExceptionMessage exception = new ExceptionMessage();
         GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID,accessToken,exception);
         GradAlgorithmGraduationStudentRecord gradStatus = new GradAlgorithmGraduationStudentRecord();
         if(gradStudentAlgorithmData != null) {
@@ -130,7 +127,7 @@ public class GradAlgorithmService {
         ruleProcessorData.setProjected(projected);
 
         //Set Special Program Flag
-        ruleProcessorData = checkForSpecialProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken);
+        ruleProcessorData = checkForSpecialProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken,exception);
         boolean studentHasOp = false;
         if (ruleProcessorData.isHasSpecialProgramFrenchImmersion()) {
         	studentHasOp = true;
@@ -239,27 +236,27 @@ public class GradAlgorithmService {
         List<GradAlgorithmOptionalStudentProgram> specialProgramStatusList = new ArrayList<>();
         if (ruleProcessorData.isHasSpecialProgramFrenchImmersion())
         	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"FI", specialProgramStatusList, accessToken);
+                    getListOfSpecialProgramStatus(pen, gradProgram,"FI", specialProgramStatusList, accessToken,exception);
 
         if (ruleProcessorData.isHasSpecialProgramCareerProgram())
         	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"CP", specialProgramStatusList, accessToken);
+                    getListOfSpecialProgramStatus(pen, gradProgram,"CP", specialProgramStatusList, accessToken,exception);
 
         if (ruleProcessorData.isHasSpecialProgramAdvancedPlacement())
         	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"AD", specialProgramStatusList, accessToken);
+                    getListOfSpecialProgramStatus(pen, gradProgram,"AD", specialProgramStatusList, accessToken,exception);
 
         if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBD())
         	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"BD", specialProgramStatusList, accessToken);
+                    getListOfSpecialProgramStatus(pen, gradProgram,"BD", specialProgramStatusList, accessToken,exception);
 
         if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
         	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"BC", specialProgramStatusList, accessToken);
+                    getListOfSpecialProgramStatus(pen, gradProgram,"BC", specialProgramStatusList, accessToken,exception);
 
         if (ruleProcessorData.isHasSpecialProgramDualDogwood())
         	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"DD", specialProgramStatusList, accessToken);
+                    getListOfSpecialProgramStatus(pen, gradProgram,"DD", specialProgramStatusList, accessToken,exception);
 		
         ruleProcessorData.setSchool(
                 gradSchoolService.getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord(), accessToken,exception)
@@ -306,19 +303,19 @@ public class GradAlgorithmService {
 	        if(graduationData.isGraduated()) {
 	        	graduationData.setGradMessage(
 	        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(),accessToken)
+	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(),accessToken,exception)
 	            );
 	        }else {
 	        	graduationData.setGradMessage(
 	        	        getGradMessages(gradProgram, "NOT_GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken)
+	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken,exception)
 	            );
 	        }
         }
         if(existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase("SCCP") || gradProgram.equalsIgnoreCase("NOPROG"))) {
         	graduationData.setGradMessage(
         	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken)
+                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken,exception)
             );
         }
         if(existingGradMessage != null && existingProgramCompletionDate != null && !gradProgram.equalsIgnoreCase("SCCP") && !gradProgram.equalsIgnoreCase("NOPROG")) {
@@ -341,7 +338,7 @@ public class GradAlgorithmService {
 
     private List<GradAlgorithmOptionalStudentProgram> getListOfSpecialProgramStatus(
             String pen, String gradProgram, String specialProgramCode,
-            List<GradAlgorithmOptionalStudentProgram> specialProgramStatusList, String accessToken) {
+            List<GradAlgorithmOptionalStudentProgram> specialProgramStatusList, String accessToken,ExceptionMessage exception) {
     	List<GradRequirement> nonGradReasons = new ArrayList<>();
     	List<GradRequirement> reqMet = new ArrayList<>();
     	GradAlgorithmOptionalStudentProgram gradStudentSpecialAlg = new GradAlgorithmOptionalStudentProgram();
@@ -411,7 +408,7 @@ public class GradAlgorithmService {
 		return specialProgramStatusList;
     }
 
-    private RuleProcessorData checkForSpecialProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken) {
+    private RuleProcessorData checkForSpecialProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken,ExceptionMessage exception) {
         List<StudentOptionalProgram> gradSpecialResponseList = gradGraduationStatusService.getStudentSpecialProgramsById(studentID, accessToken,exception);
 
         if (gradSpecialResponseList.isEmpty())
@@ -440,7 +437,7 @@ public class GradAlgorithmService {
         return ruleProcessorData;
     }
 
-    private String getGradMessages(String gradProgram, String msgType, String gradDate, String honours, String programName, String accessToken) {
+    private String getGradMessages(String gradProgram, String msgType, String gradDate, String honours, String programName, String accessToken,ExceptionMessage exception) {
 
         StringBuilder strBuilder = new StringBuilder();
 		TranscriptMessage result = studentGraduationService.getGradMessages(gradProgram, msgType, accessToken,exception);
