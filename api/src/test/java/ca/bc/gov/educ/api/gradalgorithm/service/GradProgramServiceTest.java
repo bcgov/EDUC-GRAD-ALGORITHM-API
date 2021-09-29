@@ -100,6 +100,27 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
     }
     
     @Test
+    public void testGetProgramDataForAlgorithm_withexception() throws Exception {
+    	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+        String accessToken = "accessToken";
+        String programCode = "2018-EN";
+        String optionalProgramCode = "";
+        String url = constants.getProgramData() + "programCode=%s";
+    	if(StringUtils.isNotBlank(optionalProgramCode)) {
+    		url = url + "&optionalProgramCode=%s";
+    	}       
+        
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(url,programCode,optionalProgramCode))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        
+        gradProgramService.getProgramDataForAlgorithm(programCode,optionalProgramCode, accessToken,exception);
+    }
+    
+    
+    @Test
     public void testGetSpecialProgramID() {
         String accessToken = "accessToken";
         String gradProgram = "2018-EN";

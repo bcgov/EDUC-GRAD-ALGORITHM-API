@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -95,6 +96,27 @@ public class GradShoolServiceTests {
 
         School result = gradSchoolService.getSchool(mincode, accessToken,exception);
         assertNotNull(result);
+        LOG.debug(">getSchoolTest");
+    }
+    
+    @Test
+    public void getSchoolTest_withexception() {
+        LOG.debug("<{}.getSchoolTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        String mincode = "08098655";
+        String accessToken = "accessToken";
+
+        School school = new School();
+        school.setMinCode(mincode);
+        school.setSchoolName("My School");
+
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getSchoolByMincode(), mincode))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+
+        School result = gradSchoolService.getSchool(mincode, accessToken,exception);
+        assertNull(result);
         LOG.debug(">getSchoolTest");
     }
 }
