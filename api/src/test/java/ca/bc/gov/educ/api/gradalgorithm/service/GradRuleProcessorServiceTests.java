@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.After;
@@ -24,9 +25,11 @@ import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -99,5 +102,25 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
         RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception);
         assertNotNull(result);
         LOG.debug(">getRuleProcessorTest");
+    }
+    
+    @Test
+    public void testgetGradStudentData_withexception() throws Exception {
+    	
+    	String accessToken = "accessToken";
+
+        RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
+        
+    	when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
+        when(this.requestBodyUriMock.uri(ruleEngineBaseUrl + "/" + ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
+        when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
+        when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
+        when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        
+        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception);
+        assertNull(result);
+         
     }
 }

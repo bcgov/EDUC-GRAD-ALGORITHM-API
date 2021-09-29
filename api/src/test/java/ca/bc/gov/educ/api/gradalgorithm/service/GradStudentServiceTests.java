@@ -1,6 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
+import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
+import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 import org.junit.After;
@@ -36,7 +39,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class GradStudentServiceTests {
+public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(GradStudentServiceTests.class);
     private static final String CLASS_NAME = GradStudentServiceTests.class.getSimpleName();
@@ -101,5 +104,39 @@ public class GradStudentServiceTests {
         GradSearchStudent result = gradStudentService.getStudentDemographics(UUID.fromString(studentID), accessToken);
         assertNotNull(result);
         LOG.debug(">getStudentDemographicsTest");
+    }
+    
+    @Test
+    public void testgetGradStudentData() throws Exception {
+    	
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+    	
+    	String studentID = new UUID(1, 1).toString();
+    	String accessToken = "accessToken";
+    	when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(GradStudentAlgorithmData.class)).thenReturn(Mono.just(gradStudentAlgorithmData));
+        
+        gradStudentService.getGradStudentData(UUID.fromString(studentID), accessToken, new ExceptionMessage());
+         
+    }
+    
+    @Test
+    public void testgetGradStudentData_withexception() throws Exception {
+    	
+    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+    	
+    	String studentID = new UUID(1, 1).toString();
+    	String accessToken = "accessToken";
+    	when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        
+        gradStudentService.getGradStudentData(UUID.fromString(studentID), accessToken, new ExceptionMessage());
+         
     }
 }
