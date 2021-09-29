@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import org.junit.After;
@@ -26,6 +27,7 @@ import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import reactor.core.publisher.Mono;
 
@@ -90,5 +92,64 @@ public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
         when(this.responseMock.bodyToMono(StudentGraduationAlgorithmData.class)).thenReturn(Mono.just(studentGraduationAlgorithmData));
         
         studentGraduationService.getAllAlgorithmData(programCode, accessToken,exception);
+    }
+    
+    @Test
+    public void testGetAllAlgorithmData_withException() throws Exception {
+    	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
+        String accessToken = "accessToken";
+        String programCode = "2018-EN";       
+
+        
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        
+        studentGraduationService.getAllAlgorithmData(programCode, accessToken,exception);
+    }
+    
+    @Test
+    public void testGetGradMessages() throws Exception {
+        String accessToken = "accessToken";
+        String programCode = "2018-EN";       
+        String msgType = "GRADUATED";
+        
+        TranscriptMessage msg = new TranscriptMessage();
+        msg.setAdIBProgramMessage("dsada");
+        msg.setCareerProgramMessage("asdsa");
+        msg.setGradDateMessage("asddad");
+        msg.setGradMainMessage("ASdasdad");
+        msg.setHonourNote("asda");
+        msg.setMessageTypeCode(msgType);
+        msg.setProgramCadre("Adasd");
+        msg.setProgramCode(programCode);
+        msg.setTranscriptMessageID(new UUID(1, 1));
+        
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getGraduationMessage(),programCode,msgType))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(TranscriptMessage.class)).thenReturn(Mono.just(msg));
+        
+        studentGraduationService.getGradMessages(programCode,msgType, accessToken,exception);
+    }
+    
+    @Test
+    public void testGetGradMessages_withException() throws Exception {
+    	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
+        String accessToken = "accessToken";
+        String programCode = "2018-EN";
+        String msgType = "GRADUATED";
+        
+        
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getGraduationMessage(),programCode,msgType))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        
+        studentGraduationService.getGradMessages(programCode,msgType, accessToken,exception);
     }
 }
