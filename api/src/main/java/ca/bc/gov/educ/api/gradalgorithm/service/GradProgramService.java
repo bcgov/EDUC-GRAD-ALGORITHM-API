@@ -30,7 +30,8 @@ public class GradProgramService extends GradService {
 
     
     GradProgramAlgorithmData getProgramDataForAlgorithm(String programCode,String optionalProgramCode,String accessToken,ExceptionMessage exception) {
-    	try {
+		exception = new ExceptionMessage();
+		try {
 	    	start();
 	    	String url = constants.getProgramData() + "programCode=%s";
 	    	if(StringUtils.isNotBlank(optionalProgramCode)) {
@@ -56,7 +57,8 @@ public class GradProgramService extends GradService {
     }
 
     UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram, String accessToken,ExceptionMessage exception) {
-        try {
+		exception = new ExceptionMessage();
+		try {
 	    	start();
 	        OptionalProgram result = webClient.get()
 	                .uri(String.format(constants.getOptionalProgram(), gradProgram,gradSpecialProgram))
