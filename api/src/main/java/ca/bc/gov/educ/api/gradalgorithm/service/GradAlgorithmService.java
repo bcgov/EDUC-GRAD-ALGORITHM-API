@@ -359,14 +359,24 @@ public class GradAlgorithmService {
 			}
 			break;
 		case "CP":
-			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
-			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
-			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
-			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
-			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
-			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
-				gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getOptionalStudentCourses().getStudentCourseList(),
-						gradStudentSpecialAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
+			if(!gradProgram.equalsIgnoreCase("1950")) {
+				gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
+				gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
+				gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
+				reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
+				nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
+				if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
+					gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getOptionalStudentCourses().getStudentCourseList(),
+							gradStudentSpecialAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
+				}
+			}else {
+				gradStudentSpecialAlg.setSpecialGraduated(true);
+				gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
+				gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses());
+				if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
+					gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+							ruleProcessorData.getStudentAssessments()));
+				}
 			}
 			break;
 		case "DD":

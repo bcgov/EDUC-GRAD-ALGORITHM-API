@@ -43,7 +43,8 @@ public class GradGraduationStatusService extends GradService {
     }
 
     List<StudentOptionalProgram> getStudentSpecialProgramsById(String studentID, String accessToken,ExceptionMessage exception) {
-    	try
+		exception = new ExceptionMessage();
+		try
     	{
 	        start();
 	        List<StudentOptionalProgram> result = webClient.get()

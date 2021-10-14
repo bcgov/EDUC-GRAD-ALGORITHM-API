@@ -23,7 +23,8 @@ public class GradCourseService extends GradService {
     private GradAlgorithmAPIConstants constants;
     
     CourseAlgorithmData getCourseDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
-	    try 
+		exception = new ExceptionMessage();
+		try
 	    {
     		start();
 	    	CourseAlgorithmData result = webClient.get()

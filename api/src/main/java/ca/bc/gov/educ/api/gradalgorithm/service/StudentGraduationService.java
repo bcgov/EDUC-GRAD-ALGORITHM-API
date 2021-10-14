@@ -26,9 +26,11 @@ public class StudentGraduationService extends GradService {
     private static final String EXCEPTION_MESSAGE = "GRAD-STUDENT-GRADUATION-API IS DOWN";
 
     StudentGraduationAlgorithmData getAllAlgorithmData(String programCode,String accessToken, ExceptionMessage exception) {
-        try 
+		exception = new ExceptionMessage();
+		try
         {
-	    	start();
+
+			start();
 	        StudentGraduationAlgorithmData result = webClient.get()
 	                .uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)
 	                .headers(h -> h.setBearerAuth(accessToken))
