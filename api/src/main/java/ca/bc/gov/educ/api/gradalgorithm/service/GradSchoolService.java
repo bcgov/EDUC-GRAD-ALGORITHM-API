@@ -23,6 +23,7 @@ public class GradSchoolService extends GradService {
 
     School getSchool(String minCode, String accessToken,ExceptionMessage exception) {
     	logger.debug("getSchool");
+		exception = new ExceptionMessage();
     	try
     	{
 	        start();
