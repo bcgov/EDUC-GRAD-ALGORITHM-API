@@ -51,7 +51,8 @@ public class StudentGraduationService extends GradService {
     }
     
     TranscriptMessage getGradMessages(String gradProgram, String msgType, String accessToken,ExceptionMessage exception) {
-    	try
+		exception = new ExceptionMessage();
+		try
     	{
         start();
         TranscriptMessage result = webClient.get()
