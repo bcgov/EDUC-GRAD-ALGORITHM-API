@@ -826,7 +826,7 @@
 			}
 		}
 	],
-	"gradSpecialProgramRulesFrenchImmersion": [
+	"gradOptionalProgramRulesFrenchImmersion": [
 		{
 			"createUser": "API_GRAD_PROGRAM",
 			"createDate": "2021-07-15",
@@ -1116,10 +1116,10 @@
 			}
 		}
 	],
-	"gradSpecialProgramRulesAdvancedPlacement": null,
-	"gradSpecialProgramRulesInternationalBaccalaureateBD": [],
-	"gradSpecialProgramRulesInternationalBaccalaureateBC": null,
-	"gradSpecialProgramRulesCareerProgram": [
+	"gradOptionalProgramRulesAdvancedPlacement": null,
+	"gradOptionalProgramRulesInternationalBaccalaureateBD": [],
+	"gradOptionalProgramRulesInternationalBaccalaureateBC": null,
+	"gradOptionalProgramRulesCareerProgram": [
         {
             "createUser": "API_GRAD_PROGRAM",
             "createDate": "2021-07-15",
@@ -1169,7 +1169,7 @@
             }
         }
     ],
-	"gradSpecialProgramRulesDualDogwood": null,
+	"gradOptionalProgramRulesDualDogwood": null,
 	"studentCourses": [
 		{
 			"pen": "127951309",
@@ -3772,27 +3772,27 @@
 	],
 	"nonGradReasons": null,
 	"requirementsMet": null,
-	"nonGradReasonsSpecialProgramsFrenchImmersion": null,
-	"requirementsMetSpecialProgramsFrenchImmersion": null,
-	"nonGradReasonsSpecialProgramsCareerProgram": null,
-	"requirementsMetSpecialProgramsCareerProgram": null,
-	"nonGradReasonsSpecialProgramsDualDogwood": null,
-	"requirementsMetSpecialProgramsDualDogwood": null,
-	"hasSpecialProgramFrenchImmersion": false,
-	"hasSpecialProgramAdvancedPlacement": false,
-	"hasSpecialProgramInternationalBaccalaureateBD": false,
-	"hasSpecialProgramInternationalBaccalaureateBC": false,
-	"hasSpecialProgramCareerProgram": true,
-	"hasSpecialProgramDualDogwood": false,
+	"nonGradReasonsOptionalProgramsFrenchImmersion": null,
+	"requirementsMetOptionalProgramsFrenchImmersion": null,
+	"nonGradReasonsOptionalProgramsCareerProgram": null,
+	"requirementsMetOptionalProgramsCareerProgram": null,
+	"nonGradReasonsOptionalProgramsDualDogwood": null,
+	"requirementsMetOptionalProgramsDualDogwood": null,
+	"hasOptionalProgramFrenchImmersion": false,
+	"hasOptionalProgramAdvancedPlacement": false,
+	"hasOptionalProgramInternationalBaccalaureateBD": false,
+	"hasOptionalProgramInternationalBaccalaureateBC": false,
+	"hasOptionalProgramCareerProgram": true,
+	"hasOptionalProgramDualDogwood": false,
 	"gradStatus": null,
-	"gradSpecialProgramStatus": null,
+	"gradOptionalProgramStatus": null,
 	"school": null,
 	"graduated": true,
 	"projected": false,
-	"specialProgramInternationalBaccalaureateGraduatedBC": false,
-	"specialProgramInternationalBaccalaureateGraduatedBD": false,
-	"specialProgramFrenchImmersionGraduated": false,
-	"specialProgramDualDogwoodGraduated": false,
-	"specialProgramAdvancedPlacementGraduated": false,
-	"specialProgramCareerProgramGraduated": false
+	"optionalProgramInternationalBaccalaureateGraduatedBC": false,
+	"optionalProgramInternationalBaccalaureateGraduatedBD": false,
+	"optionalProgramFrenchImmersionGraduated": false,
+	"optionalProgramDualDogwoodGraduated": false,
+	"optionalProgramAdvancedPlacementGraduated": false,
+	"optionalProgramCareerProgramGraduated": false
 }
