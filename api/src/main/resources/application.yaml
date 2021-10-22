@@ -88,7 +88,7 @@ endpoint:
       url: ${GRAD_STUDENT_API}api/v1/student/algorithmdata/%s
     get-graduation-student-record:
       get-optional-programs:
-        url: ${GRAD_STUDENT_API}api/v1/student/specialprogram/studentid/%s
+        url: ${GRAD_STUDENT_API}api/v1/student/optionalprogram/studentid/%s
   rule-engine-api:
     base-domain: ${GRAD_RULE_PROCESSOR_API}
     api-keyword: api
