@@ -393,6 +393,7 @@ public class GradAlgorithmService {
 		case "AD":
 		case "BC":
 		case "BD":
+		case "FR":
 			gradStudentOptionalAlg.setOptionalGraduated(true);
 			gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments());
 			gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses());
