@@ -24,6 +24,7 @@ public class RuleProcessorData {
     private List<OptionalProgramRequirement> gradOptionalProgramRulesInternationalBaccalaureateBC;
     private List<OptionalProgramRequirement> gradOptionalProgramRulesCareerProgram;
     private List<OptionalProgramRequirement> gradOptionalProgramRulesDualDogwood;
+    private List<OptionalProgramRequirement> gradOptionalProgramRulesSCCPFrenchCertificate;
     private List<StudentCourse> studentCourses;
     private List<StudentCourse> studentCoursesForFrenchImmersion;
     private List<StudentCourse> studentCoursesForCareerProgram;
@@ -50,10 +51,12 @@ public class RuleProcessorData {
     private boolean isOptionalProgramInternationalBaccalaureateGraduatedBC;
     private boolean isOptionalProgramCareerProgramGraduated;
     private boolean isOptionalProgramDualDogwoodGraduated;
+    private boolean isOptionalProgramSCCPFrenchCertificate;
     private boolean hasOptionalProgramFrenchImmersion;
     private boolean hasOptionalProgramAdvancedPlacement;
     private boolean hasOptionalProgramInternationalBaccalaureateBD;
     private boolean hasOptionalProgramInternationalBaccalaureateBC;
+    private boolean hasOptionalProgramSCCPFrenchCertificate;
     private boolean hasOptionalProgramCareerProgram;
     private boolean hasOptionalProgramDualDogwood;
     private GradAlgorithmGraduationStudentRecord gradStatus;

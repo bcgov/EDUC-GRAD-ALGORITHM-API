@@ -160,6 +160,14 @@ public class GradAlgorithmService {
         	ruleProcessorData.setGradOptionalProgramRulesInternationalBaccalaureateBC(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
+
+		if (ruleProcessorData.isHasOptionalProgramSCCPFrenchCertificate()) {
+			studentHasOp = true;
+			GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "FR", accessToken,exception);
+			ruleProcessorData.setGradProgramRules(data.getProgramRules());
+			ruleProcessorData.setGradOptionalProgramRulesSCCPFrenchCertificate(data.getOptionalProgramRules());
+			ruleProcessorData.setGradProgram(data.getGradProgram());
+		}
         
         if (ruleProcessorData.isHasOptionalProgramCareerProgram()) {
         	studentHasOp = true;
@@ -253,6 +261,10 @@ public class GradAlgorithmService {
         if (ruleProcessorData.isHasOptionalProgramInternationalBaccalaureateBC())
         	optionalProgramStatusList =
                     getListOfOptionalProgramStatus(pen, gradProgram,"BC", optionalProgramStatusList, accessToken,exception);
+
+		if (ruleProcessorData.isHasOptionalProgramSCCPFrenchCertificate())
+			optionalProgramStatusList =
+					getListOfOptionalProgramStatus(pen, gradProgram,"FR", optionalProgramStatusList, accessToken,exception);
 
         if (ruleProcessorData.isHasOptionalProgramDualDogwood())
         	optionalProgramStatusList =
@@ -438,6 +450,9 @@ public class GradAlgorithmService {
             if (sp.getOptionalProgramCode().equalsIgnoreCase("BC")) {
                 ruleProcessorData.setHasOptionalProgramInternationalBaccalaureateBC(true);
             }
+			if (sp.getOptionalProgramCode().equalsIgnoreCase("FR")) {
+				ruleProcessorData.setHasOptionalProgramSCCPFrenchCertificate(true);
+			}
             if (sp.getOptionalProgramCode().equalsIgnoreCase("CP")) {
                 ruleProcessorData.setHasOptionalProgramCareerProgram(true);
             }
