@@ -108,7 +108,7 @@ public class GradAlgorithmService {
 	        ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
 	        ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null); 
         }
-        //Get All Letter Grades,Special Case and AlgorithmRules
+        //Get All Letter Grades,Optional Case and AlgorithmRules
         StudentGraduationAlgorithmData studentGraduationAlgorithmData = studentGraduationService.getAllAlgorithmData(gradProgram, accessToken,exception);
         if(studentGraduationAlgorithmData != null) {
 	        ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
@@ -126,54 +126,62 @@ public class GradAlgorithmService {
         //Set Projected flag
         ruleProcessorData.setProjected(projected);
 
-        //Set Special Program Flag
-        ruleProcessorData = checkForSpecialProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken,exception);
+        //Set Optional Program Flag
+        ruleProcessorData = checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken,exception);
         boolean studentHasOp = false;
-        if (ruleProcessorData.isHasSpecialProgramFrenchImmersion()) {
+        if (ruleProcessorData.isHasOptionalProgramFrenchImmersion()) {
         	studentHasOp = true;
         	GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "FI", accessToken,exception);
         	ruleProcessorData.setGradProgramRules(data.getProgramRules());
-        	ruleProcessorData.setGradSpecialProgramRulesFrenchImmersion(data.getOptionalProgramRules());
+        	ruleProcessorData.setGradOptionalProgramRulesFrenchImmersion(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
 
-        if (ruleProcessorData.isHasSpecialProgramAdvancedPlacement()) {
+        if (ruleProcessorData.isHasOptionalProgramAdvancedPlacement()) {
         	studentHasOp = true;
         	GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "AD", accessToken,exception);
         	ruleProcessorData.setGradProgramRules(data.getProgramRules());
-        	ruleProcessorData.setGradSpecialProgramRulesAdvancedPlacement(data.getOptionalProgramRules());
+        	ruleProcessorData.setGradOptionalProgramRulesAdvancedPlacement(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
         
-        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBD()) {
+        if (ruleProcessorData.isHasOptionalProgramInternationalBaccalaureateBD()) {
         	studentHasOp = true;
         	GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "BD", accessToken,exception);
         	ruleProcessorData.setGradProgramRules(data.getProgramRules());
-        	ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBD(data.getOptionalProgramRules());
+        	ruleProcessorData.setGradOptionalProgramRulesInternationalBaccalaureateBD(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
         
-        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC()) {
+        if (ruleProcessorData.isHasOptionalProgramInternationalBaccalaureateBC()) {
         	studentHasOp = true;
         	GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "BC", accessToken,exception);
         	ruleProcessorData.setGradProgramRules(data.getProgramRules());
-        	ruleProcessorData.setGradSpecialProgramRulesInternationalBaccalaureateBC(data.getOptionalProgramRules());
+        	ruleProcessorData.setGradOptionalProgramRulesInternationalBaccalaureateBC(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
+
+		if (ruleProcessorData.isHasOptionalProgramSCCPFrenchCertificate()) {
+			studentHasOp = true;
+			GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "FR", accessToken,exception);
+			ruleProcessorData.setGradProgramRules(data.getProgramRules());
+			ruleProcessorData.setGradOptionalProgramRulesSCCPFrenchCertificate(data.getOptionalProgramRules());
+			ruleProcessorData.setGradProgram(data.getGradProgram());
+		}
         
-        if (ruleProcessorData.isHasSpecialProgramCareerProgram()) {
+        if (ruleProcessorData.isHasOptionalProgramCareerProgram()) {
         	studentHasOp = true;
         	GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "CP", accessToken,exception);
         	ruleProcessorData.setGradProgramRules(data.getProgramRules());
-        	ruleProcessorData.setGradSpecialProgramRulesCareerProgram(data.getOptionalProgramRules());
+        	ruleProcessorData.setGradOptionalProgramRulesCareerProgram(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
         
-        if (ruleProcessorData.isHasSpecialProgramDualDogwood()) {
+        if (ruleProcessorData.isHasOptionalProgramDualDogwood()) {
         	studentHasOp = true;
         	GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "DD", accessToken,exception);
         	ruleProcessorData.setGradProgramRules(data.getProgramRules());
-        	ruleProcessorData.setGradSpecialProgramRulesDualDogwood(data.getOptionalProgramRules());
+        	ruleProcessorData.setGradOptionalProgramRulesDualDogwood(data.getOptionalProgramRules());
         	ruleProcessorData.setGradProgram(data.getGradProgram());
         }
         
@@ -232,31 +240,35 @@ public class GradAlgorithmService {
 
         ruleProcessorData.setGradStatus(gradStatus);
         
-        //Populating Special Grad Status
-        List<GradAlgorithmOptionalStudentProgram> specialProgramStatusList = new ArrayList<>();
-        if (ruleProcessorData.isHasSpecialProgramFrenchImmersion())
-        	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"FI", specialProgramStatusList, accessToken,exception);
+        //Populating Optional Grad Status
+        List<GradAlgorithmOptionalStudentProgram> optionalProgramStatusList = new ArrayList<>();
+        if (ruleProcessorData.isHasOptionalProgramFrenchImmersion())
+        	optionalProgramStatusList =
+                    getListOfOptionalProgramStatus(pen, gradProgram,"FI", optionalProgramStatusList, accessToken,exception);
 
-        if (ruleProcessorData.isHasSpecialProgramCareerProgram())
-        	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"CP", specialProgramStatusList, accessToken,exception);
+        if (ruleProcessorData.isHasOptionalProgramCareerProgram())
+        	optionalProgramStatusList =
+                    getListOfOptionalProgramStatus(pen, gradProgram,"CP", optionalProgramStatusList, accessToken,exception);
 
-        if (ruleProcessorData.isHasSpecialProgramAdvancedPlacement())
-        	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"AD", specialProgramStatusList, accessToken,exception);
+        if (ruleProcessorData.isHasOptionalProgramAdvancedPlacement())
+        	optionalProgramStatusList =
+                    getListOfOptionalProgramStatus(pen, gradProgram,"AD", optionalProgramStatusList, accessToken,exception);
 
-        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBD())
-        	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"BD", specialProgramStatusList, accessToken,exception);
+        if (ruleProcessorData.isHasOptionalProgramInternationalBaccalaureateBD())
+        	optionalProgramStatusList =
+                    getListOfOptionalProgramStatus(pen, gradProgram,"BD", optionalProgramStatusList, accessToken,exception);
 
-        if (ruleProcessorData.isHasSpecialProgramInternationalBaccalaureateBC())
-        	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"BC", specialProgramStatusList, accessToken,exception);
+        if (ruleProcessorData.isHasOptionalProgramInternationalBaccalaureateBC())
+        	optionalProgramStatusList =
+                    getListOfOptionalProgramStatus(pen, gradProgram,"BC", optionalProgramStatusList, accessToken,exception);
 
-        if (ruleProcessorData.isHasSpecialProgramDualDogwood())
-        	specialProgramStatusList =
-                    getListOfSpecialProgramStatus(pen, gradProgram,"DD", specialProgramStatusList, accessToken,exception);
+		if (ruleProcessorData.isHasOptionalProgramSCCPFrenchCertificate())
+			optionalProgramStatusList =
+					getListOfOptionalProgramStatus(pen, gradProgram,"FR", optionalProgramStatusList, accessToken,exception);
+
+        if (ruleProcessorData.isHasOptionalProgramDualDogwood())
+        	optionalProgramStatusList =
+                    getListOfOptionalProgramStatus(pen, gradProgram,"DD", optionalProgramStatusList, accessToken,exception);
 		
         ruleProcessorData.setSchool(
                 gradSchoolService.getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord(), accessToken,exception)
@@ -265,7 +277,7 @@ public class GradAlgorithmService {
         //Convert ruleProcessorData into GraduationData object
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
 		graduationData.setGradStatus(ruleProcessorData.getGradStatus());
-		graduationData.setSpecialGradStatus(specialProgramStatusList);
+		graduationData.setOptionalGradStatus(optionalProgramStatusList);
 		graduationData.setSchool(ruleProcessorData.getSchool());
 		graduationData.setStudentCourses(new StudentCourses(ruleProcessorData.getStudentCourses()));
         graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
@@ -336,68 +348,69 @@ public class GradAlgorithmService {
 	Utility Methods
 	*******************************************************************************************************************/
 
-    private List<GradAlgorithmOptionalStudentProgram> getListOfSpecialProgramStatus(
-            String pen, String gradProgram, String specialProgramCode,
-            List<GradAlgorithmOptionalStudentProgram> specialProgramStatusList, String accessToken,ExceptionMessage exception) {
+    private List<GradAlgorithmOptionalStudentProgram> getListOfOptionalProgramStatus(
+            String pen, String gradProgram, String optionalProgramCode,
+            List<GradAlgorithmOptionalStudentProgram> optionalProgramStatusList, String accessToken,ExceptionMessage exception) {
     	List<GradRequirement> nonGradReasons = new ArrayList<>();
     	List<GradRequirement> reqMet = new ArrayList<>();
-    	GradAlgorithmOptionalStudentProgram gradStudentSpecialAlg = new GradAlgorithmOptionalStudentProgram();
-		gradStudentSpecialAlg.setPen(pen);
-		gradStudentSpecialAlg.setOptionalProgramID(gradProgramService.getSpecialProgramID(gradProgram, specialProgramCode, accessToken,exception));
-		gradStudentSpecialAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
+    	GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg = new GradAlgorithmOptionalStudentProgram();
+		gradStudentOptionalAlg.setPen(pen);
+		gradStudentOptionalAlg.setOptionalProgramID(gradProgramService.getOptionalProgramID(gradProgram, optionalProgramCode, accessToken,exception));
+		gradStudentOptionalAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
 		
-		switch(specialProgramCode) {
+		switch(optionalProgramCode) {
 		case "FI":
-			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramFrenchImmersionGraduated());
-			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
-			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessmentsForFrenchImmersion()));
-			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsFrenchImmersion();
-			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsFrenchImmersion();
-			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
-				gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getOptionalStudentCourses().getStudentCourseList(),
-						gradStudentSpecialAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
+			gradStudentOptionalAlg.setOptionalGraduated(ruleProcessorData.isOptionalProgramFrenchImmersionGraduated());
+			gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForFrenchImmersion()));
+			gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessmentsForFrenchImmersion()));
+			reqMet = ruleProcessorData.getRequirementsMetOptionalProgramsFrenchImmersion();
+			nonGradReasons = ruleProcessorData.getNonGradReasonsOptionalProgramsFrenchImmersion();
+			if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
+				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList(),
+						gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
 			}
 			break;
 		case "CP":
 			if(!gradProgram.equalsIgnoreCase("1950")) {
-				gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramCareerProgramGraduated());
-				gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
-				gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
-				reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsCareerProgram();
-				nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsCareerProgram();
-				if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
-					gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getOptionalStudentCourses().getStudentCourseList(),
-							gradStudentSpecialAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
+				gradStudentOptionalAlg.setOptionalGraduated(ruleProcessorData.isOptionalProgramCareerProgramGraduated());
+				gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForCareerProgram()));
+				gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments());
+				reqMet = ruleProcessorData.getRequirementsMetOptionalProgramsCareerProgram();
+				nonGradReasons = ruleProcessorData.getNonGradReasonsOptionalProgramsCareerProgram();
+				if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
+					gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList(),
+							gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
 				}
 			}else {
-				gradStudentSpecialAlg.setSpecialGraduated(true);
-				gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
-				gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses());
-				if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
-					gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+				gradStudentOptionalAlg.setOptionalGraduated(true);
+				gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments());
+				gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses());
+				if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
+					gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 							ruleProcessorData.getStudentAssessments()));
 				}
 			}
 			break;
 		case "DD":
-			gradStudentSpecialAlg.setSpecialGraduated(ruleProcessorData.isSpecialProgramDualDogwoodGraduated());
-			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForDualDogwood()));
-			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessmentsForDualDogwood()));
-			reqMet = ruleProcessorData.getRequirementsMetSpecialProgramsDualDogwood();
-			nonGradReasons = ruleProcessorData.getNonGradReasonsSpecialProgramsDualDogwood();
-			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
-				gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentSpecialAlg.getOptionalStudentCourses().getStudentCourseList(),
-						gradStudentSpecialAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
+			gradStudentOptionalAlg.setOptionalGraduated(ruleProcessorData.isOptionalProgramDualDogwoodGraduated());
+			gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses(ruleProcessorData.getStudentCoursesForDualDogwood()));
+			gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessmentsForDualDogwood()));
+			reqMet = ruleProcessorData.getRequirementsMetOptionalProgramsDualDogwood();
+			nonGradReasons = ruleProcessorData.getNonGradReasonsOptionalProgramsDualDogwood();
+			if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
+				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList(),
+						gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList()));
 			}
 			break;
 		case "AD":
 		case "BC":
 		case "BD":
-			gradStudentSpecialAlg.setSpecialGraduated(true);
-			gradStudentSpecialAlg.setOptionalStudentAssessments(new StudentAssessments());
-			gradStudentSpecialAlg.setOptionalStudentCourses(new StudentCourses());
-			if (gradStudentSpecialAlg.isSpecialGraduated() && isGraduated) {
-				gradStudentSpecialAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
+		case "FR":
+			gradStudentOptionalAlg.setOptionalGraduated(true);
+			gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments());
+			gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses());
+			if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
+				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(),
 						ruleProcessorData.getStudentAssessments()));
 			}
 			break;
@@ -408,40 +421,43 @@ public class GradAlgorithmService {
 		if(nonGradReasons != null)
 			Collections.sort(nonGradReasons, Comparator.comparing(GradRequirement::getRule));
 		
-		gradStudentSpecialAlg.setOptionalNonGradReasons(nonGradReasons);
+		gradStudentOptionalAlg.setOptionalNonGradReasons(nonGradReasons);
 		if(reqMet != null)
 			Collections.sort(reqMet,Comparator.comparing(GradRequirement::getRule));
 		
-		gradStudentSpecialAlg.setOptionalRequirementsMet(reqMet);
+		gradStudentOptionalAlg.setOptionalRequirementsMet(reqMet);
 		
-		specialProgramStatusList.add(gradStudentSpecialAlg);
-		return specialProgramStatusList;
+		optionalProgramStatusList.add(gradStudentOptionalAlg);
+		return optionalProgramStatusList;
     }
 
-    private RuleProcessorData checkForSpecialProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken,ExceptionMessage exception) {
-        List<StudentOptionalProgram> gradSpecialResponseList = gradGraduationStatusService.getStudentSpecialProgramsById(studentID, accessToken,exception);
+    private RuleProcessorData checkForOptionalProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken,ExceptionMessage exception) {
+        List<StudentOptionalProgram> gradOptionalResponseList = gradGraduationStatusService.getStudentOptionalProgramsById(studentID, accessToken,exception);
 
-        if (gradSpecialResponseList.isEmpty())
+        if (gradOptionalResponseList.isEmpty())
             return ruleProcessorData;
 
-        for (StudentOptionalProgram sp : gradSpecialResponseList) {
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("FI")) {
-                ruleProcessorData.setHasSpecialProgramFrenchImmersion(true);
+        for (StudentOptionalProgram sp : gradOptionalResponseList) {
+            if (sp.getOptionalProgramCode().equalsIgnoreCase("FI")) {
+                ruleProcessorData.setHasOptionalProgramFrenchImmersion(true);
             }
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("AD")) {
-                ruleProcessorData.setHasSpecialProgramAdvancedPlacement(true);
+            if (sp.getOptionalProgramCode().equalsIgnoreCase("AD")) {
+                ruleProcessorData.setHasOptionalProgramAdvancedPlacement(true);
             }
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("BD")) {
-                ruleProcessorData.setHasSpecialProgramInternationalBaccalaureateBD(true);
+            if (sp.getOptionalProgramCode().equalsIgnoreCase("BD")) {
+                ruleProcessorData.setHasOptionalProgramInternationalBaccalaureateBD(true);
             }
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("BC")) {
-                ruleProcessorData.setHasSpecialProgramInternationalBaccalaureateBC(true);
+            if (sp.getOptionalProgramCode().equalsIgnoreCase("BC")) {
+                ruleProcessorData.setHasOptionalProgramInternationalBaccalaureateBC(true);
             }
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("CP")) {
-                ruleProcessorData.setHasSpecialProgramCareerProgram(true);
+			if (sp.getOptionalProgramCode().equalsIgnoreCase("FR")) {
+				ruleProcessorData.setHasOptionalProgramSCCPFrenchCertificate(true);
+			}
+            if (sp.getOptionalProgramCode().equalsIgnoreCase("CP")) {
+                ruleProcessorData.setHasOptionalProgramCareerProgram(true);
             }
-            if (sp.getSpecialProgramCode().equalsIgnoreCase("DD")) {
-                ruleProcessorData.setHasSpecialProgramDualDogwood(true);
+            if (sp.getOptionalProgramCode().equalsIgnoreCase("DD")) {
+                ruleProcessorData.setHasOptionalProgramDualDogwood(true);
             }
         }
         return ruleProcessorData;

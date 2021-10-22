@@ -42,7 +42,7 @@ public class GradGraduationStatusService extends GradService {
         return result;
     }
 
-    List<StudentOptionalProgram> getStudentSpecialProgramsById(String studentID, String accessToken,ExceptionMessage exception) {
+    List<StudentOptionalProgram> getStudentOptionalProgramsById(String studentID, String accessToken,ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
     	{
@@ -55,7 +55,7 @@ public class GradGraduationStatusService extends GradService {
 	                .block();
 	        end();
 	
-	        logger.info("**** # of Special Programs: " + (result != null ? result.size() : 0));
+	        logger.info("**** # of Optional Programs: " + (result != null ? result.size() : 0));
 	        return result == null ? new ArrayList<>():result;
     	} catch (Exception e) {
     		exception.setExceptionName("GRAD-STUDENT-API IS DOWN");

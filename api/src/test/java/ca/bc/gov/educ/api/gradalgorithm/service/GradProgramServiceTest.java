@@ -121,20 +121,20 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
     
     
     @Test
-    public void testGetSpecialProgramID() {
+    public void testGetOptionalProgramID() {
         String accessToken = "accessToken";
         String gradProgram = "2018-EN";
-        String gradSpecialProgram = "FI";
+        String gradOptionalProgram = "FI";
         UUID id = new  UUID(1, 1);      
         OptionalProgram op = new OptionalProgram();
         op.setOptionalProgramID(id);
         op.setOptionalProgramName("adsad");
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(constants.getOptionalProgram(), gradProgram,gradSpecialProgram))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getOptionalProgram(), gradProgram,gradOptionalProgram))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(OptionalProgram.class)).thenReturn(Mono.just(op));
         
-        gradProgramService.getSpecialProgramID(gradProgram,gradSpecialProgram, accessToken,exception);
+        gradProgramService.getOptionalProgramID(gradProgram,gradOptionalProgram, accessToken,exception);
     }
 }
