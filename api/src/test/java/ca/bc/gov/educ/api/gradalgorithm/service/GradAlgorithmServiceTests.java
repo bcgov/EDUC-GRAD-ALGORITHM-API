@@ -4,10 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,18 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
-import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradProgramAlgorithmData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.School;
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
-import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @RunWith(SpringRunner.class)
@@ -128,6 +115,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
+		ruleProcessorData.setMapOptional(new HashMap<>());
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -164,6 +152,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setOptionalProgramCode("FI");
     	sp.setOptionalProgramName("French Immersion");
     	gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		mapOptional.put("FI",obj);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
@@ -176,8 +171,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
-        ruleProcessorData.setGradOptionalProgramRulesFrenchImmersion(programAlgorithmData.getOptionalProgramRules());
-        ruleProcessorData.setHasOptionalProgramFrenchImmersion(true);
+		ruleProcessorData.setMapOptional(mapOptional);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -216,7 +210,14 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setOptionalProgramCode("AD");
     	sp.setOptionalProgramName("French Immersion");
     	gradOptionalResponseList.add(sp);
-    	
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		mapOptional.put("AD",obj);
+
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
@@ -228,8 +229,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
-        ruleProcessorData.setGradOptionalProgramRulesAdvancedPlacement(programAlgorithmData.getOptionalProgramRules());
-        ruleProcessorData.setHasOptionalProgramAdvancedPlacement(true);
+        ruleProcessorData.setMapOptional(mapOptional);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -269,6 +269,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setOptionalProgramCode("BD");
     	sp.setOptionalProgramName("French Immersion");
     	gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		mapOptional.put("BD",obj);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
@@ -281,8 +288,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
-        ruleProcessorData.setGradOptionalProgramRulesInternationalBaccalaureateBD(programAlgorithmData.getOptionalProgramRules());
-        ruleProcessorData.setHasOptionalProgramInternationalBaccalaureateBD(true);
+        ruleProcessorData.setMapOptional(mapOptional);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -321,6 +327,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setOptionalProgramCode("BC");
     	sp.setOptionalProgramName("French Immersion");
     	gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		mapOptional.put("BC",obj);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
@@ -333,8 +346,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
-        ruleProcessorData.setGradOptionalProgramRulesInternationalBaccalaureateBC(programAlgorithmData.getOptionalProgramRules());
-        ruleProcessorData.setHasOptionalProgramInternationalBaccalaureateBC(true);
+        ruleProcessorData.setMapOptional(mapOptional);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -376,7 +388,14 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setOptionalProgramCode("CP");
     	sp.setOptionalProgramName("French Immersion");
     	gradOptionalResponseList.add(sp);
-    	
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		mapOptional.put("CP",obj);
+
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
@@ -388,8 +407,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
-        ruleProcessorData.setGradOptionalProgramRulesCareerProgram(programAlgorithmData.getOptionalProgramRules());
-        ruleProcessorData.setHasOptionalProgramCareerProgram(true);
+        ruleProcessorData.setMapOptional(mapOptional);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -429,6 +447,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setOptionalProgramCode("DD");
     	sp.setOptionalProgramName("French Immersion");
     	gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		mapOptional.put("DD",obj);
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
@@ -441,8 +466,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
         ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
-        ruleProcessorData.setGradOptionalProgramRulesDualDogwood(programAlgorithmData.getOptionalProgramRules());
-        ruleProcessorData.setHasOptionalProgramDualDogwood(true);
+        ruleProcessorData.setMapOptional(mapOptional);
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -497,7 +521,8 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null); 
         ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null); 
         ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
-        ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
+		ruleProcessorData.setMapOptional(new HashMap<>());
+		ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
         ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
         ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null); 
         ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
@@ -541,6 +566,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setProjected(true);
+		ruleProcessorData.setMapOptional(new HashMap<>());
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
     	ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
