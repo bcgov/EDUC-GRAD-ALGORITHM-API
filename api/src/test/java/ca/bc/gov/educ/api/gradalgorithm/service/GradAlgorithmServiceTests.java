@@ -509,6 +509,8 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         msg.setProgramCadre("Adasd");
         msg.setProgramCode(gradProgram);
         msg.setTranscriptMessageID(new UUID(1, 1));
+		msg.setGradProjectedMessage("asdadad");
+		msg.setHonourProjectedNote("asdad");
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setProjected(true);

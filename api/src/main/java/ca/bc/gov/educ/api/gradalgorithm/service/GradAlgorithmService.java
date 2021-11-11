@@ -222,19 +222,19 @@ public class GradAlgorithmService {
 	        if(graduationData.isGraduated()) {
 	        	graduationData.setGradMessage(
 	        	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(),accessToken,exception)
+	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(),ruleProcessorData.isProjected(),accessToken,exception)
 	            );
 	        }else {
 	        	graduationData.setGradMessage(
 	        	        getGradMessages(gradProgram, "NOT_GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken,exception)
+	                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(),ruleProcessorData.isProjected(), accessToken,exception)
 	            );
 	        }
         }
         if(checkSCCPNOPROG) {
         	graduationData.setGradMessage(
         	        getGradMessages(gradProgram, "GRADUATED", graduationData.getGradStatus().getProgramCompletionDate(),
-                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(), accessToken,exception)
+                            graduationData.getGradStatus().getHonoursStanding(),ruleProcessorData.getGradProgram().getProgramName(),ruleProcessorData.isProjected(), accessToken,exception)
             );
         }
         if(existingGradMessage != null && existingProgramCompletionDate != null && !gradProgram.equalsIgnoreCase(SCCP) && !gradProgram.equalsIgnoreCase(NOPROGRAM)) {
@@ -309,7 +309,7 @@ public class GradAlgorithmService {
 		}
 	}
 
-    private String getGradMessages(String gradProgram, String msgType, String gradDate, String honours, String programName, String accessToken,ExceptionMessage exception) {
+    private String getGradMessages(String gradProgram, String msgType, String gradDate, String honours, String programName,boolean projected, String accessToken,ExceptionMessage exception) {
 
         StringBuilder strBuilder = new StringBuilder();
 		TranscriptMessage result = studentGraduationService.getGradMessages(gradProgram, msgType, accessToken,exception);
@@ -318,11 +318,18 @@ public class GradAlgorithmService {
 			if(isGraduated) {
 				if(!gradProgram.equalsIgnoreCase(SCCP)) {
 					if(honours.equalsIgnoreCase("Y")) {
-						strBuilder.append(String.format(result.getHonourNote(),programName));
+						if(projected) {
+							strBuilder.append(String.format(result.getHonourProjectedNote(), programName));
+						}else {
+							strBuilder.append(String.format(result.getHonourNote(), programName));
+						}
 					}else {
-						strBuilder.append(String.format(result.getGradMainMessage(),programName));
+						if(projected) {
+							strBuilder.append(String.format(result.getGradProjectedMessage(), programName));
+						}else {
+							strBuilder.append(String.format(result.getGradMainMessage(),programName));
+						}
 					}
-					
 					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDateMessage(),formatGradDate(gradDate)));
 				}else {
 					strBuilder.append(String.format(result.getGradMainMessage(),programName));
