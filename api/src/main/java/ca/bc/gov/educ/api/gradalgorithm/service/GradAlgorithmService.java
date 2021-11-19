@@ -335,7 +335,11 @@ public class GradAlgorithmService {
 					strBuilder.append(String.format(result.getGradMainMessage(),programName));
 				}
 			}else {
-				strBuilder.append(String.format(result.getGradMainMessage(),programName));
+				if(projected) {
+					strBuilder.append(String.format(result.getGradProjectedMessage(), programName));
+				}else {
+					strBuilder.append(String.format(result.getGradMainMessage(), programName));
+				}
 			}
 	        return strBuilder.toString();
 		}
