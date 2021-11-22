@@ -2,7 +2,6 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentSpecialProgram;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
@@ -86,7 +85,7 @@ public class GradGraduationStatusServiceTests {
    
     @Test
     public void getStudentGraduationStatusTest() {
-        LOG.debug("<{}.getStudentSpecialProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        LOG.debug("<{}.getStudentOptionalProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "1111111111";
         UUID studentID = UUID.randomUUID();
         String accessToken = "accessToken";
@@ -103,29 +102,29 @@ public class GradGraduationStatusServiceTests {
 
         GradAlgorithmGraduationStudentRecord result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString(), accessToken);
         assertNotNull(result);
-        LOG.debug(">getStudentSpecialProgramsTest");
+        LOG.debug(">getStudentOptionalProgramsTest");
     }
 
     @Test
-    public void getStudentSpecialProgramsByIdTest() {
-        LOG.debug("<{}.getStudentSpecialProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+    public void getStudentOptionalProgramsByIdTest() {
+        LOG.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "1111111111";
         UUID studentID = UUID.randomUUID();
         String accessToken = "accessToken";
 
         List<StudentOptionalProgram> entity = new ArrayList<>();
 
-        ParameterizedTypeReference<List<StudentOptionalProgram>> specialProgramResponseType = new ParameterizedTypeReference<List<StudentOptionalProgram>>() {
+        ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<List<StudentOptionalProgram>>() {
         };
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID.toString()))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(specialProgramResponseType)).thenReturn(Mono.just(entity));
+        when(this.responseMock.bodyToMono(optionalProgramResponseType)).thenReturn(Mono.just(entity));
 
-        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentSpecialProgramsById(studentID.toString(), accessToken,exception);
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception);
         assertNotNull(result);
-        LOG.debug(">getStudentSpecialProgramsByIdTest");
+        LOG.debug(">getStudentOptionalProgramsByIdTest");
     }
 }

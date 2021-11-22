@@ -30,7 +30,8 @@ public class GradProgramService extends GradService {
 
     
     GradProgramAlgorithmData getProgramDataForAlgorithm(String programCode,String optionalProgramCode,String accessToken,ExceptionMessage exception) {
-    	try {
+		exception = new ExceptionMessage();
+		try {
 	    	start();
 	    	String url = constants.getProgramData() + "programCode=%s";
 	    	if(StringUtils.isNotBlank(optionalProgramCode)) {
@@ -45,7 +46,7 @@ public class GradProgramService extends GradService {
 	                .block();
 	        end();
 	        logger.info("**** # of Program Rules		: " + (result != null ? result.getProgramRules() != null ? result.getProgramRules().size() : 0:0));
-	        logger.info("**** # of Special Program Rules: " + (result != null ? result.getOptionalProgramRules() != null ? result.getOptionalProgramRules().size() : 0:0));
+	        logger.info("**** # of Optional Program Rules: " + (result != null ? result.getOptionalProgramRules() != null ? result.getOptionalProgramRules().size() : 0:0));
 	        logger.info("**** # of Program 				: " + (result != null ? result.getGradProgram() != null ? result.getGradProgram().getProgramName() :"":""));
 	        return result;
     	} catch (Exception e) {
@@ -55,11 +56,12 @@ public class GradProgramService extends GradService {
 		}
     }
 
-    UUID getSpecialProgramID(String gradProgram, String gradSpecialProgram, String accessToken,ExceptionMessage exception) {
-        try {
+    UUID getOptionalProgramID(String gradProgram, String gradOptionalProgram, String accessToken,ExceptionMessage exception) {
+		exception = new ExceptionMessage();
+		try {
 	    	start();
 	        OptionalProgram result = webClient.get()
-	                .uri(String.format(constants.getOptionalProgram(), gradProgram,gradSpecialProgram))
+	                .uri(String.format(constants.getOptionalProgram(), gradProgram,gradOptionalProgram))
 	                .headers(h -> h.setBearerAuth(accessToken))
 	                .retrieve()
 	                .bodyToMono(OptionalProgram.class)

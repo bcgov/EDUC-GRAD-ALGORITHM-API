@@ -19,12 +19,6 @@ public class TranscriptMessage {
 	private String adIBProgramMessage;
 	private String programCadre;
 	private String careerProgramMessage;
-	
-	@Override
-	public String toString() {
-		return "TranscriptMessage [transcriptMessageID=" + transcriptMessageID + ", programCode=" + programCode
-				+ ", messageTypeCode=" + messageTypeCode + ", gradMainMessage=" + gradMainMessage + ", gradDateMessage="
-				+ gradDateMessage + ", honourNote=" + honourNote + ", adIBProgramMessage=" + adIBProgramMessage
-				+ ", programCadre=" + programCadre + ", careerProgramMessage=" + careerProgramMessage + "]";
-	}	
+	private String gradProjectedMessage;
+	private String honourProjectedNote;
 }
