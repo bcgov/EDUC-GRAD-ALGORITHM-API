@@ -3,8 +3,6 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
-
-import java.text.SimpleDateFormat;
 import java.util.function.Consumer;
 
 import org.junit.After;
@@ -13,8 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,45 +29,32 @@ import reactor.core.publisher.Mono;
 @ActiveProfiles("test")
 public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradAssessmentServiceTest.class);
-    private static final String CLASS_NAME = GradAssessmentServiceTest.class.getSimpleName();
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-    @Autowired
-    GradAssessmentService gradAssessmentService;
+    @Autowired GradAssessmentService gradAssessmentService;
     
-    @Autowired
-    private ExceptionMessage exception;
+    @Autowired ExceptionMessage exception;
 
-    @MockBean
-    WebClient webClient;
+    @MockBean WebClient webClient;
     
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+    @Autowired GradAlgorithmAPIConstants constants;
 
-    @Mock
-    private WebClient.RequestHeadersSpec requestHeadersMock;
-    @Mock
-    private WebClient.RequestHeadersUriSpec requestHeadersUriMock;
-    @Mock
-    private WebClient.ResponseSpec responseMock;
-    @Mock
-    private WebClient.RequestBodySpec requestBodyMock;
-    @Mock
-    private WebClient.RequestBodyUriSpec requestBodyUriMock;
+    @Mock WebClient.RequestHeadersSpec requestHeadersMock;
+    @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
+    @Mock WebClient.ResponseSpec responseMock;
+    @Mock WebClient.RequestBodySpec requestBodyMock;
+    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void setup() {
 
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         openMocks(this);
     }
 

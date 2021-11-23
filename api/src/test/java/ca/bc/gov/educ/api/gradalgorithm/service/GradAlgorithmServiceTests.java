@@ -1,94 +1,34 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.MockitoAnnotations.openMocks;
-
-import java.text.SimpleDateFormat;
 import java.util.*;
-
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradAlgorithmServiceTests.class);
-    private static final String CLASS_NAME = GradAlgorithmServiceTests.class.getSimpleName();
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-    @Autowired
-    GradAlgorithmService gradAlgorithmService;
+    @Autowired GradAlgorithmService gradAlgorithmService;
+    @Autowired ExceptionMessage exception;
+    @MockBean GradStudentService gradStudentService;
+    @MockBean GradAssessmentService gradAssessmentService;
+    @MockBean GradCourseService gradCourseService;
+    @MockBean GradRuleProcessorService gradRuleProcessorService;
+    @MockBean GradProgramService gradProgramService;
+    @MockBean GradGraduationStatusService gradGraduationStatusService;
+    @MockBean StudentGraduationService studentGraduationService;
     
-    @Autowired
-    private ExceptionMessage exception;
-
-    @MockBean
-    WebClient webClient;
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
-
-    @Mock
-    private WebClient.RequestHeadersSpec requestHeadersMock;
-    @Mock
-    private WebClient.RequestHeadersUriSpec requestHeadersUriMock;
-    @Mock
-    private WebClient.ResponseSpec responseMock;
-    @Mock
-    private WebClient.RequestBodySpec requestBodyMock;
-    @Mock
-    private WebClient.RequestBodyUriSpec requestBodyUriMock;
-    
-    @MockBean
-    GradStudentService gradStudentService;
-    @MockBean
-    GradAssessmentService gradAssessmentService;
-    @MockBean
-    GradCourseService gradCourseService;
-    @MockBean
-    GradRuleProcessorService gradRuleProcessorService;
-    @MockBean
-    GradProgramService gradProgramService;
-    @MockBean
-    GradGraduationStatusService gradGraduationStatusService;
-    @MockBean
-    StudentGraduationService studentGraduationService;
-    
-    @MockBean
-    GradSchoolService gradSchoolService;
-
-    @BeforeClass
-    public static void setup() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
-    @Before
-    public void init() throws Exception {
-        openMocks(this);
-    }
+    @MockBean GradSchoolService gradSchoolService;
 
     @Test
     public void testGraduateStudent() throws Exception {
@@ -144,7 +84,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm.json");
     	School school = createSchoolData("json/school.json");
     	
-    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<StudentOptionalProgram>();
+    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
     	sp.setId(new UUID(1, 1));
     	sp.setOptionalProgramID(new UUID(1, 2));
@@ -202,7 +142,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
     	School school = createSchoolData("json/school.json");
     	
-    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<StudentOptionalProgram>();
+    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
     	sp.setId(new UUID(1, 1));
     	sp.setOptionalProgramID(new UUID(1, 2));
@@ -261,7 +201,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
     	School school = createSchoolData("json/school.json");
     	
-    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<StudentOptionalProgram>();
+    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
     	sp.setId(new UUID(1, 1));
     	sp.setOptionalProgramID(new UUID(1, 2));
@@ -319,7 +259,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
     	School school = createSchoolData("json/school.json");
     	
-    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<StudentOptionalProgram>();
+    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
     	sp.setId(new UUID(1, 1));
     	sp.setOptionalProgramID(new UUID(1, 2));
@@ -380,7 +320,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm_cp.json");
     	School school = createSchoolData("json/school.json");
     	
-    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<StudentOptionalProgram>();
+    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
     	sp.setId(new UUID(1, 1));
     	sp.setOptionalProgramID(new UUID(1, 2));
@@ -439,7 +379,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus_PF.json");
     	School school = createSchoolData("json/school.json");
     	
-    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<StudentOptionalProgram>();
+    	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
     	sp.setId(new UUID(1, 1));
     	sp.setOptionalProgramID(new UUID(1, 2));

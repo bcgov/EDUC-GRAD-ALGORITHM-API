@@ -2,9 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
-import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -22,12 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 import java.util.function.Consumer;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,44 +38,32 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
     private static final String CLASS_NAME = GradRuleProcessorServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Autowired
-    GradRuleProcessorService gradRuleProcessorService;
-    
-    @Autowired
-    private ExceptionMessage exception;
-    
-    @Autowired
-    JsonTransformer jsonTransformer;
-
-    @MockBean
-    WebClient webClient;
+    @Autowired GradRuleProcessorService gradRuleProcessorService;
+    @Autowired ExceptionMessage exception;
+    @MockBean WebClient webClient;
 
     @Value("${endpoint.rule-engine-api.base-url}")
     private String ruleEngineBaseUrl;
     @Value("${endpoint.rule-engine-api.endpoints.run-grad-algorithm-rules}")
     private String ruleEngineRunGradAlgorithmRulesUrl;
 
-    @Mock
-    private WebClient.RequestHeadersSpec requestHeadersMock;
-    @Mock
-    private WebClient.ResponseSpec responseMock;
-    @Mock
-    private WebClient.RequestBodySpec requestBodyMock;
-    @Mock
-    private WebClient.RequestBodyUriSpec requestBodyUriMock;
+    @Mock WebClient.RequestHeadersSpec requestHeadersMock;
+    @Mock WebClient.ResponseSpec responseMock;
+    @Mock WebClient.RequestBodySpec requestBodyMock;
+    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void setup() {
 
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         openMocks(this);
     }
 

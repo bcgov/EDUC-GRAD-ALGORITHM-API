@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class GradCourseService extends GradService {
     
     @Autowired
     private GradAlgorithmAPIConstants constants;
-    
+
+	@Retry(name = "generalgetcall")
     CourseAlgorithmData getCourseDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
