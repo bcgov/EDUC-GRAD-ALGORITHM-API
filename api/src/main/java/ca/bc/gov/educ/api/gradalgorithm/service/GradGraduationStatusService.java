@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,10 @@ public class GradGraduationStatusService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradGraduationStatusService.class);
     
-    @Autowired
-    private WebClient webClient;
-    
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+    @Autowired WebClient webClient;
+    @Autowired GradAlgorithmAPIConstants constants;
 
+	@Retry(name = "generalgetcall")
     GradAlgorithmGraduationStudentRecord getStudentGraduationStatus(String studentID,String accessToken) {
         
     	start();
@@ -37,11 +36,13 @@ public class GradGraduationStatusService extends GradService {
                 .block();
         end();
 
-        logger.info("**** # of Graduation Record : " + result.getStudentID());
+		if(result != null)
+        	logger.info("**** # of Graduation Record : " + result.getStudentID());
 
         return result;
     }
 
+	@Retry(name = "generalgetcall")
     List<StudentOptionalProgram> getStudentOptionalProgramsById(String studentID, String accessToken,ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try

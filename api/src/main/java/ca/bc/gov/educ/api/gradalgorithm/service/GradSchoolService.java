@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,10 @@ public class GradSchoolService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradSchoolService.class);
     
-    @Autowired
-    private WebClient webClient;
-    
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+    @Autowired WebClient webClient;
+    @Autowired GradAlgorithmAPIConstants constants;
 
+	@Retry(name = "generalgetcall")
     School getSchool(String minCode, String accessToken,ExceptionMessage exception) {
     	logger.debug("getSchool");
 		exception = new ExceptionMessage();
