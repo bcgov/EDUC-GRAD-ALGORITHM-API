@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,12 @@ public class StudentGraduationService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentGraduationService.class);
     
-    @Autowired
-    private WebClient webClient;
-    
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+    @Autowired WebClient webClient;
+    @Autowired GradAlgorithmAPIConstants constants;
     
     private static final String EXCEPTION_MESSAGE = "GRAD-STUDENT-GRADUATION-API IS DOWN";
 
+	@Retry(name = "generalgetcall")
     StudentGraduationAlgorithmData getAllAlgorithmData(String programCode,String accessToken, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
@@ -49,7 +48,8 @@ public class StudentGraduationService extends GradService {
 			return null;
 		}
     }
-    
+
+	@Retry(name = "generalgetcall")
     TranscriptMessage getGradMessages(String gradProgram, String msgType, String accessToken,ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try

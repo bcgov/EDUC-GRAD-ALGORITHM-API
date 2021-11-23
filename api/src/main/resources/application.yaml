@@ -40,6 +40,24 @@ logging:
           autoconfigure:
             logging: ${SPRING_BOOT_AUTOCONFIG_LOG_LEVEL}
 
+#Resilience
+resilience4j.retry:
+  instances:
+    generalgetcall:
+      maxRetryAttempts: ${MAX_RETRY_ATTEMPTS}
+      waitDuration: 5s
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+      ignoreExceptions:
+        - java.lang.NullPointerException
+    generalpostcall:
+      maxRetryAttempts: ${MAX_RETRY_ATTEMPTS}
+      waitDuration: 5s
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+      ignoreExceptions:
+        - java.lang.NullPointerException
+
 #Local properties
 server:
   undertow:

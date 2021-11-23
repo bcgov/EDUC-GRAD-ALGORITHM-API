@@ -3,7 +3,6 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -40,41 +38,30 @@ public class GradShoolServiceTests {
     private static final String CLASS_NAME = GradShoolServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Autowired
-    GradSchoolService gradSchoolService;
+    @Autowired GradSchoolService gradSchoolService;
+    @Autowired ExceptionMessage exception;
+    @MockBean WebClient webClient;
     
-    @Autowired
-    private ExceptionMessage exception;
+    @Autowired GradAlgorithmAPIConstants constants;
 
-    @MockBean
-    WebClient webClient;
-    
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
-
-    @Mock
-    private WebClient.RequestHeadersSpec requestHeadersMock;
-    @Mock
-    private WebClient.RequestHeadersUriSpec requestHeadersUriMock;
-    @Mock
-    private WebClient.ResponseSpec responseMock;
-    @Mock
-    private WebClient.RequestBodySpec requestBodyMock;
-    @Mock
-    private WebClient.RequestBodyUriSpec requestBodyUriMock;
+    @Mock WebClient.RequestHeadersSpec requestHeadersMock;
+    @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
+    @Mock WebClient.ResponseSpec responseMock;
+    @Mock WebClient.RequestBodySpec requestBodyMock;
+    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void setup() {
 
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         openMocks(this);
     }
 
