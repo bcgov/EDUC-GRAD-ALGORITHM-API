@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import java.util.UUID;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,11 @@ public class GradStudentService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradStudentService.class);
     
-    @Autowired
-    private WebClient webClient;
-
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+    @Autowired WebClient webClient;
+    @Autowired GradAlgorithmAPIConstants constants;
 
 
+	@Retry(name = "generalgetcall")
     GradSearchStudent getStudentDemographics(UUID studentID, String accessToken) {
         start();
         GradSearchStudent result = webClient.get()
@@ -41,6 +40,7 @@ public class GradStudentService extends GradService {
     }
 
 
+	@Retry(name = "generalgetcall")
 	public GradStudentAlgorithmData getGradStudentData(UUID studentID,String accessToken, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try {
@@ -52,10 +52,11 @@ public class GradStudentService extends GradService {
 	                .bodyToMono(GradStudentAlgorithmData.class)
 	                .block();
 	        end();
-	        
-	        logger.info("**** # of Student : "+(result.getGradStudent() != null ? result.getGradStudent().getLegalFirstName() : null) + ", "
-	                + (result.getGradStudent() != null ? result.getGradStudent().getLegalLastName().trim() : null));
-	        return result;
+
+			if(result != null)
+	        	logger.info("**** # of Student : "+(result.getGradStudent() != null ? result.getGradStudent().getLegalFirstName() : null) + ", "+ (result.getGradStudent() != null ? result.getGradStudent().getLegalLastName().trim() : null));
+
+			return result;
 		} catch (Exception e) {
 			exception.setExceptionName("GRAD-STUDENT-API IS DOWN");
 			exception.setExceptionDetails(e.getLocalizedMessage());
