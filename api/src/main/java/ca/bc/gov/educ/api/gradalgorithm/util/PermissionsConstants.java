@@ -1,8 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.util;
 
-public interface PermissionsConstants {
-	String _PREFIX = "#oauth2.hasAnyScope('";
-	String _SUFFIX = "')";
+public class PermissionsConstants {
+	private PermissionsConstants() {}
+	public static final String _PREFIX = "#oauth2.hasAnyScope('";
+	public static final String _SUFFIX = "')";
 
-	String RUN_GRAD_ALGORITHM = _PREFIX + "RUN_GRAD_ALGORITHM" + _SUFFIX;
+	public static final String RUN_GRAD_ALGORITHM = _PREFIX + "RUN_GRAD_ALGORITHM" + _SUFFIX;
 }

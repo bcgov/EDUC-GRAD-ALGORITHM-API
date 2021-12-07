@@ -10,7 +10,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
-import ca.bc.gov.educ.api.gradalgorithm.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
@@ -38,9 +37,9 @@ public class StudentGraduationService extends GradService {
 	                .block();
 	        end();
 	
-	        logger.info("**** # of Letter Grades  : " + (result != null ? result.getLetterGrade().size() : 0));
-	        logger.info("**** # of Special Cases  : " + (result != null ? result.getSpecialCase().size() : 0));
-	        logger.info("**** # of Algorithm Rules: " + (result != null ? result.getProgramAlgorithmRules().size() : 0));
+	        logger.info("**** # of Letter Grades {}:",(result != null ? result.getLetterGrade().size() : 0));
+	        logger.info("**** # of Special Cases {}:",(result != null ? result.getSpecialCase().size() : 0));
+	        logger.info("**** # of Algorithm Rules: {}",(result != null ? result.getProgramAlgorithmRules().size() : 0));
 	        return result;
         } catch (Exception e) {
         	exception.setExceptionName(EXCEPTION_MESSAGE);
