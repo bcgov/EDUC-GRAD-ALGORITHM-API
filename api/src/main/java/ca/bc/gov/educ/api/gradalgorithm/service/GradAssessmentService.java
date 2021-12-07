@@ -34,16 +34,17 @@ public class GradAssessmentService extends GradService {
 	                .block();
 	        end();
 	        
-	        if(!result.getStudentAssessments().isEmpty()) {
-		        for (StudentAssessment studentAssessment : result.getStudentAssessments()) {
-		            studentAssessment.setGradReqMet("");
-		            studentAssessment.setGradReqMetDetail("");
-		        }
-	        }
-	        logger.info("**** # of Student Assessments: " + (result.getStudentAssessments() != null ? result.getStudentAssessments().size() : 0));
-	        logger.info("**** # of Assessment Requirements: " + (result.getAssessmentRequirements() != null ? result.getAssessmentRequirements().size() : 0));
-	        logger.info("**** # of Assessments: " + (result.getAssessments() != null ? result.getAssessments().size() : 0));
-	        return result;
+	        if(result != null && !result.getStudentAssessments().isEmpty()) {
+				for (StudentAssessment studentAssessment : result.getStudentAssessments()) {
+					studentAssessment.setGradReqMet("");
+					studentAssessment.setGradReqMetDetail("");
+				}
+
+				logger.info("**** # of Student Assessments: {}", result.getStudentAssessments() != null ? result.getStudentAssessments().size() : 0);
+				logger.info("**** # of Assessment Requirements: {}", result.getAssessmentRequirements() != null ? result.getAssessmentRequirements().size() : 0);
+				logger.info("**** # of Assessments: {}", result.getAssessments() != null ? result.getAssessments().size() : 0);
+			}
+			return result;
     	} catch (Exception e) {
     		exception.setExceptionName("GRAD-ASSESSMENT-API IS DOWN");
 			exception.setExceptionDetails(e.getLocalizedMessage());

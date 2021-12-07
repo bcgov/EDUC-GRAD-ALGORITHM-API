@@ -34,8 +34,7 @@ public class GradStudentService extends GradService {
                 .block();
         end();
 
-        logger.info("**** # of Student : "+(result != null ? result.getLegalLastName().trim() : null) + ", "
-                + (result != null ? result.getLegalFirstName().trim() : null));
+        logger.info("**** # of Student {},{}:",(result != null ? result.getLegalLastName().trim() : null),(result != null ? result.getLegalFirstName().trim() : null));
         return result;
     }
 
@@ -54,7 +53,7 @@ public class GradStudentService extends GradService {
 	        end();
 
 			if(result != null)
-	        	logger.info("**** # of Student : "+(result.getGradStudent() != null ? result.getGradStudent().getLegalFirstName() : null) + ", "+ (result.getGradStudent() != null ? result.getGradStudent().getLegalLastName().trim() : null));
+	        	logger.info("**** # of Student {},{}:",(result.getGradStudent() != null ? result.getGradStudent().getLegalFirstName() : null) , (result.getGradStudent() != null ? result.getGradStudent().getLegalLastName().trim() : null));
 
 			return result;
 		} catch (Exception e) {

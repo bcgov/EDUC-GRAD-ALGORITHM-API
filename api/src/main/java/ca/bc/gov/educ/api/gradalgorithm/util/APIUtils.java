@@ -6,15 +6,7 @@ import org.springframework.http.HttpHeaders;
 
 public class APIUtils {
 
-    public static HttpHeaders getHeaders (String username, String secret)
-    {
-        //String basicAuth = Base64.encodeBase64String((username + ":" + secret).getBytes());
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type", "application/json");
-        httpHeaders.add("Authorization", "Basic Z3JhZC1hcGktdXNlcjpTTjlXakB3WQ==");
-        return httpHeaders;
-    }
+    private APIUtils() {}
 
     public static HttpHeaders getHeaders (String accessToken)
     {
