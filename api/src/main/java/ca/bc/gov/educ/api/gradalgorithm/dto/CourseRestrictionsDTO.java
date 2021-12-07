@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 @Component
-public class CourseRestrictions {
+public class CourseRestrictionsDTO {
     List<CourseRestriction> courseRestrictions;
 }

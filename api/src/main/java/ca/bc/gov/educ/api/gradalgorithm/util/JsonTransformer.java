@@ -63,7 +63,7 @@ public class JsonTransformer implements Transformer {
     }
 
     public String marshallWithWrapper(Object input) throws TransformerException {
-        ObjectWriter prettyPrinter = OBJECT_MAPPER.writer();//.writerWithDefaultPrettyPrinter();
+        ObjectWriter prettyPrinter = OBJECT_MAPPER.writer();
         String result = null;
         try {
             result = prettyPrinter

@@ -36,16 +36,17 @@ public class GradCourseService extends GradService {
 	                .bodyToMono(CourseAlgorithmData.class)
 	                .block();
 	        end();
-	        if(!result.getStudentCourses().isEmpty()) {
-		        for (StudentCourse studentCourse : result.getStudentCourses()) {
-		            studentCourse.setGradReqMet("");
-		            studentCourse.setGradReqMetDetail("");
-		        }
-	        }
-	        logger.info("**** # of Student Courses: " + (result.getStudentCourses() != null ? result.getStudentCourses().size() : 0));
-	        logger.info("**** # of Course Requirements: " + (result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0));
-	        logger.info("**** # of Course Restrictions: " + (result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0));
-	        return result;
+	        if(result != null && !result.getStudentCourses().isEmpty()) {
+				for (StudentCourse studentCourse : result.getStudentCourses()) {
+					studentCourse.setGradReqMet("");
+					studentCourse.setGradReqMetDetail("");
+				}
+
+				logger.info("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
+				logger.info("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
+				logger.info("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
+			}
+			return result;
 	    } catch (Exception e) {
 	    	exception.setExceptionName("GRAD-COURSE-API IS DOWN");
 			exception.setExceptionDetails(e.getLocalizedMessage());
