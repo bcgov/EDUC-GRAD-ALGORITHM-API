@@ -37,7 +37,7 @@ public class GradGraduationStatusService extends GradService {
         end();
 
 		if(result != null)
-        	logger.info("**** # of Graduation Record : " + result.getStudentID());
+        	logger.info("**** # of Graduation Record : {}",result.getStudentID());
 
         return result;
     }
@@ -56,7 +56,7 @@ public class GradGraduationStatusService extends GradService {
 	                .block();
 	        end();
 	
-	        logger.info("**** # of Optional Programs: " + (result != null ? result.size() : 0));
+	        logger.info("**** # of Optional Programs: {}",result != null ? result.size() : 0);
 	        return result == null ? new ArrayList<>():result;
     	} catch (Exception e) {
     		exception.setExceptionName("GRAD-STUDENT-API IS DOWN");
