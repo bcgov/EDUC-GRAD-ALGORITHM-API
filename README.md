@@ -2,8 +2,8 @@
 The API to run the grad algorithm for a student
 
 [![img](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md) &nbsp;
-[GitHub Workflow Status](https://img.shields.io/github/workflow/status/bcgov/educ-grad-algorithm-api/Build) &nbsp; 
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=educ-grad-algorithm-api&metric=bugs)](https://sonarcloud.io/summary/new_code?id=educ-grad-algorithm-api) &nbsp;
+[GitHub Workflow Status](https://img.shields.io/github/workflow/status/bcgov/bcgov_EDUC-GRAD-ALGORITHM-API/Build) &nbsp; 
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=bugs)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=educ-grad-algorithm-api&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=educ-grad-algorithm-api) &nbsp;
 ![Sonar Tests](https://img.shields.io/sonar/tests/educ-grad-algorithm-api?compact_message&server=https%3A%2F%2Fsonarcloud.io) &nbsp;
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=educ-grad-algorithm-api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=educ-grad-algorithm-api) &nbsp;
