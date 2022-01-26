@@ -15,6 +15,9 @@ pipeline{
         SOURCE_REPO_URL = 'https://github.com/${ORG}/${REPO_NAME}'
         SOURCE_REPO_URL_RAW = 'https://raw.githubusercontent.com/${ORG}/${REPO_NAME}'
     }
+    options {
+        buildDiscarder(logRotator(daysToKeepStr: '', numToKeepStr: '5'))
+    }
     parameters {
         choice( name: 'IMAGE_TAG', choices: ['main', 'release/1.0.0', 'dev' ] )
     }
