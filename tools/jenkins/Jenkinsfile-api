@@ -47,8 +47,7 @@ pipeline{
         stage('Build') {
             steps {
                 script {
-                    BRANCH = params.BRANCH_PARAM.substring(7)
-
+                    BRANCH = params.BRANCH_PARAM.substring(7).replace("/", "-")
                     openshift.withCluster() {
                         def bcTemplate =
                         openshift.apply(
