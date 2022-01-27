@@ -2,9 +2,6 @@ pipeline{
     agent {
         label 'maven'
     }
-    options {
-        buildDiscarder(logRotator(daysToKeepStr: '', numToKeepStr: '5'))
-    }
     environment{
         TOOLS_NAMESPACE = '77c02f-tools'
         DEV_NAMESPACE = '77c02f-dev'
@@ -27,6 +24,9 @@ pipeline{
         TEST_HOST_ROUTE = "${APP_NAME}-${TEST_NAMESPACE}.${APP_DOMAIN}"
         UAT_HOST_ROUTE = "${APP_NAME}-${UAT_NAMESPACE}.${APP_DOMAIN}"
         PROD_HOST_ROUTE = "${APP_NAME}-${PROD_NAMESPACE}.${APP_DOMAIN}"
+    }
+    options {
+        buildDiscarder(logRotator(daysToKeepStr: '', numToKeepStr: '5'))
     }
     parameters {
         gitParameter(
