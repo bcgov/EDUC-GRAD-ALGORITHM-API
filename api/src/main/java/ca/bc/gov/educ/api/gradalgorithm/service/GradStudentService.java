@@ -41,7 +41,6 @@ public class GradStudentService extends GradService {
 
 	@Retry(name = "generalgetcall")
 	public GradStudentAlgorithmData getGradStudentData(UUID studentID,String accessToken, ExceptionMessage exception) {
-		exception = new ExceptionMessage();
 		try {
 			start();
 			GradStudentAlgorithmData result = webClient.get()
