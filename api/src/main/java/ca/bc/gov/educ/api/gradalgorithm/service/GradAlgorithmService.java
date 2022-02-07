@@ -211,28 +211,34 @@ public class GradAlgorithmService {
 		TranscriptMessage result = studentGraduationService.getGradMessages(gradMessageRequest.getGradProgram(), gradMessageRequest.getMsgType(), accessToken,exception);
 		if(result != null) {
 			if(isGraduated) {
-				if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
-					if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
-						getHonoursMessageForProjected(gradMessageRequest,strBuilder,result);
-					}else {
-						getMessageForProjected(gradMessageRequest,strBuilder,result);
-					}
-					strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
-					createCompleteGradMessage(strBuilder,result,mapOptional);
-				}else {
-					getMessageForProjected(gradMessageRequest,strBuilder,result);
-				}
+				processMessageForGraduatedStudent(gradMessageRequest,strBuilder,result,mapOptional);
 			}else {
-				getMessageForProjected(gradMessageRequest,strBuilder,result);
-				if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
-					createCompleteGradMessage(strBuilder,result,mapOptional);
-				}
+				processMessageForUnGraduatedStudent(gradMessageRequest,strBuilder,result,mapOptional);
 			}
 	        return strBuilder.toString();
 		}
 		return null;
 	}
 
+	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional) {
+		getMessageForProjected(gradMessageRequest,strBuilder,result);
+		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
+			createCompleteGradMessage(strBuilder,result,mapOptional);
+		}
+	}
+	private void processMessageForGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional) {
+		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
+			if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
+				getHonoursMessageForProjected(gradMessageRequest,strBuilder,result);
+			}else {
+				getMessageForProjected(gradMessageRequest,strBuilder,result);
+			}
+			strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
+			createCompleteGradMessage(strBuilder,result,mapOptional);
+		}else {
+			getMessageForProjected(gradMessageRequest,strBuilder,result);
+		}
+	}
 	private void getHonoursMessageForProjected(GradMessageRequest gradMessageRequest,StringBuilder strBuilder,TranscriptMessage result) {
 		if(gradMessageRequest.isProjected()) {
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
