@@ -226,7 +226,7 @@ public class GradAlgorithmService {
 			}else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
-			strBuilder.append(System.getProperty("line.separator")).append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
+			strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
 			strBuilder.append(" ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData);
 		}else {
