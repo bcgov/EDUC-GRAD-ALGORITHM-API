@@ -227,7 +227,7 @@ public class GradAlgorithmService {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
 			strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
-			strBuilder.append(" ");
+			strBuilder.append(". ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData);
 		}else {
 			getMessageForProjected(gradMessageRequest,strBuilder,result);
@@ -479,17 +479,17 @@ public class GradAlgorithmService {
 				optPrograms.add(obj.getOptionalProgramName());
 			}
 		}
-		if(!programs.isEmpty()) {
-			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
-			currentGradMessage.append(" ");
-		}
 		if(StringUtils.isNotBlank(cpCommaSeparated)) {
 			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
-			currentGradMessage.append(" ");
+			currentGradMessage.append(". ");
+		}
+		if(!programs.isEmpty()) {
+			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
+			currentGradMessage.append(". ");
 		}
 		if(!optPrograms.isEmpty()) {
 			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
-			currentGradMessage.append(" ");
+			currentGradMessage.append(". ");
 		}
 
 	}
