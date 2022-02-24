@@ -97,6 +97,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
 		obj.setOptionalProgramGraduated(true);
 		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
 		mapOptional.put("FI",obj);
     	
@@ -155,6 +156,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
 		obj.setOptionalProgramGraduated(true);
 		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
 		mapOptional.put("AD",obj);
 
@@ -214,6 +216,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
 		obj.setOptionalProgramGraduated(true);
 		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
 		mapOptional.put("BD",obj);
     	
@@ -272,6 +275,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
 		obj.setOptionalProgramGraduated(true);
 		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
 		mapOptional.put("BC",obj);
     	
@@ -333,6 +337,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
 		obj.setOptionalProgramGraduated(true);
 		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
 		mapOptional.put("CP",obj);
 
@@ -392,6 +397,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
 		obj.setOptionalProgramGraduated(true);
 		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
 		mapOptional.put("DD",obj);
     	
@@ -503,6 +509,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         msg.setHonourNote("asda");
         msg.setMessageTypeCode(msgType);
         msg.setProgramCadre("Adasd");
+		msg.setGradProjectedMessage("sdada");
         msg.setProgramCode(gradProgram);
         msg.setTranscriptMessageID(new UUID(1, 1));
     	

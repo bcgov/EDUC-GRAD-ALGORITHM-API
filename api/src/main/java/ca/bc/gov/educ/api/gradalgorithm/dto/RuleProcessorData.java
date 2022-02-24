@@ -36,4 +36,5 @@ public class RuleProcessorData {
     private List<LetterGrade> letterGradeList;
     private List<SpecialCase> specialCaseList;
     private List<ProgramAlgorithmRule> algorithmRules;
+    private List<StudentCareerProgram> cpList;
 }

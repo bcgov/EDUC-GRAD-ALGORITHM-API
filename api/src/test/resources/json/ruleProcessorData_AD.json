@@ -802,6 +802,7 @@
       "nonGradReasonsOptionalProgram": null,
       "requirementsMetOptionalProgram": null,
       "hasOptionalProgram": true,
+      "optionalProgramName": "French Immersion",
       "optionalProgramGraduated": true
     }
   },

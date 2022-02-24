@@ -1263,7 +1263,8 @@
 				}
 			],
 			"hasOptionalProgram": true,
-			"optionalProgramGraduated": false
+			"optionalProgramGraduated": false,
+			"optionalProgramName": "French Immersion"
 		},
 		"BC": {
 			"optionalProgramRules": [],
@@ -2192,7 +2193,8 @@
 			"nonGradReasonsOptionalProgram": null,
 			"requirementsMetOptionalProgram": null,
 			"hasOptionalProgram": true,
-			"optionalProgramGraduated": true
+			"optionalProgramGraduated": true,
+			"optionalProgramName": "French Immersion"
 		}
 	},
 	"studentCourses": [

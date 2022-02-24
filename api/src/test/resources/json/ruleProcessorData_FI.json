@@ -1358,6 +1358,7 @@
         }
       ],
       "hasOptionalProgram": true,
+      "optionalProgramName": "French Immersion",
       "optionalProgramGraduated": true
     },
     "CP": {
@@ -2385,6 +2386,7 @@
       ],
       "requirementsMetOptionalProgram": [],
       "hasOptionalProgram": true,
+      "optionalProgramName": "French Immersion",
       "optionalProgramGraduated": false
     }
   },
