@@ -155,6 +155,16 @@ public class GradAlgorithmService {
 		gradStudentOptionalAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
 		gradStudentOptionalAlg.setOptionalGraduated(obj.isOptionalProgramGraduated());
 
+		List<GradRequirement> existingNonGradReasons = null;
+		try {
+			if(obj.getStudentOptionalProgramData() != null) {
+				GradAlgorithmOptionalStudentProgram existingData = new ObjectMapper().readValue(obj.getStudentOptionalProgramData(), GradAlgorithmOptionalStudentProgram.class);
+				existingNonGradReasons = existingData.getOptionalNonGradReasons();
+			}
+		} catch (JsonProcessingException e) {
+			e.getMessage();
+		}
+
 		if(obj.getOptionalProgramRules().isEmpty()){
 			gradStudentOptionalAlg.setOptionalStudentCourses(new StudentCourses(new ArrayList<>()));
 			gradStudentOptionalAlg.setOptionalStudentAssessments(new StudentAssessments(new ArrayList<>()));
@@ -162,6 +172,7 @@ public class GradAlgorithmService {
 			gradStudentOptionalAlg.setOptionalStudentCourses(obj.getStudentCoursesOptionalProgram() != null ? new StudentCourses(obj.getStudentCoursesOptionalProgram()) : new StudentCourses(new ArrayList<>()));
 			gradStudentOptionalAlg.setOptionalStudentAssessments(obj.getStudentAssessmentsOptionalProgram() != null ? new StudentAssessments(obj.getStudentAssessmentsOptionalProgram()) : new StudentAssessments(new ArrayList<>()));
 		}
+		processExistingNonGradReasonOptionalProgram(existingNonGradReasons,ruleProcessorData,obj);
 		if(obj.getRequirementsMetOptionalProgram() != null) {
 			reqMet = obj.getRequirementsMetOptionalProgram();
 			reqMet.sort(Comparator.comparing(GradRequirement::getRule));
@@ -191,6 +202,7 @@ public class GradAlgorithmService {
 				OptionalProgramRuleProcessor opRulePro = new OptionalProgramRuleProcessor();
 				opRulePro.setHasOptionalProgram(true);
 				opRulePro.setOptionalProgramGraduated(true);
+				opRulePro.setStudentOptionalProgramData(sp.getStudentOptionalProgramData());
 				opRulePro.setOptionalProgramName(sp.getOptionalProgramName());
 				mapOpt.put(sp.getOptionalProgramCode(), opRulePro);
 			}
@@ -419,6 +431,20 @@ public class GradAlgorithmService {
 		graduationData.setGraduated(ruleProcessorData.isGraduated());
 		if(graduationData.getGradStatus().getProgramCompletionDate() == null && gradProgram.equalsIgnoreCase(SCCP)) {
 			graduationData.setGraduated(false);
+		}
+	}
+
+	private void processExistingNonGradReasonOptionalProgram(List<GradRequirement> existingNonGradReasons, RuleProcessorData ruleProcessorData, OptionalProgramRuleProcessor obj) {
+		if(existingNonGradReasons != null && !existingNonGradReasons.isEmpty() && ruleProcessorData.isProjected()) {
+			for (GradRequirement gR : existingNonGradReasons) {
+				boolean ruleExists = false;
+				if (obj.getNonGradReasonsOptionalProgram() != null) {
+					ruleExists = obj.getNonGradReasonsOptionalProgram().stream().anyMatch(nGR -> nGR.getRule().compareTo(gR.getRule()) == 0);
+				}
+				if (!ruleExists && ruleProcessorData.getRequirementsMet() != null) {
+					obj.getRequirementsMetOptionalProgram().stream().filter(rM -> rM.getRule().compareTo(gR.getRule()) == 0).forEach(rM -> rM.setProjected(true));
+				}
+			}
 		}
 	}
 
