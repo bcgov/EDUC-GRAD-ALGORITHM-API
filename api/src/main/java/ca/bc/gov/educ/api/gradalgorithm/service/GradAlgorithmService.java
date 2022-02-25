@@ -24,6 +24,8 @@ public class GradAlgorithmService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
 
+	private static final String NON_GRADUATED = "fromNonGrad";
+	private static final String GRADUATED = "fromGraduated";
     @Autowired
     GradStudentService gradStudentService;
 
@@ -228,7 +230,7 @@ public class GradAlgorithmService {
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		getMessageForProjected(gradMessageRequest,strBuilder,result);
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
-			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,"fromNonGrad");
+			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
 	}
 	private void processMessageForGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
@@ -240,7 +242,7 @@ public class GradAlgorithmService {
 			}
 			strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
 			strBuilder.append(". ");
-			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,"fromGraduated");
+			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		}else {
 			getMessageForProjected(gradMessageRequest,strBuilder,result);
 		}
@@ -498,7 +500,7 @@ public class GradAlgorithmService {
 			String optionalProgramCode = entry.getKey();
 			OptionalProgramRuleProcessor obj = entry.getValue();
 
-			if(opMessage.equalsIgnoreCase("fromNonGrad") || (obj.isOptionalProgramGraduated() && opMessage.equalsIgnoreCase("fromGraduated"))) {
+			if(opMessage.equalsIgnoreCase(NON_GRADUATED) || (obj.isOptionalProgramGraduated() && opMessage.equalsIgnoreCase(GRADUATED))) {
 				if (optionalProgramCode.compareTo("AD") == 0 || optionalProgramCode.compareTo("BD") == 0 || optionalProgramCode.compareTo("BC") == 0) {
 					programs.add(obj.getOptionalProgramName());
 				} else if (optionalProgramCode.compareTo("CP") == 0) {
