@@ -185,8 +185,10 @@ public class GradAlgorithmService {
 		}
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
+			String mainProgramCompletionDate = ruleProcessorData.getGradStatus().getProgramCompletionDate();
 			if (!gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList().isEmpty()) {
-				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList()));
+				String optionalPrgComlDate = getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList());
+				gradStudentOptionalAlg.setOptionalProgramCompletionDate(optionalPrgComlDate == null ? mainProgramCompletionDate:optionalPrgComlDate);
 			} else {
 				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
 			}
@@ -296,7 +298,9 @@ public class GradAlgorithmService {
             }
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
+		if(dateFormat.format(gradDate).compareTo("1700-01-01") == 0) {
+			return null;
+		}
         return dateFormat.format(gradDate);
     }
 
