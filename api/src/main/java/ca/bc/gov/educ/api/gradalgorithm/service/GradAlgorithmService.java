@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
+import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -185,7 +186,12 @@ public class GradAlgorithmService {
 		}
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
-			String mainProgramCompletionDate = ruleProcessorData.getGradStatus().getProgramCompletionDate();
+			String mainProgramCompletionDate = null;
+			if (ruleProcessorData.getGradStatus().getProgramCompletionDate().length() > 7) {
+				mainProgramCompletionDate = ruleProcessorData.getGradStatus().getProgramCompletionDate();
+			}else {
+				mainProgramCompletionDate = APIUtils.parsingTraxDate(ruleProcessorData.getGradStatus().getProgramCompletionDate());
+			}
 			if (!gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList().isEmpty()) {
 				String optionalPrgComlDate = getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList());
 				gradStudentOptionalAlg.setOptionalProgramCompletionDate(optionalPrgComlDate == null ? mainProgramCompletionDate:optionalPrgComlDate);
