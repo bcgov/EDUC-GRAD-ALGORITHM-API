@@ -237,7 +237,7 @@ public class GradAlgorithmService {
 
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		getMessageForProjected(gradMessageRequest,strBuilder,result);
-		strBuilder.append(". ");
+		strBuilder.append(" ");
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
