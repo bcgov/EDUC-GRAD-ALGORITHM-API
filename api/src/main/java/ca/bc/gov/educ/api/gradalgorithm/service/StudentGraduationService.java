@@ -11,6 +11,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentGraduationAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.TranscriptMessage;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import reactor.core.publisher.Mono;
 
 @Service
 public class StudentGraduationService extends GradService {
@@ -23,30 +24,25 @@ public class StudentGraduationService extends GradService {
     private static final String EXCEPTION_MESSAGE = "GRAD-STUDENT-GRADUATION-API IS DOWN";
 
 	@Retry(name = "generalgetcall")
-    StudentGraduationAlgorithmData getAllAlgorithmData(String programCode,String accessToken, ExceptionMessage exception) {
+	Mono<StudentGraduationAlgorithmData> getAllAlgorithmData(String programCode,String accessToken, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
-        {
+		{
 
 			start();
-	        StudentGraduationAlgorithmData result = webClient.get()
-	                .uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)
-	                .headers(h -> h.setBearerAuth(accessToken))
-	                .retrieve()
-	                .bodyToMono(StudentGraduationAlgorithmData.class)
-	                .block();
-	        end();
-	
-	        logger.info("**** # of Letter Grades {}:",(result != null ? result.getLetterGrade().size() : 0));
-	        logger.info("**** # of Special Cases {}:",(result != null ? result.getSpecialCase().size() : 0));
-	        logger.info("**** # of Algorithm Rules: {}",(result != null ? result.getProgramAlgorithmRules().size() : 0));
-	        return result;
-        } catch (Exception e) {
-        	exception.setExceptionName(EXCEPTION_MESSAGE);
+			Mono<StudentGraduationAlgorithmData> result = webClient.get()
+					.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)
+					.headers(h -> h.setBearerAuth(accessToken))
+					.retrieve()
+					.bodyToMono(StudentGraduationAlgorithmData.class);
+			end();
+			return result;
+		} catch (Exception e) {
+			exception.setExceptionName(EXCEPTION_MESSAGE);
 			exception.setExceptionDetails(e.getLocalizedMessage());
 			return null;
 		}
-    }
+	}
 
 	@Retry(name = "generalgetcall")
     TranscriptMessage getGradMessages(String gradProgram, String msgType, String accessToken,ExceptionMessage exception) {

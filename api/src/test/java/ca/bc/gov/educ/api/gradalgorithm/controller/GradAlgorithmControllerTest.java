@@ -13,11 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,8 +39,18 @@ public class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
     @Mock
     GradAlgorithmService gradAlgorithmService;
 
+    @MockBean
+    WebClient webClient;
+
     @InjectMocks
     private GradAlgorithmController gradAlgorithmController;
+
+
+    @Mock
+    OAuth2AuthenticationDetails oAuth2AuthenticationDetails;
+
+    @Mock
+    SecurityContextHolder securityContextHolder;
 
     @Test
     public void graduateStudentTest() throws Exception {

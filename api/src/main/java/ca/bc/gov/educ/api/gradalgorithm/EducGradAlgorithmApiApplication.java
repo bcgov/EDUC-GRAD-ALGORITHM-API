@@ -38,17 +38,6 @@ public class EducGradAlgorithmApiApplication {
 	}
 
 	@Bean
-	public WebClient webClient() {
-		HttpClient client = HttpClient.create();
-		client.warmup().block();
-		return WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()
-				.codecs(configurer -> configurer
-						.defaultCodecs()
-						.maxInMemorySize(40 * 1024 * 1024))
-				.build()).build();
-	}
-
-	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
