@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -27,8 +28,9 @@ public class GradAlgorithmService {
 
 	private static final String NON_GRADUATED = "fromNonGrad";
 	private static final String GRADUATED = "fromGraduated";
-    @Autowired
-    GradStudentService gradStudentService;
+
+	@Autowired
+	GradStudentService gradStudentService;
 
     @Autowired
     GradAssessmentService gradAssessmentService;
@@ -47,6 +49,9 @@ public class GradAlgorithmService {
 
     @Autowired
     GradSchoolService gradSchoolService;
+
+	@Autowired
+	ParallelDataFetch parallelDataFetch;
     
     @Autowired
     StudentGraduationService studentGraduationService;
@@ -63,7 +68,7 @@ public class GradAlgorithmService {
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
 		ruleProcessorData.setMapOptional(mapOptional);
         ExceptionMessage exception = new ExceptionMessage();
-        GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID,accessToken,exception);
+		GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID,accessToken,exception);
         GradAlgorithmGraduationStudentRecord gradStatus = new GradAlgorithmGraduationStudentRecord();
         if(gradStudentAlgorithmData != null) {
 			ruleProcessorData.setCpList(gradStudentAlgorithmData.getStudentCareerProgramList());
@@ -78,10 +83,12 @@ public class GradAlgorithmService {
         String pen=ruleProcessorData.getGradStudent().getPen();
         logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
         logger.info("**** Grad Program: {}",gradProgram);
-        //Get All Assessment Requirements, assessments, student assessments
-		setCourseAssessmentDataForAlgorithm(pen,accessToken,exception,ruleProcessorData);
+		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,accessToken,exception);
+		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelyCollectedData.block();
+		//Get All Assessment Requirements, assessments, student assessments
+		setCourseAssessmentDataForAlgorithm(algorithmDataParallelDTO.courseAlgorithmData(),algorithmDataParallelDTO.assessmentAlgorithmData(),ruleProcessorData);
         //Get All Letter Grades,Optional Case and AlgorithmRules
-		setAlgorithmSupportData(gradProgram,accessToken,exception,ruleProcessorData);
+		setAlgorithmSupportData(algorithmDataParallelDTO.studentGraduationAlgorithmData(),ruleProcessorData);
         //Set Projected flag
         ruleProcessorData.setProjected(projected);
 
@@ -360,15 +367,15 @@ public class GradAlgorithmService {
             return "N";
     }
 
-	private void setCourseAssessmentDataForAlgorithm(String pen,String accessToken,ExceptionMessage exception, RuleProcessorData ruleProcessorData) {
-		CourseAlgorithmData courseAlgorithmData = gradCourseService.getCourseDataForAlgorithm(pen, accessToken,exception);
+	private void setCourseAssessmentDataForAlgorithm(CourseAlgorithmData courseAlgData,AssessmentAlgorithmData assessmentAlgData, RuleProcessorData ruleProcessorData) {
+		CourseAlgorithmData courseAlgorithmData = gradCourseService.prepareCourseDataForAlgorithm(courseAlgData);
 		if(courseAlgorithmData != null) {
 			ruleProcessorData.setStudentCourses(courseAlgorithmData.getStudentCourses());
 			ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null);
 			ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null);
 		}
 
-		AssessmentAlgorithmData assessmentAlgorithmData = gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken,exception);
+		AssessmentAlgorithmData assessmentAlgorithmData = gradAssessmentService.prepareAssessmentDataForAlgorithm(assessmentAlgData);
 		if(assessmentAlgorithmData != null) {
 			ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
 			ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null);
@@ -376,8 +383,7 @@ public class GradAlgorithmService {
 		}
 	}
 
-	private void setAlgorithmSupportData(String gradProgram, String accessToken, ExceptionMessage exception, RuleProcessorData ruleProcessorData) {
-		StudentGraduationAlgorithmData studentGraduationAlgorithmData = studentGraduationService.getAllAlgorithmData(gradProgram, accessToken,exception);
+	private void setAlgorithmSupportData(StudentGraduationAlgorithmData studentGraduationAlgorithmData, RuleProcessorData ruleProcessorData) {
 		if(studentGraduationAlgorithmData != null) {
 			ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
 			ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());

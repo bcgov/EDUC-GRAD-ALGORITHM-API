@@ -13,6 +13,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradSearchStudent;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradStudentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import reactor.core.publisher.Mono;
 
 @Service
 public class GradStudentService extends GradService {
@@ -60,5 +61,27 @@ public class GradStudentService extends GradService {
 			exception.setExceptionDetails(e.getLocalizedMessage());
 			return null;
 		}        
+	}
+
+	@Retry(name = "generalgetcall")
+	public Mono<GradStudentAlgorithmData> getGradStudentDataParallel(UUID studentID, String accessToken, ExceptionMessage exception) {
+		try {
+			start();
+			Mono<GradStudentAlgorithmData> result = webClient.get()
+					.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))
+					.headers(h -> h.setBearerAuth(accessToken))
+					.retrieve()
+					.bodyToMono(GradStudentAlgorithmData.class);
+			end();
+
+			//if(result != null)
+			//logger.info("**** # of Student {},{}:",(result.getGradStudent() != null ? result.getGradStudent().getLegalFirstName() : null) , (result.getGradStudent() != null ? result.getGradStudent().getLegalLastName().trim() : null));
+
+			return result;
+		} catch (Exception e) {
+			exception.setExceptionName("GRAD-STUDENT-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
+		}
 	}
 }
