@@ -11,6 +11,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import reactor.core.publisher.Mono;
 
 @Service
 public class GradAssessmentService extends GradService {
@@ -21,34 +22,37 @@ public class GradAssessmentService extends GradService {
     @Autowired GradAlgorithmAPIConstants constants;
 
 	@Retry(name = "generalgetcall")
-    AssessmentAlgorithmData getAssessmentDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
+	Mono<AssessmentAlgorithmData> getAssessmentDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
-    	{
-	    	start();
-	    	AssessmentAlgorithmData result = webClient.get()
-	                .uri(String.format(constants.getAssessmentData(),pen))
-	                .headers(h -> h.setBearerAuth(accessToken))
-	                .retrieve()
-	                .bodyToMono(AssessmentAlgorithmData.class)
-	                .block();
-	        end();
-	        
-	        if(result != null && !result.getStudentAssessments().isEmpty()) {
-				for (StudentAssessment studentAssessment : result.getStudentAssessments()) {
-					studentAssessment.setGradReqMet("");
-					studentAssessment.setGradReqMetDetail("");
-				}
-
-				logger.info("**** # of Student Assessments: {}", result.getStudentAssessments() != null ? result.getStudentAssessments().size() : 0);
-				logger.info("**** # of Assessment Requirements: {}", result.getAssessmentRequirements() != null ? result.getAssessmentRequirements().size() : 0);
-				logger.info("**** # of Assessments: {}", result.getAssessments() != null ? result.getAssessments().size() : 0);
-			}
+		{
+			start();
+			Mono<AssessmentAlgorithmData> result = webClient.get()
+					.uri(String.format(constants.getAssessmentData(),pen))
+					.headers(h -> h.setBearerAuth(accessToken))
+					.retrieve()
+					.bodyToMono(AssessmentAlgorithmData.class);
+			end();
 			return result;
-    	} catch (Exception e) {
-    		exception.setExceptionName("GRAD-ASSESSMENT-API IS DOWN");
+		} catch (Exception e) {
+			exception.setExceptionName("GRAD-ASSESSMENT-API IS DOWN");
 			exception.setExceptionDetails(e.getLocalizedMessage());
-    		return null;
+			return null;
 		}
-    }
+	}
+
+	AssessmentAlgorithmData prepareAssessmentDataForAlgorithm(AssessmentAlgorithmData result) {
+		if(result != null && !result.getStudentAssessments().isEmpty()) {
+			for (StudentAssessment studentAssessment : result.getStudentAssessments()) {
+				studentAssessment.setGradReqMet("");
+				studentAssessment.setGradReqMetDetail("");
+			}
+
+			logger.info("**** # of Student Assessments: {}", result.getStudentAssessments() != null ? result.getStudentAssessments().size() : 0);
+			logger.info("**** # of Assessment Requirements: {}", result.getAssessmentRequirements() != null ? result.getAssessmentRequirements().size() : 0);
+			logger.info("**** # of Assessments: {}", result.getAssessments() != null ? result.getAssessments().size() : 0);
+		}
+		return result;
+
+	}
 }

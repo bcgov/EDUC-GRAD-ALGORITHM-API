@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.netty.http.client.HttpClient;
@@ -34,14 +35,6 @@ public class EducGradAlgorithmApiApplication {
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
-	}
-
-	@Bean
-	public WebClient webClient() {
-		HttpClient client = HttpClient.create();
-		client.warmup().block();
-		logger.debug("$$$$$ Initializing Web Client");
-		return WebClient.builder().build();
 	}
 
 	@Bean
