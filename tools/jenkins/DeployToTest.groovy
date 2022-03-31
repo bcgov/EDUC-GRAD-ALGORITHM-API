@@ -3,7 +3,7 @@ pipeline{
         label 'maven'
     }
     environment{
-        OCP_PROJECT = '77c02f-dev'
+        OCP_PROJECT = '77c02f-test'
         IMAGE_PROJECT = '77c02f-tools'
         IMAGE_TAG = 'latest'
         APP_SUBDOMAIN_SUFFIX = '77c02f-test'
