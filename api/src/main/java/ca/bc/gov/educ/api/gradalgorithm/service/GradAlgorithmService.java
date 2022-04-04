@@ -321,7 +321,10 @@ public class GradAlgorithmService {
     private String getGPA(List<StudentCourse> studentCourseList,List<LetterGrade> letterGradesList) {
 
         studentCourseList = studentCourseList.stream().filter(StudentCourse::isUsed).collect(Collectors.toList());
-        float totalCredits = studentCourseList.stream().filter(StudentCourse::isUsed).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
+        float totalCredits = studentCourseList.stream().filter(sc-> sc.isUsed()
+				&& !sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM")
+				&& !sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG")
+				&& !sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS")).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
         float acquiredCredits = 0;
         String tempGpaMV;
 
