@@ -415,9 +415,9 @@ public class GradAlgorithmService {
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
 			if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
 				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
+				gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
+				gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
 			}
-			gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
-			gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
 		}
 
 		//This is done for Reports only grad run -Student already graduated no change in graduation date
