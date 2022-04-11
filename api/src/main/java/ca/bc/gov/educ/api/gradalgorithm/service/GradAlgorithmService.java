@@ -415,9 +415,9 @@ public class GradAlgorithmService {
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
 			if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
 				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
-				gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
-				gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
 			}
+			gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
+			gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
 		}
 
 		//This is done for Reports only grad run -Student already graduated no change in graduation date
@@ -515,7 +515,7 @@ public class GradAlgorithmService {
 		List<String> programs = new ArrayList<>();
 		List<String> optPrograms = new ArrayList<>();
 		String cpCommaSeparated = null;
-
+		boolean dualDogwoodGraduated = false;
 		for (Map.Entry<String, OptionalProgramRuleProcessor> entry : mapOptional.entrySet()) {
 			String optionalProgramCode = entry.getKey();
 			OptionalProgramRuleProcessor obj = entry.getValue();
@@ -525,8 +525,10 @@ public class GradAlgorithmService {
 					programs.add(obj.getOptionalProgramName());
 				} else if (optionalProgramCode.compareTo("CP") == 0) {
 					cpCommaSeparated = getCareerProgramNames(ruleProcessorData);
-				} else {
+				} else if (optionalProgramCode.compareTo("DD") != 0) {
 					optPrograms.add(obj.getOptionalProgramName());
+				}else if(optionalProgramCode.compareTo("DD") == 0) {
+					dualDogwoodGraduated = true;
 				}
 			}
 		}
@@ -540,6 +542,11 @@ public class GradAlgorithmService {
 		}
 		if(!optPrograms.isEmpty()) {
 			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
+			currentGradMessage.append(". ");
+		}
+
+		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated) {
+			currentGradMessage.append("Student has successfully completed the Programme Francophone");
 			currentGradMessage.append(". ");
 		}
 
