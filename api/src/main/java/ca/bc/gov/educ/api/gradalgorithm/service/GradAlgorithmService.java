@@ -545,7 +545,7 @@ public class GradAlgorithmService {
 			currentGradMessage.append(". ");
 		}
 
-		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated) {
+		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
 			currentGradMessage.append(". ");
 		}
