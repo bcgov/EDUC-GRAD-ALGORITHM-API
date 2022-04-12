@@ -35,6 +35,7 @@ public class ParallelDataFetchTest extends EducGradAlgorithmTestBase {
     @MockBean GradCourseService gradCourseService;
     @MockBean GradAssessmentService gradAssessmentService;
     @MockBean StudentGraduationService studentGraduationService;
+    @MockBean GradSchoolService gradSchoolService;
 
     @MockBean WebClient webClient;
 
@@ -58,17 +59,20 @@ public class ParallelDataFetchTest extends EducGradAlgorithmTestBase {
         CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
         AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
         StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
+        School school = createSchoolData("json/school.json");
         String accessToken = "accessToken";
         ExceptionMessage exception = new ExceptionMessage();
         String pen = "1312311231";
         String gradProgram = "2018-EN";
-        AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData,studentGraduationAlgorithmData);
+        String schoolOfRecord = "32343242";
+        AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData,studentGraduationAlgorithmData,school);
 
         Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken,exception)).thenReturn(Mono.just(courseAlgorithmData));
         Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken,exception)).thenReturn(Mono.just(assessmentAlgorithmData));
         Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken,exception)).thenReturn(Mono.just(studentGraduationAlgorithmData));
+        Mockito.when(gradSchoolService.getSchool(schoolOfRecord, accessToken,exception)).thenReturn(Mono.just(school));
 
-        Mono<AlgorithmDataParallelDTO> data = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen, accessToken,exception);
+        Mono<AlgorithmDataParallelDTO> data = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,schoolOfRecord,accessToken,exception);
         assertNotNull(data.block().assessmentAlgorithmData());
         assertEquals(data.block().assessmentAlgorithmData().getAssessments().size(),parallelDTO.assessmentAlgorithmData().getAssessments().size());
     }

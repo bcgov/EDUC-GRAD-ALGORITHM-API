@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -65,5 +66,12 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
         when(this.responseMock.bodyToMono(CourseAlgorithmData.class)).thenReturn(Mono.just(courseAlgorithmData));
         
         gradCourseService.getCourseDataForAlgorithm(pen, accessToken,exception);
+    }
+
+    @Test
+    public void testprepareCourseDataForAlgorithm() throws Exception {
+        CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
+        assertNotNull(res);
     }
 }

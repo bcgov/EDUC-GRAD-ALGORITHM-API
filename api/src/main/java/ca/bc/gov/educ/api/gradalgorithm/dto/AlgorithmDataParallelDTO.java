@@ -4,11 +4,13 @@ public class AlgorithmDataParallelDTO {
     private CourseAlgorithmData courseAlgorithmData;
     private AssessmentAlgorithmData assessmentAlgorithmData;
     private StudentGraduationAlgorithmData studentGraduationAlgorithmData;
+    private School schoolData;
 
-    public AlgorithmDataParallelDTO(CourseAlgorithmData courseAlgorithmData, AssessmentAlgorithmData assessmentAlgorithmData, StudentGraduationAlgorithmData studentGraduationAlgorithmData) {
+    public AlgorithmDataParallelDTO(CourseAlgorithmData courseAlgorithmData, AssessmentAlgorithmData assessmentAlgorithmData, StudentGraduationAlgorithmData studentGraduationAlgorithmData,School schoolData) {
         this.courseAlgorithmData = courseAlgorithmData;
         this.assessmentAlgorithmData = assessmentAlgorithmData;
         this.studentGraduationAlgorithmData = studentGraduationAlgorithmData;
+        this.schoolData = schoolData;
     }
 
     public StudentGraduationAlgorithmData studentGraduationAlgorithmData() {
@@ -21,6 +23,10 @@ public class AlgorithmDataParallelDTO {
 
     public CourseAlgorithmData courseAlgorithmData() {
         return  courseAlgorithmData;
+    }
+
+    public School schoolData() {
+        return  schoolData;
     }
 
 }

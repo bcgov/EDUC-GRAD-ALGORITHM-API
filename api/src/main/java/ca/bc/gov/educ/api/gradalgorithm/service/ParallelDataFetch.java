@@ -23,11 +23,15 @@ public class ParallelDataFetch {
     @Autowired
     GradAssessmentService gradAssessmentService;
 
+    @Autowired
+    GradSchoolService gradSchoolService;
+
     @Retry(name = "generalgetcall")
-    public Mono<AlgorithmDataParallelDTO> fetchAlgorithmRequiredData(String gradProgram,String pen, String accessToken, ExceptionMessage exception) {
+    public Mono<AlgorithmDataParallelDTO> fetchAlgorithmRequiredData(String gradProgram,String pen,String schoolOfRecord, String accessToken, ExceptionMessage exception) {
         Mono<CourseAlgorithmData> courseAlgorithmDataMono = gradCourseService.getCourseDataForAlgorithm(pen,accessToken,exception);
         Mono<AssessmentAlgorithmData> assessmentAlgorithmDataMono = gradAssessmentService.getAssessmentDataForAlgorithm(pen,accessToken,exception);
         Mono<StudentGraduationAlgorithmData> studentGraduationAlgorithmDataMono = studentGraduationService.getAllAlgorithmData(gradProgram, accessToken,exception);
-        return Mono.zip(courseAlgorithmDataMono,assessmentAlgorithmDataMono,studentGraduationAlgorithmDataMono).map(tuple -> new AlgorithmDataParallelDTO(tuple.getT1(),tuple.getT2(),tuple.getT3()));
+        Mono<School> schoolDataMono = gradSchoolService.getSchool(schoolOfRecord, accessToken,exception);
+        return Mono.zip(courseAlgorithmDataMono,assessmentAlgorithmDataMono,studentGraduationAlgorithmDataMono,schoolDataMono).map(tuple -> new AlgorithmDataParallelDTO(tuple.getT1(),tuple.getT2(),tuple.getT3(),tuple.getT4()));
     }
 }
