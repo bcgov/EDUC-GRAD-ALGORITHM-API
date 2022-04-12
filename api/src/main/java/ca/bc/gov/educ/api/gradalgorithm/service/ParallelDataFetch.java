@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 public class ParallelDataFetch {
-    private static final Logger logger = LoggerFactory.getLogger(GradCourseService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ParallelDataFetch.class);
 
     @Autowired
     StudentGraduationService studentGraduationService;
@@ -28,6 +28,7 @@ public class ParallelDataFetch {
 
     @Retry(name = "generalgetcall")
     public Mono<AlgorithmDataParallelDTO> fetchAlgorithmRequiredData(String gradProgram,String pen,String schoolOfRecord, String accessToken, ExceptionMessage exception) {
+        logger.debug("parallel fetchAlgorithmRequiredData");
         Mono<CourseAlgorithmData> courseAlgorithmDataMono = gradCourseService.getCourseDataForAlgorithm(pen,accessToken,exception);
         Mono<AssessmentAlgorithmData> assessmentAlgorithmDataMono = gradAssessmentService.getAssessmentDataForAlgorithm(pen,accessToken,exception);
         Mono<StudentGraduationAlgorithmData> studentGraduationAlgorithmDataMono = studentGraduationService.getAllAlgorithmData(gradProgram, accessToken,exception);

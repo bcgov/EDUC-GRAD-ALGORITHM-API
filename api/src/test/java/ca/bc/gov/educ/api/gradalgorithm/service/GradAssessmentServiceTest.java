@@ -71,7 +71,8 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(AssessmentAlgorithmData.class)).thenReturn(Mono.just(assessmentAlgorithmData));
         
-        gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken,exception);
+        Mono<AssessmentAlgorithmData> res = gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken,exception);
+        assertNotNull(res.block());
     }
 
     @Test

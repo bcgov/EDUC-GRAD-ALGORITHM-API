@@ -120,7 +120,7 @@ public class GradAlgorithmService {
 				existingGradMessage = existingData.getGradMessage();
 			}
 		} catch (JsonProcessingException e) {
-			e.getMessage();
+			logger.debug("JSON processing Error {}",e.getMessage());
 		}
         gradStatus.setStudentGradData(null);
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
@@ -173,7 +173,7 @@ public class GradAlgorithmService {
 				existingNonGradReasons = existingData.getOptionalNonGradReasons();
 			}
 		} catch (JsonProcessingException e) {
-			e.getMessage();
+			logger.debug("JSON processing Error {}",e.getMessage());
 		}
 
 		if(obj.getOptionalProgramRules().isEmpty()){
