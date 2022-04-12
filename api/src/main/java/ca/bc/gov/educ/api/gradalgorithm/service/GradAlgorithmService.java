@@ -81,9 +81,10 @@ public class GradAlgorithmService {
         }
         ruleProcessorData.setGradStatus(gradStatus);
         String pen=ruleProcessorData.getGradStudent().getPen();
+		String schoolOfRecord = ruleProcessorData.getGradStudent().getSchoolOfRecord();
         logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
         logger.info("**** Grad Program: {}",gradProgram);
-		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,accessToken,exception);
+		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,schoolOfRecord,accessToken,exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelyCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
 		setCourseAssessmentDataForAlgorithm(algorithmDataParallelDTO.courseAlgorithmData(),algorithmDataParallelDTO.assessmentAlgorithmData(),ruleProcessorData);
@@ -91,6 +92,9 @@ public class GradAlgorithmService {
 		setAlgorithmSupportData(algorithmDataParallelDTO.studentGraduationAlgorithmData(),ruleProcessorData);
         //Set Projected flag
         ruleProcessorData.setProjected(projected);
+
+		//Set School of Record for Student
+		ruleProcessorData.setSchool(algorithmDataParallelDTO.schoolData());
 
         //Set Optional Program Flag
 		checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken,exception);
@@ -116,7 +120,7 @@ public class GradAlgorithmService {
 				existingGradMessage = existingData.getGradMessage();
 			}
 		} catch (JsonProcessingException e) {
-			e.getMessage();
+			logger.debug("JSON processing Error {}",e.getMessage());
 		}
         gradStatus.setStudentGradData(null);
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
@@ -133,9 +137,6 @@ public class GradAlgorithmService {
 			OptionalProgramRuleProcessor obj = entry.getValue();
 			getListOfOptionalProgramStatus(gradProgram, optionalProgramCode, obj, optionalProgramStatusList, accessToken, exception,ruleProcessorData);
 		}
-        ruleProcessorData.setSchool(
-                gradSchoolService.getSchool(ruleProcessorData.getGradStudent().getSchoolOfRecord(), accessToken,exception)
-        );
 
         //Convert ruleProcessorData into GraduationData object
 		convertRuleProcessorToGraduationData(optionalProgramStatusList,existingProgramCompletionDate,existingNonGradReasons,gradProgram,ruleProcessorData,graduationData);
@@ -172,7 +173,7 @@ public class GradAlgorithmService {
 				existingNonGradReasons = existingData.getOptionalNonGradReasons();
 			}
 		} catch (JsonProcessingException e) {
-			e.getMessage();
+			logger.debug("JSON processing Error {}",e.getMessage());
 		}
 
 		if(obj.getOptionalProgramRules().isEmpty()){
@@ -545,7 +546,7 @@ public class GradAlgorithmService {
 			currentGradMessage.append(". ");
 		}
 
-		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated) {
+		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
 			currentGradMessage.append(". ");
 		}
