@@ -246,7 +246,7 @@ public class GradAlgorithmService {
 
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		getMessageForProjected(gradMessageRequest,strBuilder,result);
-		strBuilder.append(" ");
+		strBuilder.append(". ");
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
@@ -258,7 +258,7 @@ public class GradAlgorithmService {
 			}else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
-			strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
+			strBuilder.append(". ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
 			strBuilder.append(". ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		}else {
