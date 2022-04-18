@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -418,7 +419,14 @@ public class GradAlgorithmService {
 				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
 			}
 			gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
-			gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
+			Pair<Boolean,String> honoursCheckExemption = checkHonoursExemptRule(gradProgram,ruleProcessorData.getStudentCourses());
+			boolean isExempted = honoursCheckExemption.getLeft();
+			String honoursValue =honoursCheckExemption.getRight();
+			if(!isExempted) {
+				gradStatus.setHonoursStanding(getHonoursFlag(gradStatus.getGpa()));
+			}else{
+				gradStatus.setHonoursStanding(honoursValue);
+			}
 		}
 
 		//This is done for Reports only grad run -Student already graduated no change in graduation date
@@ -429,6 +437,69 @@ public class GradAlgorithmService {
 		if(checkSCCPNOPROG) {
 			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
 		}
+	}
+
+	private Pair<Boolean, String> checkHonoursExemptRule(String program,List<StudentCourse> studentCourseList) {
+		Boolean isExempted = false;
+		String honourValue = null;
+		float totalCreditsTSSGRM = studentCourseList.stream().filter(sc-> sc.isUsed()
+				&& (sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM")
+				|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG")
+				|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS"))).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
+		float totalCoursesTSSG = studentCourseList.stream().filter(sc-> sc.isUsed()
+				&& (sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG")
+				|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS"))).count();
+
+		switch (program) {
+			case "2018-EN":
+			case "2018-PF":
+				StudentCourse sCCheck = studentCourseList.stream().filter(sc -> sc.isUsed() && (sc.getCourseCode().equalsIgnoreCase("GT")
+						|| sc.getCourseCode().equalsIgnoreCase("GTF")
+						|| sc.getCourseCode().equalsIgnoreCase("PORT")
+						|| sc.getCourseCode().equalsIgnoreCase("PORTF")))
+						.findAny()
+						.orElse(null);
+				if(sCCheck == null) {
+					if(totalCreditsTSSGRM > 32) {
+						isExempted=true;
+						honourValue="N";
+					}
+				}else {
+					if(totalCreditsTSSGRM > 36) {
+						isExempted=true;
+						honourValue="N";
+					}
+				}
+				break;
+			case "1950":
+				if(totalCoursesTSSG > 3) {
+					isExempted = true;
+					honourValue = "N";
+				}
+				break;
+			case "2004-EN":
+			case "2004-PF":
+				if(totalCreditsTSSGRM > 36) {
+					isExempted=true;
+					honourValue="N";
+				}
+				break;
+			case "1996-EN":
+			case "1996-PF":
+				if(totalCreditsTSSGRM > 24) {
+					isExempted=true;
+					honourValue="N";
+				}
+				break;
+			case "1986-EN":
+				if(totalCoursesTSSG > 6) {
+					isExempted = true;
+					honourValue = "N";
+				}
+				break;
+			default:
+		}
+		return Pair.of(isExempted,honourValue);
 	}
 
 	private void convertRuleProcessorToGraduationData(List<GradAlgorithmOptionalStudentProgram> optionalProgramStatusList, String existingProgramCompletionDate, List<GradRequirement> existingNonGradReasons, String gradProgram, RuleProcessorData ruleProcessorData,GraduationData graduationData) {
