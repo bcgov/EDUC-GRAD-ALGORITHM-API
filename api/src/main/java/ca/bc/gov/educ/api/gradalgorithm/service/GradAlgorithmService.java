@@ -386,6 +386,32 @@ public class GradAlgorithmService {
 			ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null);
 			ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
 		}
+		sortCoursesBasedOnProgram(ruleProcessorData.getGradStatus().getProgram(),ruleProcessorData.getStudentCourses(),ruleProcessorData.getStudentAssessments());
+	}
+
+	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
+		switch (program) {
+			case "2018-EN":
+				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed().thenComparing(StudentCourse::getSessionDate));
+				studentAssessments.sort(Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).thenComparing(StudentAssessment::getSpecialCase).thenComparing(StudentAssessment::getSessionDate));
+				break;
+			case "2018-PF":
+				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed());
+				break;
+			case "1950":
+				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCoursePercentage,Comparator.nullsLast(Double::compareTo)));
+				break;
+			case "2004-EN":
+			case "2004-PF":
+				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed().thenComparing(StudentCourse::getSessionDate));
+				break;
+			case "1996-EN":
+			case "1996-PF":
+			case "1986-EN":
+				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel));
+				break;
+			default:
+		}
 	}
 
 	private void setAlgorithmSupportData(StudentGraduationAlgorithmData studentGraduationAlgorithmData, RuleProcessorData ruleProcessorData) {
