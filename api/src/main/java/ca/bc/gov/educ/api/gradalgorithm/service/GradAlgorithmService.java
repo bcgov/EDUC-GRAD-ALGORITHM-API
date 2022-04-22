@@ -399,7 +399,7 @@ public class GradAlgorithmService {
 				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed());
 				break;
 			case "1950":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCoursePercentage,Comparator.nullsLast(Double::compareTo)));
+				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
 				break;
 			case "2004-EN":
 			case "2004-PF":
