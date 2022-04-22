@@ -246,7 +246,7 @@ public class GradAlgorithmService {
 
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		getMessageForProjected(gradMessageRequest,strBuilder,result);
-		strBuilder.append(". ");
+		strBuilder.append(" ");
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
@@ -258,7 +258,7 @@ public class GradAlgorithmService {
 			}else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
-			strBuilder.append(". ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
+			strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
 			strBuilder.append(". ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		}else {
@@ -540,7 +540,7 @@ public class GradAlgorithmService {
 			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule));
 
 		//This is done for Reports only grad run
-		if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
+		if(existingProgramCompletionDate == null || ruleProcessorData.isProjected() || gradProgram.equalsIgnoreCase("SCCP") || gradProgram.equalsIgnoreCase("NOPROG")) {
 			graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
 		}
 		processExistingNonGradReason(existingNonGradReasons,ruleProcessorData,graduationData);
@@ -598,7 +598,7 @@ public class GradAlgorithmService {
 
 		if(checkSCCPNOPROG) {
 			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
-					.gradProgram(existingDataSupport.getGradProgam()).msgType("GRADUATED").gradDate(graduationData.getGradStatus().getProgramCompletionDate())
+					.gradProgram(existingDataSupport.getGradProgam()).msgType(graduationData.isGraduated()?"GRADUATED":"NOT_GRADUATED").gradDate(graduationData.getGradStatus().getProgramCompletionDate())
 					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
 					.build();
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,accessToken,exception,null,ruleProcessorData));
