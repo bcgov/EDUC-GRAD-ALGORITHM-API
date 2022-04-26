@@ -166,6 +166,10 @@ public class GradAlgorithmService {
 		gradStudentOptionalAlg.setOptionalProgramID(gradProgramService.getOptionalProgramID(gradProgram, optionalProgramCode, accessToken,exception));
 		gradStudentOptionalAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
 		gradStudentOptionalAlg.setOptionalGraduated(obj.isOptionalProgramGraduated());
+		gradStudentOptionalAlg.setOptionalProgramCode(optionalProgramCode);
+		if(optionalProgramCode.equalsIgnoreCase("CP")) {
+			gradStudentOptionalAlg.setCpList(ruleProcessorData.getCpList());
+		}
 
 		List<GradRequirement> existingNonGradReasons = null;
 		try {
