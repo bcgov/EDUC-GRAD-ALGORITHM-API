@@ -81,8 +81,8 @@ public class GradShoolServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(School.class)).thenReturn(Mono.just(school));
 
-        School result = gradSchoolService.getSchool(mincode, accessToken,exception);
-        assertNotNull(result);
+        Mono<School> result = gradSchoolService.getSchool(mincode, accessToken,exception);
+        assertNotNull(result.block());
         LOG.debug(">getSchoolTest");
     }
     
@@ -102,7 +102,7 @@ public class GradShoolServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
 
-        School result = gradSchoolService.getSchool(mincode, accessToken,exception);
+        Mono<School> result = gradSchoolService.getSchool(mincode, accessToken,exception);
         assertNull(result);
         LOG.debug(">getSchoolTest");
     }

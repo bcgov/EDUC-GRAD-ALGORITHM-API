@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import reactor.core.publisher.Mono;
 
 @Service
 public class GradSchoolService extends GradService {
@@ -20,18 +21,16 @@ public class GradSchoolService extends GradService {
     @Autowired GradAlgorithmAPIConstants constants;
 
 	@Retry(name = "generalgetcall")
-    School getSchool(String minCode, String accessToken,ExceptionMessage exception) {
+	Mono<School> getSchool(String minCode, String accessToken,ExceptionMessage exception) {
     	logger.debug("getSchool");
-		exception = new ExceptionMessage();
     	try
     	{
 	        start();
-	        School schObj = webClient.get()
+	        Mono<School> schObj = webClient.get()
 	                .uri(String.format(constants.getSchoolByMincode(), minCode))
 	                .headers(h -> h.setBearerAuth(accessToken))
 	                .retrieve()
-	                .bodyToMono(School.class)
-	                .block();
+	                .bodyToMono(School.class);
 	        end();
 	        return schObj;
     	} catch (Exception e) {

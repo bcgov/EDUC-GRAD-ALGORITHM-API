@@ -11,6 +11,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import reactor.core.publisher.Mono;
 
 @Service
 public class GradCourseService extends GradService {
@@ -24,33 +25,37 @@ public class GradCourseService extends GradService {
     private GradAlgorithmAPIConstants constants;
 
 	@Retry(name = "generalgetcall")
-    CourseAlgorithmData getCourseDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
+	Mono<CourseAlgorithmData> getCourseDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
-	    {
-    		start();
-	    	CourseAlgorithmData result = webClient.get()
-	                .uri(String.format(constants.getCourseData(),pen))
-	                .headers(h -> h.setBearerAuth(accessToken))
-	                .retrieve()
-	                .bodyToMono(CourseAlgorithmData.class)
-	                .block();
-	        end();
-	        if(result != null && !result.getStudentCourses().isEmpty()) {
-				for (StudentCourse studentCourse : result.getStudentCourses()) {
-					studentCourse.setGradReqMet("");
-					studentCourse.setGradReqMetDetail("");
-				}
-
-				logger.info("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
-				logger.info("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
-				logger.info("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
-			}
+		{
+			start();
+			Mono<CourseAlgorithmData> result = webClient.get()
+					.uri(String.format(constants.getCourseData(),pen))
+					.headers(h -> h.setBearerAuth(accessToken))
+					.retrieve()
+					.bodyToMono(CourseAlgorithmData.class);
+			end();
 			return result;
-	    } catch (Exception e) {
-	    	exception.setExceptionName("GRAD-COURSE-API IS DOWN");
+		} catch (Exception e) {
+			exception.setExceptionName("GRAD-COURSE-API IS DOWN");
 			exception.setExceptionDetails(e.getLocalizedMessage());
-	    	return null;
-	    }
-    }
+			return null;
+		}
+	}
+
+	CourseAlgorithmData prepareCourseDataForAlgorithm(CourseAlgorithmData result) {
+		if(result != null && !result.getStudentCourses().isEmpty()) {
+			for (StudentCourse studentCourse : result.getStudentCourses()) {
+				studentCourse.setGradReqMet("");
+				studentCourse.setGradReqMetDetail("");
+			}
+
+			logger.info("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
+			logger.info("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
+			logger.info("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
+		}
+		return result;
+	}
+
 }
