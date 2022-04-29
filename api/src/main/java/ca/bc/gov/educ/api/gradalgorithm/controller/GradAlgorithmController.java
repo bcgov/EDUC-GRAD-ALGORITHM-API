@@ -26,8 +26,8 @@ public class GradAlgorithmController {
     @Autowired
     GradAlgorithmService gradAlgorithmService;
 
-    @GetMapping(PermissionsConstants.RUN_GRAD_ALGORITHM)
-    @PreAuthorize("#oauth2.hasScope('RUN_GRAD_ALGORITHM')")
+    @GetMapping("/graduatestudent")
+    @PreAuthorize(PermissionsConstants.RUN_GRAD_ALGORITHM)
     public GraduationData graduateStudent(@RequestParam(name = "studentID") String studentID,
                                           @RequestParam(name = "gradProgram") String gradProgram,
                                           @RequestParam(required = false) boolean projected,
