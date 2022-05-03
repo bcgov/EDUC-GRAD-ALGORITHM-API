@@ -12,6 +12,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class GradAlgorithmAPIConstants {
+
+    public static final String CORRELATION_ID = "correlationID";
+
     //API end-point Mapping constants
     public static final String API_ROOT_MAPPING = "";
     public static final String API_VERSION = "v1";
@@ -74,6 +77,10 @@ public class GradAlgorithmAPIConstants {
     
     @Value("${endpoint.grad-student-api.get-grad-student-algo-data.url}")
     private String gradStudentAlgorithmData;
+
+    // Splunk LogHelper Enabled
+    @Value("${splunk.log-helper.enabled}")
+    private boolean splunkLogHelperEnabled;
     
 //Application Properties Constants
 
