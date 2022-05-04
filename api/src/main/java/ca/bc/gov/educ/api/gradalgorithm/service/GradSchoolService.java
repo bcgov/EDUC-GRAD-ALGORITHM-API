@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,10 @@ public class GradSchoolService extends GradService {
 	        start();
 	        Mono<School> schObj = webClient.get()
 	                .uri(String.format(constants.getSchoolByMincode(), minCode))
-	                .headers(h -> h.setBearerAuth(accessToken))
+	                .headers(h -> {
+										h.setBearerAuth(accessToken);
+										h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
+									})
 	                .retrieve()
 	                .bodyToMono(School.class);
 	        end();
