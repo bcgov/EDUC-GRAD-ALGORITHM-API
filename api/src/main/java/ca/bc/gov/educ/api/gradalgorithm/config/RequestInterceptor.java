@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.config;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import ca.bc.gov.educ.api.gradalgorithm.util.LogHelper;
+import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -25,6 +26,10 @@ public class RequestInterceptor implements AsyncHandlerInterceptor {
 			final long startTime = Instant.now().toEpochMilli();
 			request.setAttribute("startTime", startTime);
 		}
+		val correlationID = request.getHeader(GradAlgorithmAPIConstants.CORRELATION_ID);
+		if (correlationID != null) {
+			ThreadLocalStateUtil.setCorrelationID(correlationID);
+		}
 		return true;
 	}
 
@@ -42,6 +47,7 @@ public class RequestInterceptor implements AsyncHandlerInterceptor {
 		val correlationID = request.getHeader(GradAlgorithmAPIConstants.CORRELATION_ID);
 		if (correlationID != null) {
 			response.setHeader(GradAlgorithmAPIConstants.CORRELATION_ID, request.getHeader(GradAlgorithmAPIConstants.CORRELATION_ID));
+			ThreadLocalStateUtil.clear();
 		}
 	}
 }
