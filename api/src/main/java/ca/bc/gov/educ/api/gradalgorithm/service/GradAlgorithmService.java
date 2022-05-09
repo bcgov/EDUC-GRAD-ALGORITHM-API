@@ -393,7 +393,7 @@ public class GradAlgorithmService {
 		sortCoursesBasedOnProgram(ruleProcessorData.getGradStatus().getProgram(),ruleProcessorData.getStudentCourses(),ruleProcessorData.getStudentAssessments());
 	}
 
-	public void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
+	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 		switch (program) {
 			case "2018-EN":
 				Collections.sort(studentCourses, new StudentCoursesComparator(program));
