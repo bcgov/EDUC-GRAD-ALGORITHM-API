@@ -396,18 +396,16 @@ public class GradAlgorithmService {
 	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 		switch (program) {
 			case "2018-EN":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).reversed().thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed().thenComparing(StudentCourse::getSessionDate));
+				Collections.sort(studentCourses, new StudentCoursesComparator(program));
 				studentAssessments.sort(Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).thenComparing(StudentAssessment::getSpecialCase).thenComparing(StudentAssessment::getSessionDate));
 				break;
 			case "2018-PF":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).reversed().thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed());
+			case "2004-EN":
+			case "2004-PF":
+				Collections.sort(studentCourses, new StudentCoursesComparator(program));
 				break;
 			case "1950":
 				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
-				break;
-			case "2004-EN":
-			case "2004-PF":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getCompletedCoursePercentage).reversed().thenComparing(StudentCourse::getCredits).reversed().thenComparing(StudentCourse::getCourseLevel).reversed().thenComparing(StudentCourse::getSessionDate));
 				break;
 			case "1996-EN":
 			case "1996-PF":
