@@ -62,7 +62,7 @@ public class GradAlgorithmService {
 	private static final String NOPROGRAM = "NOPROG";
 
     public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String accessToken) {
-        logger.info("\n************* New Graduation Algorithm START  ************");
+        logger.info("\n************* New Graduation Algorithm START  ************ {}/{}",studentID,gradProgram);
         //Get Student Demographics
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
 		GraduationData graduationData = new GraduationData();
@@ -390,14 +390,14 @@ public class GradAlgorithmService {
 			ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null);
 			ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
 		}
-		sortCoursesBasedOnProgram(ruleProcessorData.getGradStatus().getProgram(),ruleProcessorData.getStudentCourses(),ruleProcessorData.getStudentAssessments());
+		sortCoursesBasedOnProgram(ruleProcessorData.getGradStatus().getProgram(),ruleProcessorData.getStudentCourses() != null?ruleProcessorData.getStudentCourses():new ArrayList<>(),ruleProcessorData.getStudentAssessments() != null? ruleProcessorData.getStudentAssessments():new ArrayList<>());
 	}
 
 	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 		switch (program) {
 			case "2018-EN":
 				Collections.sort(studentCourses, new StudentCoursesComparator(program));
-				studentAssessments.sort(Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).thenComparing(StudentAssessment::getSpecialCase).thenComparing(StudentAssessment::getSessionDate));
+				studentAssessments.sort(Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).thenComparing(StudentAssessment::getSpecialCase,Comparator.nullsLast(String::compareTo)).thenComparing(StudentAssessment::getSessionDate));
 				break;
 			case "2018-PF":
 			case "2004-EN":
@@ -429,14 +429,18 @@ public class GradAlgorithmService {
 		boolean studentHasOp = mapOpt.size() > 0;
 		mapOpt.forEach((k,v) ->{
 			GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, k, accessToken,exception);
-			ruleProcessorData.setGradProgramRules(data.getProgramRules());
-			v.setOptionalProgramRules(data.getOptionalProgramRules());
-			ruleProcessorData.setGradProgram(data.getGradProgram());
+			if(data != null) {
+				ruleProcessorData.setGradProgramRules(data.getProgramRules());
+				v.setOptionalProgramRules(data.getOptionalProgramRules());
+				ruleProcessorData.setGradProgram(data.getGradProgram());
+			}
 		});
 		if(!studentHasOp) {
 			GradProgramAlgorithmData data = gradProgramService.getProgramDataForAlgorithm(gradProgram, "", accessToken,exception);
-			ruleProcessorData.setGradProgramRules(data.getProgramRules());
-			ruleProcessorData.setGradProgram(data.getGradProgram());
+			if(data != null) {
+				ruleProcessorData.setGradProgramRules(data.getProgramRules());
+				ruleProcessorData.setGradProgram(data.getGradProgram());
+			}
 		}
 	}
 
