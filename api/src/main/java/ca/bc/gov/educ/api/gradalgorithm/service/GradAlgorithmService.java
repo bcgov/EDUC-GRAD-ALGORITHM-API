@@ -62,7 +62,7 @@ public class GradAlgorithmService {
 	private static final String NOPROGRAM = "NOPROG";
 
     public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String accessToken) {
-        logger.info("\n************* New Graduation Algorithm START  ************ {}/{}",studentID,gradProgram);
+        logger.info("\n************* New Graduation Algorithm START  ************ ");
         //Get Student Demographics
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
 		GraduationData graduationData = new GraduationData();
