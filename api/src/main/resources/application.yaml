@@ -82,7 +82,7 @@ springdoc:
 endpoint:
   grad-trax-api:
     school-by-min-code:
-      url: ${GRAD_TRAX_API}api/v1/school/%s
+      url: ${GRAD_TRAX_API}api/v1/trax/school/%s
   grad-program-api:
     get-program-algorithm-data:
       url: ${GRAD_PROGRAM_API}api/v1/program/algorithmdata?
@@ -92,15 +92,15 @@ endpoint:
       url: ${GRAD_PROGRAM_API}api/v1/program/optionalprograms/id/%s
   grad-course-api:
     get-course-algorithm-data:
-      url: ${GRAD_COURSE_API}api/v1/course-algorithm/pen/%s
+      url: ${GRAD_COURSE_API}api/v1/course/course-algorithm/pen/%s
   grad-assessment-api:
     get-assessment-algorithm-data:
       url: ${GRAD_ASSESSMENT_API}api/v1/assessment/assessment-algorithm/pen/%s
   grad-student-graduation-api:
     get-algorithm-data:
-      url: ${GRAD_STUDENT_GRADUATION_API}api/v1/algo
+      url: ${GRAD_STUDENT_GRADUATION_API}api/v1/studentgraduation/algo
     get-graduation-message:
-      url: ${GRAD_STUDENT_GRADUATION_API}api/v1/transcript/gradmessages/pgmCode/%s/msgType/%s
+      url: ${GRAD_STUDENT_GRADUATION_API}api/v1/studentgraduation/transcript/gradmessages/pgmCode/%s/msgType/%s
   grad-student-api:
     get-student-by-studentid:
       url: ${GRAD_STUDENT_API}api/v1/student/stdid/%s
