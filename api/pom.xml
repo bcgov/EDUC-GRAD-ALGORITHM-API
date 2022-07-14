@@ -29,7 +29,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<resilience4j.version>1.7.1</resilience4j.version>
 		<maven.test.skip>false</maven.test.skip>
-		<log4j.version>2.17.2</log4j.version>
+		<log4j.version>2.18.0</log4j.version>
 	</properties>
 
 	<dependencies>
