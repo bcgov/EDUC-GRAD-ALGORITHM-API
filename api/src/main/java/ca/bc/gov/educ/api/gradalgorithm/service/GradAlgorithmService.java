@@ -88,14 +88,16 @@ public class GradAlgorithmService {
 		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,schoolOfRecord,accessToken,exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelyCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
-		setCourseAssessmentDataForAlgorithm(algorithmDataParallelDTO.courseAlgorithmData(),algorithmDataParallelDTO.assessmentAlgorithmData(),ruleProcessorData);
-        //Get All Letter Grades,Optional Case and AlgorithmRules
-		setAlgorithmSupportData(algorithmDataParallelDTO.studentGraduationAlgorithmData(),ruleProcessorData);
-        //Set Projected flag
-        ruleProcessorData.setProjected(projected);
+		if(algorithmDataParallelDTO != null) {
+			setCourseAssessmentDataForAlgorithm(algorithmDataParallelDTO.courseAlgorithmData(), algorithmDataParallelDTO.assessmentAlgorithmData(), ruleProcessorData);
+			//Get All Letter Grades,Optional Case and AlgorithmRules
+			setAlgorithmSupportData(algorithmDataParallelDTO.studentGraduationAlgorithmData(), ruleProcessorData);
+			//Set Projected flag
+			ruleProcessorData.setProjected(projected);
 
-		//Set School of Record for Student
-		ruleProcessorData.setSchool(algorithmDataParallelDTO.schoolData());
+			//Set School of Record for Student
+			ruleProcessorData.setSchool(algorithmDataParallelDTO.schoolData());
+		}
 
         //Set Optional Program Flag
 		checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken,exception);
@@ -199,7 +201,7 @@ public class GradAlgorithmService {
 		}
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && isGraduated) {
-			String mainProgramCompletionDate = null;
+			String mainProgramCompletionDate;
 			if (ruleProcessorData.getGradStatus().getProgramCompletionDate().length() > 7) {
 				mainProgramCompletionDate = ruleProcessorData.getGradStatus().getProgramCompletionDate();
 			}else {
@@ -262,7 +264,8 @@ public class GradAlgorithmService {
 			}else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
-			strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
+			if(!gradMessageRequest.isProjected())
+				strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
 			strBuilder.append(". ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		}else {
@@ -396,13 +399,13 @@ public class GradAlgorithmService {
 	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 		switch (program) {
 			case "2018-EN":
-				Collections.sort(studentCourses, new StudentCoursesComparator(program));
+				studentCourses.sort(new StudentCoursesComparator(program));
 				studentAssessments.sort(Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).thenComparing(StudentAssessment::getSpecialCase,Comparator.nullsLast(String::compareTo)).thenComparing(StudentAssessment::getSessionDate));
 				break;
 			case "2018-PF":
 			case "2004-EN":
 			case "2004-PF":
-				Collections.sort(studentCourses, new StudentCoursesComparator(program));
+				studentCourses.sort(new StudentCoursesComparator(program));
 				break;
 			case "1950":
 				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
@@ -472,7 +475,7 @@ public class GradAlgorithmService {
 	}
 
 	private Pair<Boolean, String> checkHonoursExemptRule(String program,List<StudentCourse> studentCourseList) {
-		Boolean isExempted = false;
+		boolean isExempted = false;
 		String honourValue = null;
 		float totalCreditsTSSGRM = studentCourseList.stream().filter(sc-> sc.isUsed()
 				&& (sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM")
@@ -537,21 +540,22 @@ public class GradAlgorithmService {
 	private void convertRuleProcessorToGraduationData(List<GradAlgorithmOptionalStudentProgram> optionalProgramStatusList, String existingProgramCompletionDate, List<GradRequirement> existingNonGradReasons, String gradProgram, RuleProcessorData ruleProcessorData,GraduationData graduationData) {
 		graduationData.setGradStudent(ruleProcessorData.getGradStudent());
 		graduationData.setGradStatus(ruleProcessorData.getGradStatus());
+		graduationData.setGradProgram(ruleProcessorData.getGradProgram());
 		graduationData.setOptionalGradStatus(optionalProgramStatusList);
 		graduationData.setSchool(ruleProcessorData.getSchool());
 		graduationData.setStudentCourses(new StudentCourses(ruleProcessorData.getStudentCourses()));
 		graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
 
 		if(ruleProcessorData.getNonGradReasons() != null)
-			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule));
+			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
 
 		//This is done for Reports only grad run
-		if(existingProgramCompletionDate == null || ruleProcessorData.isProjected() || gradProgram.equalsIgnoreCase("SCCP") || gradProgram.equalsIgnoreCase("NOPROG")) {
+		if(existingProgramCompletionDate == null || ruleProcessorData.isProjected() || gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM)) {
 			graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
 		}
 		processExistingNonGradReason(existingNonGradReasons,ruleProcessorData,graduationData);
 		if(ruleProcessorData.getRequirementsMet() != null)
-			ruleProcessorData.getRequirementsMet().sort(Comparator.comparing(GradRequirement::getRule));
+			ruleProcessorData.getRequirementsMet().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
 
 		graduationData.setRequirementsMet(ruleProcessorData.getRequirementsMet());
 		graduationData.setGraduated(ruleProcessorData.isGraduated());
