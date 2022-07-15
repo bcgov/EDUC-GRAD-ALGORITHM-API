@@ -583,10 +583,10 @@ public class GradAlgorithmService {
 			for (GradRequirement gR : existingNonGradReasons) {
 				boolean ruleExists = false;
 				if (graduationData.getNonGradReasons() != null) {
-					ruleExists = graduationData.getNonGradReasons().stream().anyMatch(nGR -> nGR.getRule().compareTo(gR.getRule()) == 0);
+					ruleExists = graduationData.getNonGradReasons().stream().anyMatch(nGR -> nGR.getRule() != null && nGR.getRule().compareTo(gR.getRule()) == 0);
 				}
 				if (!ruleExists && ruleProcessorData.getRequirementsMet() != null) {
-					ruleProcessorData.getRequirementsMet().stream().filter(rM -> rM.getRule().compareTo(gR.getRule()) == 0).forEach(rM -> rM.setProjected(true));
+					ruleProcessorData.getRequirementsMet().stream().filter(rM -> rM.getRule() != null && rM.getRule().compareTo(gR.getRule()) == 0).forEach(rM -> rM.setProjected(true));
 				}
 			}
 		}
