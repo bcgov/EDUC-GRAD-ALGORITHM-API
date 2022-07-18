@@ -21,4 +21,5 @@ public class TranscriptMessage {
 	private String careerProgramMessage;
 	private String gradProjectedMessage;
 	private String honourProjectedNote;
+	private String graduationSchool;
 }

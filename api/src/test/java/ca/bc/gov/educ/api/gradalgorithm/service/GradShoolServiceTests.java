@@ -106,4 +106,25 @@ public class GradShoolServiceTests {
         assertNull(result);
         LOG.debug(">getSchoolTest");
     }
+
+    @Test
+    public void getSchoolGradTest() {
+        LOG.debug("<{}.getSchoolTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        String mincode = "08098655";
+        String accessToken = "accessToken";
+
+        School school = new School();
+        school.setMinCode(mincode);
+        school.setSchoolName("My School");
+
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getSchoolByMincode(), mincode))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(School.class)).thenReturn(Mono.just(school));
+
+        School result = gradSchoolService.getSchoolGrad(mincode, accessToken,exception);
+        assertNotNull(result);
+        LOG.debug(">getSchoolTest");
+    }
 }

@@ -128,7 +128,7 @@ public class GradAlgorithmService {
         gradStatus.setStudentGradData(null);
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
 		if(isGraduated) {
-			setGradStatusAlgorithmResponse(gradProgram,existingProgramCompletionDate,gradStatus,checkSCCPNOPROG,ruleProcessorData);
+			setGradStatusAlgorithmResponse(gradProgram,existingProgramCompletionDate,gradStatus,checkSCCPNOPROG,ruleProcessorData,accessToken,exception);
         }
         ruleProcessorData.setGradStatus(gradStatus);
 
@@ -264,8 +264,10 @@ public class GradAlgorithmService {
 			}else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
-			if(!gradMessageRequest.isProjected())
-				strBuilder.append(" ").append(String.format(result.getGradDateMessage(),formatGradDate(gradMessageRequest.getGradDate())));
+			if(!gradMessageRequest.isProjected()) {
+				strBuilder.append(" ").append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
+				strBuilder.append(". ").append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
+			}
 			strBuilder.append(". ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		}else {
@@ -447,7 +449,7 @@ public class GradAlgorithmService {
 		}
 	}
 
-	private void setGradStatusAlgorithmResponse(String gradProgram, String existingProgramCompletionDate, GradAlgorithmGraduationStudentRecord gradStatus, boolean checkSCCPNOPROG, RuleProcessorData ruleProcessorData) {
+	private void setGradStatusAlgorithmResponse(String gradProgram, String existingProgramCompletionDate, GradAlgorithmGraduationStudentRecord gradStatus, boolean checkSCCPNOPROG, RuleProcessorData ruleProcessorData,String accessToken,ExceptionMessage exception) {
 		if (!gradProgram.equalsIgnoreCase(SCCP) && !gradProgram.equalsIgnoreCase(NOPROGRAM)) {
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
 			if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
@@ -463,10 +465,17 @@ public class GradAlgorithmService {
 				gradStatus.setHonoursStanding(honoursValue);
 			}
 		}
+		if(gradStatus.getSchoolAtGrad() != null) {
+			School sch = gradSchoolService.getSchoolGrad(gradStatus.getSchoolAtGrad(),accessToken,exception);
+			if(sch != null) {
+				gradStatus.setSchoolAtGradName(sch.getSchoolName());
+			}
+		}
 
 		//This is done for Reports only grad run -Student already graduated no change in graduation date
 		if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGrad() == null) {
 			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+			gradStatus.setSchoolAtGradName(ruleProcessorData.getSchool().getSchoolName());
 		}
 
 		if(checkSCCPNOPROG) {
@@ -597,6 +606,7 @@ public class GradAlgorithmService {
 			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
 					.gradProgram(existingDataSupport.getGradProgam()).gradDate(graduationData.getGradStatus().getProgramCompletionDate())
 					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
+					.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
 					.build();
 			if(graduationData.isGraduated()) {
 				gradMessageRequest.setMsgType("GRADUATED");

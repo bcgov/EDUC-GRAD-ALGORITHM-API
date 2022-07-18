@@ -4756,11 +4756,12 @@
 		"gpa": "3.2",
 		"honoursStanding": "Y",
 		"recalculateGradStatus": null,
-		"schoolOfRecord": "00502001",
+		"schoolOfRecord": "00599119",
 		"studentGrade": "12",
 		"studentStatus": "A",
 		"studentID": "ac339d70-7649-1a2e-8176-4a2e70f049b6",
-		"schoolAtGrad": null
+		"schoolAtGrad": "00599119",
+		"schoolAtGradName": null
 	},
 	"gradOptionalProgramStatus": null,
 	"gradProgram": {
