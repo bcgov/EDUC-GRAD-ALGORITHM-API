@@ -11,5 +11,6 @@ public class GradMessageRequest {
     String gradDate;
     String honours;
     String programName;
+    String schoolAtGradName;
     boolean projected;
 }

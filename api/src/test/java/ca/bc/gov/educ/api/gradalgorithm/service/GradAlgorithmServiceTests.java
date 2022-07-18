@@ -69,6 +69,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradProgramService.getProgramDataForAlgorithm(gradProgram, "", accessToken,exception)).thenReturn(programAlgorithmData);
 		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception)).thenReturn(ruleProcessorDatas);
 		Mockito.when(gradSchoolService.getSchool(ruleProcessorDatas.getGradStudent().getSchoolOfRecord(), accessToken,exception)).thenReturn(Mono.just(school));
+		Mockito.when(gradSchoolService.getSchoolGrad(ruleProcessorDatas.getGradStatus().getSchoolAtGrad(), accessToken,exception)).thenReturn(school);
 		String schoolOfRecord = ruleProcessorDatas.getGradStudent().getSchoolOfRecord();
 		Mockito.when(parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,schoolOfRecord,accessToken,exception)).thenReturn(Mono.just(parallelDTO));
 		Mockito.when(gradCourseService.prepareCourseDataForAlgorithm(parallelDTO.courseAlgorithmData())).thenReturn(parallelDTO.courseAlgorithmData());
