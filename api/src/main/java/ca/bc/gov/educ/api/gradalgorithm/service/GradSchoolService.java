@@ -43,4 +43,26 @@ public class GradSchoolService extends GradService {
 			return null;
 		}
     }
+
+	School getSchoolGrad(String minCode, String accessToken,ExceptionMessage exception) {
+		logger.debug("getSchool");
+		try
+		{
+			start();
+			School schObj = webClient.get()
+					.uri(String.format(constants.getSchoolByMincode(), minCode))
+					.headers(h -> {
+						h.setBearerAuth(accessToken);
+						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
+					})
+					.retrieve()
+					.bodyToMono(School.class).block();
+			end();
+			return schObj;
+		} catch (Exception e) {
+			exception.setExceptionName("GRAD-TRAX-API IS DOWN");
+			exception.setExceptionDetails(e.getLocalizedMessage());
+			return null;
+		}
+	}
 }

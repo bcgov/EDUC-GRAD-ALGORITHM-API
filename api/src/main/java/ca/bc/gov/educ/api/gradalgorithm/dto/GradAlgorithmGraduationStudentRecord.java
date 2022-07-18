@@ -24,4 +24,5 @@ public class GradAlgorithmGraduationStudentRecord {
     private UUID studentID;
     private String schoolAtGrad;
     private String consumerEducationRequirementMet;
+    private String schoolAtGradName;
 }
