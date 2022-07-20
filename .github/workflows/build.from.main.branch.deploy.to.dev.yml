@@ -23,7 +23,6 @@ env:
   TAG: "latest"
 
 on:
-  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
   workflow_dispatch:
 
 jobs:
