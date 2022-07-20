@@ -1,15 +1,7 @@
 name: API CI
 on:
-  push:
-    branches:
-      - main
-      - release/*
-  pull_request:
-    branches:
-      - main
-      - grad-release/*
-    paths:
-      - 'api/**'
+  workflow_dispatch:
+
 jobs:
   quality_profile:
     name: Build and test
