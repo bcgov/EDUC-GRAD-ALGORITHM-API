@@ -7,6 +7,7 @@ class EducGradAlgorithmApiApplicationTests {
 
 	//@Test
 	void contextLoads() {
+		
 	}
 
 }
