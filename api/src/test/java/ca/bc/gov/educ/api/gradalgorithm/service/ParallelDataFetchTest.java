@@ -65,12 +65,10 @@ public class ParallelDataFetchTest extends EducGradAlgorithmTestBase {
         String pen = "1312311231";
         String gradProgram = "2018-EN";
         String schoolOfRecord = "32343242";
-        AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData,studentGraduationAlgorithmData,school);
+        AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
 
         Mockito.when(gradCourseService.getCourseDataForAlgorithm(pen, accessToken,exception)).thenReturn(Mono.just(courseAlgorithmData));
         Mockito.when(gradAssessmentService.getAssessmentDataForAlgorithm(pen, accessToken,exception)).thenReturn(Mono.just(assessmentAlgorithmData));
-        Mockito.when(studentGraduationService.getAllAlgorithmData(gradProgram, accessToken,exception)).thenReturn(Mono.just(studentGraduationAlgorithmData));
-        Mockito.when(gradSchoolService.getSchool(schoolOfRecord, accessToken,exception)).thenReturn(Mono.just(school));
 
         Mono<AlgorithmDataParallelDTO> data = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,schoolOfRecord,accessToken,exception);
         assertNotNull(data.block().assessmentAlgorithmData());

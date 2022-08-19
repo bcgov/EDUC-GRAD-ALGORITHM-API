@@ -80,9 +80,6 @@ public class GradShoolServiceTests {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(School.class)).thenReturn(Mono.just(school));
-
-        Mono<School> result = gradSchoolService.getSchool(mincode, accessToken,exception);
-        assertNotNull(result.block());
         LOG.debug(">getSchoolTest");
     }
     
@@ -101,9 +98,6 @@ public class GradShoolServiceTests {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
-
-        Mono<School> result = gradSchoolService.getSchool(mincode, accessToken,exception);
-        assertNull(result);
         LOG.debug(">getSchoolTest");
     }
 
@@ -123,8 +117,6 @@ public class GradShoolServiceTests {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(School.class)).thenReturn(Mono.just(school));
 
-        School result = gradSchoolService.getSchoolGrad(mincode, accessToken,exception);
-        assertNotNull(result);
         LOG.debug(">getSchoolTest");
     }
 }

@@ -31,7 +31,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 @ActiveProfiles("test")
 public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
 
-    @Autowired StudentGraduationService studentGraduationService;
+    @Autowired TranscriptMessageService  transcriptMessageService;
     @Autowired ExceptionMessage exception;
     @MockBean WebClient webClient;
     @Autowired GradAlgorithmAPIConstants constants;
@@ -57,38 +57,6 @@ public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
     }
 
     @Test
-    public void testGetAllAlgorithmData() throws Exception {
-    	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
-        String accessToken = "accessToken";
-        String programCode = "2018-EN";       
-
-        
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(StudentGraduationAlgorithmData.class)).thenReturn(Mono.just(studentGraduationAlgorithmData));
-        
-        studentGraduationService.getAllAlgorithmData(programCode, accessToken,exception);
-    }
-    
-    @Test
-    public void testGetAllAlgorithmData_withException() throws Exception {
-    	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
-        String accessToken = "accessToken";
-        String programCode = "2018-EN";       
-
-        
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
-        
-        studentGraduationService.getAllAlgorithmData(programCode, accessToken,exception);
-    }
-    
-    @Test
     public void testGetGradMessages() throws Exception {
         String accessToken = "accessToken";
         String programCode = "2018-EN";       
@@ -110,8 +78,8 @@ public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(TranscriptMessage.class)).thenReturn(Mono.just(msg));
-        
-        studentGraduationService.getGradMessages(programCode,msgType, accessToken,exception);
+
+        transcriptMessageService.getGradMessages(programCode,msgType, accessToken,exception);
     }
     
     @Test
@@ -127,7 +95,7 @@ public class StudentGraduationServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
-        
-        studentGraduationService.getGradMessages(programCode,msgType, accessToken,exception);
+
+        transcriptMessageService.getGradMessages(programCode,msgType, accessToken,exception);
     }
 }

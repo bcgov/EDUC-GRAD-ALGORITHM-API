@@ -45,7 +45,7 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.rule-engine-api.endpoints.run-grad-algorithm-rules}")
     private String runRules;
     
-    @Value("${endpoint.grad-trax-api.school-by-min-code.url}")
+    @Value("${endpoint.grad-trax-api.school-all-school.url}")
     private String schoolByMincode;
     
     @Value("${endpoint.grad-program-api.get-program-algorithm-data.url}")
@@ -81,7 +81,17 @@ public class GradAlgorithmAPIConstants {
     // Splunk LogHelper Enabled
     @Value("${splunk.log-helper.enabled}")
     private boolean splunkLogHelperEnabled;
-    
+
+    @Value("${authorization.user}")
+    private String userName;
+
+    @Value("${authorization.password}")
+    private String password;
+
+    @Value("${endpoint.keycloak.getToken}")
+    private String tokenUrl;
+
+
 //Application Properties Constants
 
 }

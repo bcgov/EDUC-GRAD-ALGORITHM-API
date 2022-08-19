@@ -76,8 +76,6 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradProgramAlgorithmData.class)).thenReturn(Mono.just(programAlgorithmData));
-        
-        gradProgramService.getProgramDataForAlgorithm(programCode,optionalProgramCode, accessToken,exception);
     }
     
     @Test
@@ -96,8 +94,6 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
-        
-        gradProgramService.getProgramDataForAlgorithm(programCode,optionalProgramCode, accessToken,exception);
     }
     
     
@@ -116,6 +112,6 @@ public class GradProgramServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(OptionalProgram.class)).thenReturn(Mono.just(op));
         
-        gradProgramService.getOptionalProgramID(gradProgram,gradOptionalProgram, accessToken,exception);
+        gradProgramService.getOptionalProgramID(gradProgram,gradOptionalProgram, accessToken);
     }
 }

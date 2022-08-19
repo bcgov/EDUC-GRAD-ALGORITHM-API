@@ -1,10 +1,15 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.ResponseObj;
+import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
 import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -13,56 +18,74 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 public class GradSchoolService extends GradService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradSchoolService.class);
-    
-    @Autowired WebClient webClient;
-    @Autowired GradAlgorithmAPIConstants constants;
+	private static final Logger logger = LoggerFactory.getLogger(GradSchoolService.class);
+	private final ReadWriteLock minCodeSchoolMapLock = new ReentrantReadWriteLock();
+	private Map<String, School> mincodeSchoolEntityMap;
 
-	@Retry(name = "generalgetcall")
-	Mono<School> getSchool(String minCode, String accessToken,ExceptionMessage exception) {
-    	logger.debug("getSchool");
-    	try
-    	{
-	        start();
-	        Mono<School> schObj = webClient.get()
-	                .uri(String.format(constants.getSchoolByMincode(), minCode))
-	                .headers(h -> {
-										h.setBearerAuth(accessToken);
-										h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-									})
-	                .retrieve()
-	                .bodyToMono(School.class);
-	        end();
-	        return schObj;
-    	} catch (Exception e) {
-    		exception.setExceptionName("GRAD-TRAX-API IS DOWN");
-			exception.setExceptionDetails(e.getLocalizedMessage());
+	/**
+	 * Search for SchoolEntity by Mincode
+	 *
+	 * @param mincode the unique mincode for a given school.
+	 * @return the School entity if found.
+	 */
+	public School retrieveSchoolByMincode(String mincode) {
+		Optional<School> result = Optional.ofNullable(this.mincodeSchoolEntityMap.get(mincode));
+		if (result.isPresent()) {
+			return result.get();
+		} else {
 			return null;
 		}
-    }
+	}
 
-	School getSchoolGrad(String minCode, String accessToken,ExceptionMessage exception) {
-		logger.debug("getSchool");
-		try
-		{
-			start();
-			School schObj = webClient.get()
-					.uri(String.format(constants.getSchoolByMincode(), minCode))
+	/**
+	 * Init.
+	 */
+	@PostConstruct
+	public void init() {
+		ResponseObj obj = getTokenResponseObject();
+		this.setSchoolData(obj.getAccess_token());
+		logger.info("loaded school cache..");
+	}
+
+	private void setSchoolData(String accessToken) {
+		val writeLock = minCodeSchoolMapLock.writeLock();
+		try {
+			writeLock.lock();
+			List<School> schoolList = webClient.get()
+					.uri(String.format(constants.getSchoolByMincode()))
 					.headers(h -> {
 						h.setBearerAuth(accessToken);
 						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
 					})
 					.retrieve()
-					.bodyToMono(School.class).block();
-			end();
-			return schObj;
-		} catch (Exception e) {
-			exception.setExceptionName("GRAD-TRAX-API IS DOWN");
-			exception.setExceptionDetails(e.getLocalizedMessage());
-			return null;
+					.bodyToMono(new ParameterizedTypeReference<List<School>>(){}).block();
+			if(schoolList != null)
+				this.mincodeSchoolEntityMap = schoolList.stream().collect(Collectors.toConcurrentMap(School::getMinCode, Function.identity()));
+		} finally {
+			writeLock.unlock();
 		}
+	}
+
+	/**
+	 * Reload cache at midnight
+	 */
+	@Scheduled(cron = "0 0 0 * * *")
+	public void reloadCache() {
+		logger.info("started reloading cache..");
+		ResponseObj obj = getTokenResponseObject();
+		this.setSchoolData(obj.getAccess_token());
+		logger.info("reloading cache completed..");
 	}
 }

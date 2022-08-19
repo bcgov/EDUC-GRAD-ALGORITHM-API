@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.gradalgorithm.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +19,14 @@ public class APIUtils {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", "application/json");
         httpHeaders.setBearerAuth(accessToken);
+        return httpHeaders;
+    }
+
+    public static HttpHeaders getHeaders (String username,String password)
+    {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setBasicAuth(username, password);
         return httpHeaders;
     }
 
