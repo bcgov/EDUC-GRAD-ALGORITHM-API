@@ -6,6 +6,7 @@ env:
   # To get a permanent token, refer to https://github.com/redhat-actions/oc-login/wiki/Using-a-Service-Account-for-GitHub-Actions
   OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+  # secrets.GRAD_BUSINESS_NAMESPACE to change in GH Secrets to the e8a*** namespace, currently 77c***
   OPENSHIFT_NAMESPACE: ${{ secrets.GRAD_BUSINESS_NAMESPACE }}-dev
 
   # 🖊️ EDIT to change the image registry settings.
@@ -15,7 +16,7 @@ env:
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
 
   SPRING_BOOT_IMAGE_NAME: educ-grad-algorithm-api-dc
-  DOCKER_ARTIFACTORY_REPO: docker-remote.artifacts.developer.gov.bc.ca
+  DOCKER_ARTIFACTORY_REPO: artifacts.developer.gov.bc.ca/docker-remote
 
   REPO_NAME: "educ-grad-algorithm-api"
   APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
@@ -49,7 +50,7 @@ jobs:
           echo "TAG=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.DOCKER_ARTIFACTORY_REPO }}
           username: ${{ secrets.DOCKER_ARTIFACTORY_USERNAME }}
