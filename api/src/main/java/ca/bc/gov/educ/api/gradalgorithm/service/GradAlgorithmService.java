@@ -1,6 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +43,7 @@ public class GradAlgorithmService {
     GradCourseService gradCourseService;
 
     @Autowired
-    GradProgramService gradProgramService;
+	GradProgramService gradProgramService;
 
     @Autowired
     GradGraduationStatusService gradGraduationStatusService;
@@ -49,16 +52,13 @@ public class GradAlgorithmService {
     GradRuleProcessorService gradRuleProcessorService;
 
     @Autowired
-    GradSchoolService gradSchoolService;
+	GradSchoolService gradSchoolService;
 
 	@Autowired
 	ParallelDataFetch parallelDataFetch;
     
     @Autowired
-    StudentGraduationService studentGraduationService;
-
-	@Autowired TranscriptMessageService transcriptMessageService;
-
+	StudentGraduationService studentGraduationService;
 
 	private static final String SCCP = "SCCP";
 	private static final String NOPROGRAM = "NOPROG";
@@ -87,7 +87,7 @@ public class GradAlgorithmService {
 		String schoolOfRecord = ruleProcessorData.getGradStudent().getSchoolOfRecord();
         logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
         logger.info("**** Grad Program: {}",gradProgram);
-		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(gradProgram,pen,schoolOfRecord,accessToken,exception);
+		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelyCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
 		if(algorithmDataParallelDTO != null) {
@@ -431,7 +431,7 @@ public class GradAlgorithmService {
 			if(data != null) {
 				ruleProcessorData.setGradProgramRules(data.getProgramRules());
 				v.setOptionalProgramRules(data.getOptionalProgramRules());
-				v.setOptionalProgramID(data.getOptionalProgramRules().get(0).getOptionalProgramID().getOptionalProgramID());
+				v.setOptionalProgramID(data.getOptionalProgramID());
 				ruleProcessorData.setGradProgram(data.getGradProgram());
 			}
 		});

@@ -1,22 +1,17 @@
-package ca.bc.gov.educ.api.gradalgorithm.service;
+package ca.bc.gov.educ.api.gradalgorithm.service.caching;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.ResponseObj;
-import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
+import ca.bc.gov.educ.api.gradalgorithm.service.GradService;
 import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -42,11 +37,7 @@ public class GradSchoolService extends GradService {
 	 */
 	public School retrieveSchoolByMincode(String mincode) {
 		Optional<School> result = Optional.ofNullable(this.mincodeSchoolEntityMap.get(mincode));
-		if (result.isPresent()) {
-			return result.get();
-		} else {
-			return null;
-		}
+		return result.orElse(null);
 	}
 
 	/**
@@ -64,7 +55,7 @@ public class GradSchoolService extends GradService {
 		try {
 			writeLock.lock();
 			List<School> schoolList = webClient.get()
-					.uri(String.format(constants.getSchoolByMincode()))
+					.uri(constants.getAllSchools())
 					.headers(h -> {
 						h.setBearerAuth(accessToken);
 						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());

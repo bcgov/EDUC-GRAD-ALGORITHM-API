@@ -22,16 +22,16 @@ public class GradService {
     private static final Logger logger = LoggerFactory.getLogger(GradService.class);
 
     @Autowired
-    GradAlgorithmAPIConstants constants;
+    protected GradAlgorithmAPIConstants constants;
 
     @Autowired
-    WebClient webClient;
+    protected WebClient webClient;
 
-    void start() {
+    protected void start() {
         start = Instant.now();
     }
 
-    void end() {
+    protected void end() {
         Instant end = Instant.now();
         Duration timeElapsed = Duration.between(start, end);
         logger.info("Time taken: {} milliseconds",timeElapsed.toMillis());

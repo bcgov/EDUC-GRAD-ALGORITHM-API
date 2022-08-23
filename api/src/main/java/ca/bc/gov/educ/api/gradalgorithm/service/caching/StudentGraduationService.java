@@ -1,22 +1,18 @@
-package ca.bc.gov.educ.api.gradalgorithm.service;
+package ca.bc.gov.educ.api.gradalgorithm.service.caching;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
+import ca.bc.gov.educ.api.gradalgorithm.service.GradService;
 import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -77,7 +73,7 @@ public class StudentGraduationService extends GradService {
 	/**
 	 * Reload cache at midnight
 	 */
-	@Scheduled(cron = "0 55 16 * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	public void reloadStudentGraduationCache() {
 		logger.info("started reloading cache..");
 		ResponseObj obj = getTokenResponseObject();

@@ -23,7 +23,7 @@ public class ParallelDataFetch {
 
 
     @Retry(name = "generalgetcall")
-    public Mono<AlgorithmDataParallelDTO> fetchAlgorithmRequiredData(String gradProgram,String pen,String schoolOfRecord, String accessToken, ExceptionMessage exception) {
+    public Mono<AlgorithmDataParallelDTO> fetchAlgorithmRequiredData(String pen,String accessToken, ExceptionMessage exception) {
         logger.debug("parallel fetchAlgorithmRequiredData");
         Mono<CourseAlgorithmData> courseAlgorithmDataMono = gradCourseService.getCourseDataForAlgorithm(pen,accessToken,exception);
         Mono<AssessmentAlgorithmData> assessmentAlgorithmDataMono = gradAssessmentService.getAssessmentDataForAlgorithm(pen,accessToken,exception);

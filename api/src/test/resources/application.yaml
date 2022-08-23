@@ -58,13 +58,21 @@ springdoc:
   swagger-ui:
     path: /api/v1/api-docs-ui.html
     operationsSorter: alpha
-  
+
+authorization:
+  user: batch-api
+  password: abc
+
 #Endpoints
 #Endpoint properties
 endpoint:
+  keycloak:
+    getToken: https://soam-dev.apps.silver.devops.gov.bc.ca/auth/realms/master/protocol/openid-connect/token
   grad-trax-api:
     school-by-min-code:
       url: https://educ-grad-trax-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/trax/school/%s
+    school-all-school:
+      url: https://educ-grad-trax-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/trax/school
   grad-program-api:
     get-program-algorithm-data:
       url: https://educ-grad-program-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program/algorithmdata?
