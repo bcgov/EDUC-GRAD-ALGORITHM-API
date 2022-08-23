@@ -197,7 +197,13 @@ public class GradAlgorithmService {
 			nonGradReasons = obj.getNonGradReasonsOptionalProgram();
 			nonGradReasons.sort(Comparator.comparing(GradRequirement::getRule));
 		}
+		processGraduation(gradStudentOptionalAlg,ruleProcessorData);
+		gradStudentOptionalAlg.setOptionalNonGradReasons(nonGradReasons);
+		gradStudentOptionalAlg.setOptionalRequirementsMet(reqMet);
+		optionalProgramStatusList.add(gradStudentOptionalAlg);
+	}
 
+	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
 		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
 			String mainProgramCompletionDate;
 			if (ruleProcessorData.getGradStatus().getProgramCompletionDate().length() > 7) {
@@ -212,11 +218,7 @@ public class GradAlgorithmService {
 				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
 			}
 		}
-		gradStudentOptionalAlg.setOptionalNonGradReasons(nonGradReasons);
-		gradStudentOptionalAlg.setOptionalRequirementsMet(reqMet);
-		optionalProgramStatusList.add(gradStudentOptionalAlg);
 	}
-
 	private void checkForOptionalProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken,ExceptionMessage exception) {
 		List<StudentOptionalProgram> gradOptionalResponseList = gradGraduationStatusService.getStudentOptionalProgramsById(studentID, accessToken,exception);
 		if (!gradOptionalResponseList.isEmpty()) {
