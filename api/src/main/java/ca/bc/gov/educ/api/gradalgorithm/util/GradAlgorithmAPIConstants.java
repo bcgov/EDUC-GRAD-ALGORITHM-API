@@ -24,9 +24,9 @@ public class GradAlgorithmAPIConstants {
 
     //Default Attribute value constants
     public static final String DEFAULT_CREATED_BY = "GradAlgorithmAPI";
-    public static final Date DEFAULT_CREATED_TIMESTAMP = new Date();
+    protected static final Date DEFAULT_CREATED_TIMESTAMP = new Date();
     public static final String DEFAULT_UPDATED_BY = "GradAlgorithmAPI";
-    public static final Date DEFAULT_UPDATED_TIMESTAMP = new Date();
+    protected static final Date DEFAULT_UPDATED_TIMESTAMP = new Date();
 
     //Default Date format constants
     public static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
@@ -46,7 +46,7 @@ public class GradAlgorithmAPIConstants {
     private String runRules;
     
     @Value("${endpoint.grad-trax-api.school-all-school.url}")
-    private String schoolByMincode;
+    private String allSchools;
     
     @Value("${endpoint.grad-program-api.get-program-algorithm-data.url}")
     private String programData;
