@@ -41,11 +41,7 @@ public class StudentGraduationService extends GradService {
 	 */
 	public StudentGraduationAlgorithmData retrieveStudentGraduationDataByProgramCode(String programCode) {
 		Optional<StudentGraduationAlgorithmData> result = Optional.ofNullable(this.programStudentGraduationAlgorithmDataMap.get(programCode));
-		if (result.isPresent()) {
-			return result.get();
-		} else {
-			return null;
-		}
+		return result.orElse(null);
 	}
 
 	/**
@@ -53,38 +49,26 @@ public class StudentGraduationService extends GradService {
 	 */
 	@PostConstruct
 	public void init() {
-
 		ResponseObj obj = getTokenResponseObject();
-		this.setStudentGraduationAlgorithmData("2018-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("2018-PF",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("2004-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("2004-PF",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1996-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1996-PF",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1986-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1950",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("SCCP",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("NOPROG",obj.getAccess_token());
+		this.setStudentGraduationAlgorithmData(obj.getAccess_token());
 		logger.info("loaded student graduation cache..");
 	}
 
-	private void setStudentGraduationAlgorithmData(String programCode,String accessToken) {
+	private void setStudentGraduationAlgorithmData(String accessToken) {
 		val writeLock = programStudentGraduationMapLock.writeLock();
 		try {
 			writeLock.lock();
-			StudentGraduationAlgorithmData data = webClient.get()
-					.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata/"+programCode)
+			List<StudentGraduationAlgorithmData> data = webClient.get()
+					.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata")
 					.headers(h -> {
 						h.setBearerAuth(accessToken);
 						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
 					})
 					.retrieve()
-					.bodyToMono(StudentGraduationAlgorithmData.class).block();
+					.bodyToMono(new ParameterizedTypeReference<List<StudentGraduationAlgorithmData>>(){}).block();
 
-			if(this.programStudentGraduationAlgorithmDataMap == null) {
-				this.programStudentGraduationAlgorithmDataMap = new HashMap<>();
-			}
-			this.programStudentGraduationAlgorithmDataMap.put(programCode,data);
+			if(data != null)
+				this.programStudentGraduationAlgorithmDataMap = data.stream().collect(Collectors.toConcurrentMap(StudentGraduationAlgorithmData::getGradProgram, Function.identity()));
 		} finally {
 			writeLock.unlock();
 		}
@@ -93,20 +77,11 @@ public class StudentGraduationService extends GradService {
 	/**
 	 * Reload cache at midnight
 	 */
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "0 55 16 * * *")
 	public void reloadStudentGraduationCache() {
 		logger.info("started reloading cache..");
 		ResponseObj obj = getTokenResponseObject();
-		this.setStudentGraduationAlgorithmData("2018-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("2018-PF",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("2004-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("2004-PF",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1996-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1996-PF",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1986-EN",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("1950",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("SCCP",obj.getAccess_token());
-		this.setStudentGraduationAlgorithmData("NOPROG",obj.getAccess_token());
+		this.setStudentGraduationAlgorithmData(obj.getAccess_token());
 		logger.info("reloading cache completed..");
 	}
     
