@@ -4,6 +4,11 @@ import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,11 +27,12 @@ import java.util.Date;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
+class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(GradAlgorithmControllerTest.class);
     private static final String CLASS_NAME = GradAlgorithmControllerTest.class.getSimpleName();
@@ -38,12 +44,28 @@ public class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
     @MockBean
     WebClient webClient;
 
+    @MockBean
+    GradProgramService gradProgramService;
+    @MockBean
+    GradSchoolService gradSchoolService;
+    @MockBean
+    StudentGraduationService studentGraduationService;
+
     @InjectMocks
     private GradAlgorithmController gradAlgorithmController;
 
 
-    /*@Test
-    public void graduateStudentTest() throws Exception {
+    @BeforeEach
+    public void init() {
+
+        this.gradProgramService.init();
+        this.gradSchoolService.init();
+        this.studentGraduationService.init();
+        openMocks(this);
+    }
+
+    @Test
+    void graduateStudentTest() throws Exception {
         LOG.debug("<{}.graduateStudentTest at {}", CLASS_NAME, dateFormat.format(new Date()));
 
         RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
@@ -59,19 +81,12 @@ public class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
         entity.setGradStatus(ruleProcessorData.getGradStatus());
         entity.setSchool(ruleProcessorData.getSchool());
 
-        Authentication authentication = Mockito.mock(Authentication.class);
-        OAuth2AuthenticationDetails details = Mockito.mock(OAuth2AuthenticationDetails.class);
-        // Mockito.whens() for your authorization object
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        Mockito.when(authentication.getDetails()).thenReturn(details);
-        SecurityContextHolder.setContext(securityContext);
 
-        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, null)).thenReturn(entity);
-        gradAlgorithmController.graduateStudent(studentID, gradProgram, false, "");
-        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, null);
+        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, "accessToken")).thenReturn(entity);
+        gradAlgorithmController.graduateStudent(studentID, gradProgram, false, "accessToken");
+        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, "accessToken");
 
         LOG.debug(">graduateStudentTest");
-    }*/
+    }
 
 }

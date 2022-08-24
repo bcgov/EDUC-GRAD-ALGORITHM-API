@@ -3,6 +3,9 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.GradAlgorithmGraduationStudentRecord;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import org.junit.After;
 import org.junit.Before;
@@ -44,6 +47,9 @@ public class GradGraduationStatusServiceTests {
     @Autowired GradGraduationStatusService gradGraduationStatusService;
     @Autowired ExceptionMessage exception;
     @MockBean WebClient webClient;
+    @MockBean GradProgramService gradProgramService;
+    @MockBean GradSchoolService gradSchoolService;
+    @MockBean StudentGraduationService studentGraduationService;
     @Autowired GradAlgorithmAPIConstants constants;
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
@@ -63,6 +69,9 @@ public class GradGraduationStatusServiceTests {
 
     @Before
     public void init() {
+        this.gradProgramService.init();
+        this.gradSchoolService.init();
+        this.studentGraduationService.init();
         openMocks(this);
     }
 
@@ -105,6 +114,28 @@ public class GradGraduationStatusServiceTests {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(optionalProgramResponseType)).thenReturn(Mono.just(entity));
+
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception);
+        assertNotNull(result);
+        LOG.debug(">getStudentOptionalProgramsByIdTest");
+    }
+
+    @Test
+    public void getStudentOptionalProgramsByIdTest_Exception() {
+        LOG.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        UUID studentID = UUID.randomUUID();
+        String accessToken = "accessToken";
+
+        List<StudentOptionalProgram> entity = new ArrayList<>();
+
+        ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
+        };
+
+        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
 
         List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception);
         assertNotNull(result);

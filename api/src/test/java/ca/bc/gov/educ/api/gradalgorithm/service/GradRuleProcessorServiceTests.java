@@ -3,6 +3,9 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,6 +44,9 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
     @Autowired GradRuleProcessorService gradRuleProcessorService;
     @Autowired ExceptionMessage exception;
     @MockBean WebClient webClient;
+    @MockBean GradProgramService gradProgramService;
+    @MockBean GradSchoolService gradSchoolService;
+    @MockBean StudentGraduationService studentGraduationService;
 
     @Value("${endpoint.rule-engine-api.base-url}")
     private String ruleEngineBaseUrl;
@@ -64,6 +70,9 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
 
     @Before
     public void init() {
+        this.gradProgramService.init();
+        this.gradSchoolService.init();
+        this.studentGraduationService.init();
         openMocks(this);
     }
 

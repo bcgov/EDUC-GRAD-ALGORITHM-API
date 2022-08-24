@@ -1,4 +1,6 @@
 {
+	"programKey": "2018-EN AD",
+	"optionalProgramID": "c71ba15e-1cb8-ccce-e053-98e9228e1b71",
 	"programRules": [
 		{
 			"createUser": "API_GRAD_PROGRAM",
@@ -574,7 +576,7 @@
 				"updateDate": "2021-07-14",
 				"proReqCode": "117",
 				"label": "28 Elective credits",
-				"description": "Students must complete a minimum of 28 elective credits",
+				"description": "Students must complete a minimum of 28ï¿½elective credits",
 				"requirementTypeCode": {
 					"createUser": "API_GRAD_PROGRAM",
 					"createDate": "2021-07-14",
@@ -609,7 +611,7 @@
 				"updateDate": "2021-07-14",
 				"proReqCode": "118",
 				"label": "Literacy 12 Assessment",
-				"description": "Students must write a Grade 12 Literacy Assessments in order to graduate",
+				"description": "Students must write a Grade 12 Literacy Assessmentsï¿½in order to graduate",
 				"requirementTypeCode": {
 					"createUser": "API_GRAD_PROGRAM",
 					"createDate": "2021-07-14",
