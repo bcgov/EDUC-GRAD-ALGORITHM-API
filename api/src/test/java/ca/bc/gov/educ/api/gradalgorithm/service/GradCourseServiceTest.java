@@ -7,6 +7,9 @@ import static org.mockito.MockitoAnnotations.openMocks;
 import java.util.function.Consumer;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
+import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,6 +36,9 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     @Autowired GradCourseService gradCourseService;
     @Autowired ExceptionMessage exception;
     @MockBean WebClient webClient;
+    @MockBean GradProgramService gradProgramService;
+    @MockBean GradSchoolService gradSchoolService;
+    @MockBean StudentGraduationService studentGraduationService;
     @Autowired GradAlgorithmAPIConstants constants;
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
@@ -52,6 +58,9 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
 
     @Before
     public void init() {
+        this.gradProgramService.init();
+        this.gradSchoolService.init();
+        this.studentGraduationService.init();
         openMocks(this);
     }
 

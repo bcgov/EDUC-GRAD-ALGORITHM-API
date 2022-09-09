@@ -2,7 +2,10 @@ package ca.bc.gov.educ.api.gradalgorithm.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class APIUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(APIUtils.class);
 
     private APIUtils() {}
 
@@ -21,6 +26,14 @@ public class APIUtils {
         return httpHeaders;
     }
 
+    public static HttpHeaders getHeaders (String username,String password)
+    {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setBasicAuth(username, password);
+        return httpHeaders;
+    }
+
     public static <T> String getJSONStringFromObject(T inputObject) {
         ObjectMapper mapper = new ObjectMapper();
         String json = "";
@@ -28,7 +41,7 @@ public class APIUtils {
         try {
             json = mapper.writeValueAsString(inputObject);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.debug("ERROR {}",e.getLocalizedMessage());
         }
 
         return json;
@@ -41,7 +54,7 @@ public class APIUtils {
         try {
             gradDate = dateFormat.parse(actualPCDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.debug("ERROR {}",e.getLocalizedMessage());
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(gradDate);
