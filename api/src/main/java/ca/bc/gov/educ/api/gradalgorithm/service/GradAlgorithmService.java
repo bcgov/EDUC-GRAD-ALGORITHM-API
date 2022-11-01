@@ -655,7 +655,7 @@ public class GradAlgorithmService {
 			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
 			currentGradMessage.append(". ");
 		}
-		if(!optPrograms.isEmpty()) {
+		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
 			currentGradMessage.append(". ");
 		}
