@@ -70,6 +70,10 @@ server:
       io: 16
   #port: ${HTTP_PORT}
 
+authorization:
+  user: ${GRAD_CLIENT_NAME}
+  password: ${GRAD_CLIENT_SECRET}
+
 #API Documentation
 springdoc:
   api-docs:
@@ -80,12 +84,16 @@ springdoc:
 
 #Endpoint properties
 endpoint:
+  keycloak:
+    getToken: ${KEYCLOAK_TOKEN_URL}auth/realms/master/protocol/openid-connect/token
   grad-trax-api:
     school-by-min-code:
       url: ${GRAD_TRAX_API}api/v1/trax/school/%s
+    school-all-school:
+      url: ${GRAD_TRAX_API}api/v1/trax/school
   grad-program-api:
     get-program-algorithm-data:
-      url: ${GRAD_PROGRAM_API}api/v1/program/algorithmdata?
+      url: ${GRAD_PROGRAM_API}api/v1/program/algorithmdatalist
     get-optional-program:
       url: ${GRAD_PROGRAM_API}api/v1/program/optionalprograms/%s/%s
     optional_program_name_by_optional_program_id:
