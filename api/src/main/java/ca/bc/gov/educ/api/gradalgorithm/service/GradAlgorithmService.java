@@ -638,11 +638,14 @@ public class GradAlgorithmService {
 			if(opMessage.equalsIgnoreCase(NON_GRADUATED) || (obj.isOptionalProgramGraduated() && opMessage.equalsIgnoreCase(GRADUATED))) {
 				if (optionalProgramCode.compareTo("AD") == 0 || optionalProgramCode.compareTo("BD") == 0 || optionalProgramCode.compareTo("BC") == 0) {
 					programs.add(obj.getOptionalProgramName());
-				} else if (optionalProgramCode.compareTo("CP") == 0) {
+				}
+				if (optionalProgramCode.compareTo("CP") == 0) {
 					cpCommaSeparated = getCareerProgramNames(ruleProcessorData);
-				} else if (optionalProgramCode.compareTo("DD") != 0) {
+				}
+				if (optionalProgramCode.compareTo("DD") != 0) {
 					optPrograms.add(obj.getOptionalProgramName());
-				}else if(optionalProgramCode.compareTo("DD") == 0) {
+				}
+				if(optionalProgramCode.compareTo("DD") == 0) {
 					dualDogwoodGraduated = true;
 				}
 			}
