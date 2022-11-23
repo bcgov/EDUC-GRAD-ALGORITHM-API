@@ -620,9 +620,9 @@ public class GradAlgorithmService {
 					.build();
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,null,ruleProcessorData));
 		}
-		if(existingDataSupport.getExistingGradMessage() != null && existingDataSupport.getExistingProgramCompletionDate() != null && !existingDataSupport.getGradProgam().equalsIgnoreCase(SCCP) && !existingDataSupport.getGradProgam().equalsIgnoreCase(NOPROGRAM)) {
-			graduationData.setGradMessage(existingDataSupport.getExistingGradMessage());
-		}
+//		if(existingDataSupport.getExistingGradMessage() != null && existingDataSupport.getExistingProgramCompletionDate() != null && !existingDataSupport.getGradProgam().equalsIgnoreCase(SCCP) && !existingDataSupport.getGradProgam().equalsIgnoreCase(NOPROGRAM)) {
+//			graduationData.setGradMessage(existingDataSupport.getExistingGradMessage());
+//		}
 	}
 
 	private void createCompleteGradMessage(StringBuilder currentGradMessage, TranscriptMessage result, Map<String,OptionalProgramRuleProcessor> mapOptional, RuleProcessorData ruleProcessorData,String opMessage) {
