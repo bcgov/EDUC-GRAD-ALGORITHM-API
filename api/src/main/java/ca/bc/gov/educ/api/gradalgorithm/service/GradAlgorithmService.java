@@ -240,7 +240,7 @@ public class GradAlgorithmService {
 		StudentGraduationAlgorithmData data = studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradMessageRequest.getGradProgram());
 		if(ruleProcessorData.isGraduated()) {
 			processMessageForGraduatedStudent(gradMessageRequest,strBuilder, data.getGraduatedMessage(), mapOptional,ruleProcessorData);
-		}else {
+		} else {
 			processMessageForUnGraduatedStudent(gradMessageRequest,strBuilder, data.getNonGraduateMessage(), mapOptional,ruleProcessorData);
 		}
 		return strBuilder.toString();
@@ -257,7 +257,7 @@ public class GradAlgorithmService {
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
 				getHonoursMessageForProjected(gradMessageRequest,strBuilder,result);
-			}else {
+			} else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
 			if(!gradMessageRequest.isProjected()) {
@@ -287,10 +287,15 @@ public class GradAlgorithmService {
 	}
     
     private String formatGradDate(String gradDate) {
-    	LocalDate currentDate = LocalDate.parse(gradDate);
-        Month month = currentDate.getMonth(); 
-        int year = currentDate.getYear();
-        return month.getDisplayName(TextStyle.FULL,Locale.ENGLISH) +" "+ year;
+		try {
+			LocalDate currentDate = LocalDate.parse(StringUtils.replace(gradDate + "/01", "/", "-"));
+			Month month = currentDate.getMonth();
+			int year = currentDate.getYear();
+			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
+		} catch (Exception e) {
+			logger.error("Unable to parse date {}", gradDate);
+			return gradDate;
+		}
     }
 
     private String getGradDate(List<StudentCourse> studentCourses) {
