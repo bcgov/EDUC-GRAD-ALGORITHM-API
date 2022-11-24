@@ -599,30 +599,25 @@ public class GradAlgorithmService {
 	}
 
 	private void processGradMessages(boolean checkSCCPNOPROG, ExistingDataSupport existingDataSupport,Map<String, OptionalProgramRuleProcessor> mapOption,RuleProcessorData ruleProcessorData,GraduationData graduationData) {
-		if(existingDataSupport.getExistingProgramCompletionDate() == null || ruleProcessorData.isProjected()) {
-			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
+		GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
 					.gradProgram(existingDataSupport.getGradProgam()).gradDate(graduationData.getGradStatus().getProgramCompletionDate())
 					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
 					.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
 					.build();
 			if(graduationData.isGraduated()) {
 				gradMessageRequest.setMsgType("GRADUATED");
-			}else {
+			} else {
 				gradMessageRequest.setMsgType("NOT_GRADUATED");
 			}
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,mapOption,ruleProcessorData));
-		}
 
 		if(checkSCCPNOPROG) {
-			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
+			gradMessageRequest = GradMessageRequest.builder()
 					.gradProgram(existingDataSupport.getGradProgam()).msgType(graduationData.isGraduated()?"GRADUATED":"NOT_GRADUATED").gradDate(graduationData.getGradStatus().getProgramCompletionDate())
 					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
 					.build();
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,null,ruleProcessorData));
 		}
-//		if(existingDataSupport.getExistingGradMessage() != null && existingDataSupport.getExistingProgramCompletionDate() != null && !existingDataSupport.getGradProgam().equalsIgnoreCase(SCCP) && !existingDataSupport.getGradProgam().equalsIgnoreCase(NOPROGRAM)) {
-//			graduationData.setGradMessage(existingDataSupport.getExistingGradMessage());
-//		}
 	}
 
 	private void createCompleteGradMessage(StringBuilder currentGradMessage, TranscriptMessage result, Map<String,OptionalProgramRuleProcessor> mapOptional, RuleProcessorData ruleProcessorData,String opMessage) {
