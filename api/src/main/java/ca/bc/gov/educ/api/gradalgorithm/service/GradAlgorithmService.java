@@ -240,7 +240,7 @@ public class GradAlgorithmService {
 		StudentGraduationAlgorithmData data = studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradMessageRequest.getGradProgram());
 		if(ruleProcessorData.isGraduated()) {
 			processMessageForGraduatedStudent(gradMessageRequest,strBuilder, data.getGraduatedMessage(), mapOptional,ruleProcessorData);
-		}else {
+		} else {
 			processMessageForUnGraduatedStudent(gradMessageRequest,strBuilder, data.getNonGraduateMessage(), mapOptional,ruleProcessorData);
 		}
 		return strBuilder.toString();
@@ -257,7 +257,7 @@ public class GradAlgorithmService {
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
 				getHonoursMessageForProjected(gradMessageRequest,strBuilder,result);
-			}else {
+			} else {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
 			if(!gradMessageRequest.isProjected()) {
@@ -287,10 +287,15 @@ public class GradAlgorithmService {
 	}
     
     private String formatGradDate(String gradDate) {
-    	LocalDate currentDate = LocalDate.parse(gradDate);
-        Month month = currentDate.getMonth(); 
-        int year = currentDate.getYear();
-        return month.getDisplayName(TextStyle.FULL,Locale.ENGLISH) +" "+ year;
+		try {
+			LocalDate currentDate = LocalDate.parse(StringUtils.replace(gradDate + "/01", "/", "-"));
+			Month month = currentDate.getMonth();
+			int year = currentDate.getYear();
+			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
+		} catch (Exception e) {
+			logger.error("Unable to parse date {}", gradDate);
+			return gradDate;
+		}
     }
 
     private String getGradDate(List<StudentCourse> studentCourses) {
@@ -599,30 +604,25 @@ public class GradAlgorithmService {
 	}
 
 	private void processGradMessages(boolean checkSCCPNOPROG, ExistingDataSupport existingDataSupport,Map<String, OptionalProgramRuleProcessor> mapOption,RuleProcessorData ruleProcessorData,GraduationData graduationData) {
-		if(existingDataSupport.getExistingProgramCompletionDate() == null || ruleProcessorData.isProjected()) {
-			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
+		GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
 					.gradProgram(existingDataSupport.getGradProgam()).gradDate(graduationData.getGradStatus().getProgramCompletionDate())
 					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
 					.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
 					.build();
 			if(graduationData.isGraduated()) {
 				gradMessageRequest.setMsgType("GRADUATED");
-			}else {
+			} else {
 				gradMessageRequest.setMsgType("NOT_GRADUATED");
 			}
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,mapOption,ruleProcessorData));
-		}
 
 		if(checkSCCPNOPROG) {
-			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
+			gradMessageRequest = GradMessageRequest.builder()
 					.gradProgram(existingDataSupport.getGradProgam()).msgType(graduationData.isGraduated()?"GRADUATED":"NOT_GRADUATED").gradDate(graduationData.getGradStatus().getProgramCompletionDate())
 					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
 					.build();
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,null,ruleProcessorData));
 		}
-//		if(existingDataSupport.getExistingGradMessage() != null && existingDataSupport.getExistingProgramCompletionDate() != null && !existingDataSupport.getGradProgam().equalsIgnoreCase(SCCP) && !existingDataSupport.getGradProgam().equalsIgnoreCase(NOPROGRAM)) {
-//			graduationData.setGradMessage(existingDataSupport.getExistingGradMessage());
-//		}
 	}
 
 	private void createCompleteGradMessage(StringBuilder currentGradMessage, TranscriptMessage result, Map<String,OptionalProgramRuleProcessor> mapOptional, RuleProcessorData ruleProcessorData,String opMessage) {
