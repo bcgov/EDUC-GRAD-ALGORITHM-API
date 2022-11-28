@@ -266,7 +266,7 @@ public class GradAlgorithmService {
 			}
 			strBuilder.append(". ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
-		}else {
+		} else {
 			getMessageForProjected(gradMessageRequest,strBuilder,result);
 		}
 	}
@@ -642,7 +642,7 @@ public class GradAlgorithmService {
 				if (optionalProgramCode.compareTo("CP") == 0) {
 					cpCommaSeparated = getCareerProgramNames(ruleProcessorData);
 				}
-				if (optionalProgramCode.compareTo("DD") != 0) {
+				if (optionalProgramCode.compareTo("FI") == 0) {
 					optPrograms.add(obj.getOptionalProgramName());
 				}
 				if(optionalProgramCode.compareTo("DD") == 0) {
