@@ -261,7 +261,7 @@ public class GradAlgorithmService {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
 			if(!gradMessageRequest.isProjected()) {
-				strBuilder.append(" ").append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
+				strBuilder.append(". ").append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
 				strBuilder.append(". ").append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
 			}
 			strBuilder.append(". ");
