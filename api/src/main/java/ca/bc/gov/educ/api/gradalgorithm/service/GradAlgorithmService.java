@@ -28,10 +28,12 @@ import java.util.stream.Collectors;
 @Service
 public class GradAlgorithmService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
+	private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
 
 	private static final String NON_GRADUATED = "fromNonGrad";
 	private static final String GRADUATED = "fromGraduated";
+	public static final String MSG_TYPE_GRADUATED = "GRADUATED";
+	public static final String MSG_TYPE_NOT_GRADUATED = "NOT_GRADUATED";
 
 	@Autowired
 	GradStudentService gradStudentService;
@@ -144,7 +146,6 @@ public class GradAlgorithmService {
         //This is done for Reports only grad run - Student already graduated, no change in grad message
         ExistingDataSupport existingDataSupport = ExistingDataSupport.builder().existingProgramCompletionDate(existingProgramCompletionDate).existingGradMessage(existingGradMessage).gradProgam(gradProgram).build();
 		processGradMessages(checkSCCPNOPROG,existingDataSupport,mapOption,ruleProcessorData,graduationData);
-
 
         if(exception.getExceptionName() != null) {
         	graduationData.setException(exception);
@@ -614,21 +615,28 @@ public class GradAlgorithmService {
 
 	private void processGradMessages(boolean checkSCCPNOPROG, ExistingDataSupport existingDataSupport,Map<String, OptionalProgramRuleProcessor> mapOption,RuleProcessorData ruleProcessorData,GraduationData graduationData) {
 		GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
-					.gradProgram(existingDataSupport.getGradProgam()).gradDate(graduationData.getGradStatus().getProgramCompletionDate())
-					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
-					.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
-					.build();
+				.gradProgram(existingDataSupport.getGradProgam())
+				.gradDate(graduationData.getGradStatus().getProgramCompletionDate())
+				.honours(graduationData.getGradStatus().getHonoursStanding())
+				.programName(ruleProcessorData.getGradProgram().getProgramName())
+				.projected(ruleProcessorData.isProjected())
+				.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
+				.build();
 			if(graduationData.isGraduated()) {
-				gradMessageRequest.setMsgType("GRADUATED");
+				gradMessageRequest.setMsgType(MSG_TYPE_GRADUATED);
 			} else {
-				gradMessageRequest.setMsgType("NOT_GRADUATED");
+				gradMessageRequest.setMsgType(MSG_TYPE_NOT_GRADUATED);
 			}
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,mapOption,ruleProcessorData));
 
 		if(checkSCCPNOPROG) {
 			gradMessageRequest = GradMessageRequest.builder()
-					.gradProgram(existingDataSupport.getGradProgam()).msgType(graduationData.isGraduated()?"GRADUATED":"NOT_GRADUATED").gradDate(graduationData.getGradStatus().getProgramCompletionDate())
-					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
+					.gradProgram(existingDataSupport.getGradProgam())
+					.msgType(graduationData.isGraduated()? MSG_TYPE_GRADUATED : MSG_TYPE_NOT_GRADUATED)
+					.gradDate(graduationData.getGradStatus().getProgramCompletionDate())
+					.honours(graduationData.getGradStatus().getHonoursStanding())
+					.programName(ruleProcessorData.getGradProgram().getProgramName())
+					.projected(ruleProcessorData.isProjected())
 					.build();
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,null,ruleProcessorData));
 		}
