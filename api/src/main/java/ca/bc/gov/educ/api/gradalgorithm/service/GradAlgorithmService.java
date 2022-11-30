@@ -269,6 +269,7 @@ public class GradAlgorithmService {
 			if(!gradMessageRequest.isProjected()) {
 				appendPeriod(strBuilder);
 				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
+				appendPeriod(strBuilder);
 				strBuilder.append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
 			}
 			appendPeriod(strBuilder);
@@ -281,6 +282,8 @@ public class GradAlgorithmService {
 	private void appendPeriod(StringBuilder strBuilder) {
 		if(strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
 			strBuilder.append(". ");
+		} else {
+			strBuilder.append(" ");
 		}
 	}
 
@@ -524,7 +527,7 @@ public class GradAlgorithmService {
 						isExempted=true;
 						honourValue="N";
 					}
-				}else {
+				} else {
 					if(totalCreditsTSSGRM > 36) {
 						isExempted=true;
 						honourValue="N";
