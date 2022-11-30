@@ -144,7 +144,11 @@ public class GradAlgorithmService {
         //Convert ruleProcessorData into GraduationData object
 		convertRuleProcessorToGraduationData(optionalProgramStatusList,existingProgramCompletionDate,existingNonGradReasons,gradProgram,ruleProcessorData,graduationData);
         //This is done for Reports only grad run - Student already graduated, no change in grad message
-        ExistingDataSupport existingDataSupport = ExistingDataSupport.builder().existingProgramCompletionDate(existingProgramCompletionDate).existingGradMessage(existingGradMessage).gradProgam(gradProgram).build();
+        ExistingDataSupport existingDataSupport = ExistingDataSupport.builder()
+				.existingProgramCompletionDate(existingProgramCompletionDate)
+				.existingGradMessage(existingGradMessage)
+				.gradProgam(gradProgram)
+				.build();
 		processGradMessages(checkSCCPNOPROG,existingDataSupport,mapOption,ruleProcessorData,graduationData);
 
         if(exception.getExceptionName() != null) {
@@ -248,7 +252,7 @@ public class GradAlgorithmService {
 	}
 
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
-		getMessageForProjected(gradMessageRequest,strBuilder,result);
+		getMainMessage(gradMessageRequest,strBuilder,result);
 		strBuilder.append(" ");
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
@@ -257,10 +261,10 @@ public class GradAlgorithmService {
 
 	private void processMessageForGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
-			if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
-				getHonoursMessageForProjected(gradMessageRequest,strBuilder,result);
+			if("Y".equalsIgnoreCase(gradMessageRequest.getHonours())) {
+				getHonoursMainMessage(gradMessageRequest,strBuilder,result);
 			} else {
-				getMessageForProjected(gradMessageRequest,strBuilder,result);
+				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
 			if(!gradMessageRequest.isProjected()) {
 				appendPeriod(strBuilder);
@@ -270,7 +274,7 @@ public class GradAlgorithmService {
 			appendPeriod(strBuilder);
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		} else {
-			getMessageForProjected(gradMessageRequest,strBuilder,result);
+			getMainMessage(gradMessageRequest,strBuilder,result);
 		}
 	}
 
@@ -280,18 +284,18 @@ public class GradAlgorithmService {
 		}
 	}
 
-	private void getHonoursMessageForProjected(GradMessageRequest gradMessageRequest,StringBuilder strBuilder,TranscriptMessage result) {
+	private void getHonoursMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
 		if(gradMessageRequest.isProjected()) {
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
-		}else {
+		} else {
 			strBuilder.append(String.format(result.getHonourNote(), gradMessageRequest.getProgramName()));
 		}
 	}
 
-	private void getMessageForProjected(GradMessageRequest gradMessageRequest,StringBuilder strBuilder,TranscriptMessage result) {
+	private void getMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
 		if(gradMessageRequest.isProjected()) {
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
-		}else {
+		} else {
 			strBuilder.append(String.format(result.getGradMainMessage(),gradMessageRequest.getProgramName()));
 		}
 	}
@@ -622,7 +626,7 @@ public class GradAlgorithmService {
 				.projected(ruleProcessorData.isProjected())
 				.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
 				.build();
-			if(graduationData.isGraduated()) {
+			if(ruleProcessorData.isGraduated()) {
 				gradMessageRequest.setMsgType(MSG_TYPE_GRADUATED);
 			} else {
 				gradMessageRequest.setMsgType(MSG_TYPE_NOT_GRADUATED);
