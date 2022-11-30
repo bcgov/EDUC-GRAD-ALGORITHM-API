@@ -253,6 +253,7 @@ public class GradAlgorithmService {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
 	}
+
 	private void processMessageForGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
@@ -261,15 +262,23 @@ public class GradAlgorithmService {
 				getMessageForProjected(gradMessageRequest,strBuilder,result);
 			}
 			if(!gradMessageRequest.isProjected()) {
-				strBuilder.append(". ").append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
-				strBuilder.append(". ").append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
+				appendPeriod(strBuilder);
+				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
+				strBuilder.append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
 			}
-			strBuilder.append(". ");
+			appendPeriod(strBuilder);
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		} else {
 			getMessageForProjected(gradMessageRequest,strBuilder,result);
 		}
 	}
+
+	private void appendPeriod(StringBuilder strBuilder) {
+		if(strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
+			strBuilder.append(". ");
+		}
+	}
+
 	private void getHonoursMessageForProjected(GradMessageRequest gradMessageRequest,StringBuilder strBuilder,TranscriptMessage result) {
 		if(gradMessageRequest.isProjected()) {
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
@@ -652,20 +661,20 @@ public class GradAlgorithmService {
 		}
 		if(StringUtils.isNotBlank(cpCommaSeparated)) {
 			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 		if(!programs.isEmpty()) {
 			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 
 		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 
 	}
