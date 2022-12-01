@@ -288,17 +288,21 @@ public class GradAlgorithmService {
 	}
 
 	private void getHonoursMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
-		if(gradMessageRequest.isProjected()) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+			// "should be able to graduate"
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
 		} else {
+			// "has graduated"
 			strBuilder.append(String.format(result.getHonourNote(), gradMessageRequest.getProgramName()));
 		}
 	}
 
 	private void getMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
-		if(gradMessageRequest.isProjected()) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+			// "should be able to graduate"
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
 		} else {
+			// "has graduated"
 			strBuilder.append(String.format(result.getGradMainMessage(),gradMessageRequest.getProgramName()));
 		}
 	}
