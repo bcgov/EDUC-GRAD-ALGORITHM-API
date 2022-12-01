@@ -266,7 +266,7 @@ public class GradAlgorithmService {
 			} else {
 				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
-			if(!gradMessageRequest.isProjected()) {
+			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
 				appendPeriod(strBuilder);
 				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
 				appendPeriod(strBuilder);
@@ -309,7 +309,8 @@ public class GradAlgorithmService {
     
     private String formatGradDate(String gradDate) {
 		try {
-			LocalDate currentDate = LocalDate.parse(StringUtils.replace(gradDate + "/01", "/", "-"));
+			String formatDate = StringUtils.contains(gradDate, "/") ? StringUtils.replace(gradDate + "/01", "/", "-") : gradDate;
+			LocalDate currentDate = LocalDate.parse(formatDate);
 			Month month = currentDate.getMonth();
 			int year = currentDate.getYear();
 			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
