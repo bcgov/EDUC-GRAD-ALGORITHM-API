@@ -433,7 +433,7 @@ public class GradAlgorithmService {
 				studentCourses.sort(new StudentCoursesComparator(program));
 				break;
 			case "1950":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
+				studentCourses.sort(Comparator.comparing(StudentCourse::getSessionDate).reversed().thenComparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
 				break;
 			case "1996-EN":
 			case "1996-PF":
