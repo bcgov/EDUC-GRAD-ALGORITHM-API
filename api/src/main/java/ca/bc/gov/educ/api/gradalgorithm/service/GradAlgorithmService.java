@@ -28,10 +28,12 @@ import java.util.stream.Collectors;
 @Service
 public class GradAlgorithmService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
+	private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
 
 	private static final String NON_GRADUATED = "fromNonGrad";
 	private static final String GRADUATED = "fromGraduated";
+	public static final String MSG_TYPE_GRADUATED = "GRADUATED";
+	public static final String MSG_TYPE_NOT_GRADUATED = "NOT_GRADUATED";
 
 	@Autowired
 	GradStudentService gradStudentService;
@@ -142,9 +144,12 @@ public class GradAlgorithmService {
         //Convert ruleProcessorData into GraduationData object
 		convertRuleProcessorToGraduationData(optionalProgramStatusList,existingProgramCompletionDate,existingNonGradReasons,gradProgram,ruleProcessorData,graduationData);
         //This is done for Reports only grad run - Student already graduated, no change in grad message
-        ExistingDataSupport existingDataSupport = ExistingDataSupport.builder().existingProgramCompletionDate(existingProgramCompletionDate).existingGradMessage(existingGradMessage).gradProgam(gradProgram).build();
+        ExistingDataSupport existingDataSupport = ExistingDataSupport.builder()
+				.existingProgramCompletionDate(existingProgramCompletionDate)
+				.existingGradMessage(existingGradMessage)
+				.gradProgam(gradProgram)
+				.build();
 		processGradMessages(checkSCCPNOPROG,existingDataSupport,mapOption,ruleProcessorData,graduationData);
-
 
         if(exception.getExceptionName() != null) {
         	graduationData.setException(exception);
@@ -240,57 +245,79 @@ public class GradAlgorithmService {
 		StudentGraduationAlgorithmData data = studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradMessageRequest.getGradProgram());
 		if(ruleProcessorData.isGraduated()) {
 			processMessageForGraduatedStudent(gradMessageRequest,strBuilder, data.getGraduatedMessage(), mapOptional,ruleProcessorData);
-		}else {
+		} else {
 			processMessageForUnGraduatedStudent(gradMessageRequest,strBuilder, data.getNonGraduateMessage(), mapOptional,ruleProcessorData);
 		}
 		return strBuilder.toString();
 	}
 
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
-		getMessageForProjected(gradMessageRequest,strBuilder,result);
+		getMainMessage(gradMessageRequest,strBuilder,result);
 		strBuilder.append(" ");
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
 	}
+
 	private void processMessageForGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
-			if(gradMessageRequest.getHonours().equalsIgnoreCase("Y")) {
-				getHonoursMessageForProjected(gradMessageRequest,strBuilder,result);
-			}else {
-				getMessageForProjected(gradMessageRequest,strBuilder,result);
+			if("Y".equalsIgnoreCase(gradMessageRequest.getHonours())) {
+				getHonoursMainMessage(gradMessageRequest,strBuilder,result);
+			} else {
+				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
-			if(!gradMessageRequest.isProjected()) {
-				strBuilder.append(" ").append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
-				strBuilder.append(". ").append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
+			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
+				appendPeriod(strBuilder);
+				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
+				appendPeriod(strBuilder);
+				strBuilder.append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
 			}
-			strBuilder.append(". ");
+			appendPeriod(strBuilder);
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
-		}else {
-			getMessageForProjected(gradMessageRequest,strBuilder,result);
+		} else {
+			getMainMessage(gradMessageRequest,strBuilder,result);
 		}
 	}
-	private void getHonoursMessageForProjected(GradMessageRequest gradMessageRequest,StringBuilder strBuilder,TranscriptMessage result) {
-		if(gradMessageRequest.isProjected()) {
+
+	private void appendPeriod(StringBuilder strBuilder) {
+		if(strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
+			strBuilder.append(". ");
+		} else {
+			strBuilder.append(" ");
+		}
+	}
+
+	private void getHonoursMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+			// "should be able to graduate"
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
-		}else {
+		} else {
+			// "has graduated"
 			strBuilder.append(String.format(result.getHonourNote(), gradMessageRequest.getProgramName()));
 		}
 	}
 
-	private void getMessageForProjected(GradMessageRequest gradMessageRequest,StringBuilder strBuilder,TranscriptMessage result) {
-		if(gradMessageRequest.isProjected()) {
+	private void getMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+			// "should be able to graduate"
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
-		}else {
+		} else {
+			// "has graduated"
 			strBuilder.append(String.format(result.getGradMainMessage(),gradMessageRequest.getProgramName()));
 		}
 	}
     
     private String formatGradDate(String gradDate) {
-    	LocalDate currentDate = LocalDate.parse(gradDate);
-        Month month = currentDate.getMonth(); 
-        int year = currentDate.getYear();
-        return month.getDisplayName(TextStyle.FULL,Locale.ENGLISH) +" "+ year;
+		try {
+			String formatDate = StringUtils.contains(gradDate, "/") ? StringUtils.replace(gradDate + "/01", "/", "-") : gradDate;
+			LocalDate currentDate = LocalDate.parse(formatDate);
+			Month month = currentDate.getMonth();
+			int year = currentDate.getYear();
+			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
+		} catch (Exception e) {
+			logger.error("Unable to parse date {}", gradDate);
+			return gradDate;
+		}
     }
 
     private String getGradDate(List<StudentCourse> studentCourses) {
@@ -505,7 +532,7 @@ public class GradAlgorithmService {
 						isExempted=true;
 						honourValue="N";
 					}
-				}else {
+				} else {
 					if(totalCreditsTSSGRM > 36) {
 						isExempted=true;
 						honourValue="N";
@@ -599,29 +626,31 @@ public class GradAlgorithmService {
 	}
 
 	private void processGradMessages(boolean checkSCCPNOPROG, ExistingDataSupport existingDataSupport,Map<String, OptionalProgramRuleProcessor> mapOption,RuleProcessorData ruleProcessorData,GraduationData graduationData) {
-		if(existingDataSupport.getExistingProgramCompletionDate() == null || ruleProcessorData.isProjected()) {
-			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
-					.gradProgram(existingDataSupport.getGradProgam()).gradDate(graduationData.getGradStatus().getProgramCompletionDate())
-					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
-					.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
-					.build();
-			if(graduationData.isGraduated()) {
-				gradMessageRequest.setMsgType("GRADUATED");
-			}else {
-				gradMessageRequest.setMsgType("NOT_GRADUATED");
+		GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
+				.gradProgram(existingDataSupport.getGradProgam())
+				.gradDate(graduationData.getGradStatus().getProgramCompletionDate())
+				.honours(graduationData.getGradStatus().getHonoursStanding())
+				.programName(ruleProcessorData.getGradProgram().getProgramName())
+				.projected(ruleProcessorData.isProjected())
+				.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
+				.build();
+			if(ruleProcessorData.isGraduated()) {
+				gradMessageRequest.setMsgType(MSG_TYPE_GRADUATED);
+			} else {
+				gradMessageRequest.setMsgType(MSG_TYPE_NOT_GRADUATED);
 			}
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,mapOption,ruleProcessorData));
-		}
 
 		if(checkSCCPNOPROG) {
-			GradMessageRequest gradMessageRequest = GradMessageRequest.builder()
-					.gradProgram(existingDataSupport.getGradProgam()).msgType(graduationData.isGraduated()?"GRADUATED":"NOT_GRADUATED").gradDate(graduationData.getGradStatus().getProgramCompletionDate())
-					.honours(graduationData.getGradStatus().getHonoursStanding()).programName(ruleProcessorData.getGradProgram().getProgramName()).projected(ruleProcessorData.isProjected())
+			gradMessageRequest = GradMessageRequest.builder()
+					.gradProgram(existingDataSupport.getGradProgam())
+					.msgType(graduationData.isGraduated()? MSG_TYPE_GRADUATED : MSG_TYPE_NOT_GRADUATED)
+					.gradDate(graduationData.getGradStatus().getProgramCompletionDate())
+					.honours(graduationData.getGradStatus().getHonoursStanding())
+					.programName(ruleProcessorData.getGradProgram().getProgramName())
+					.projected(ruleProcessorData.isProjected())
 					.build();
 			graduationData.setGradMessage(getGradMessages(gradMessageRequest,null,ruleProcessorData));
-		}
-		if(existingDataSupport.getExistingGradMessage() != null && existingDataSupport.getExistingProgramCompletionDate() != null && !existingDataSupport.getGradProgam().equalsIgnoreCase(SCCP) && !existingDataSupport.getGradProgam().equalsIgnoreCase(NOPROGRAM)) {
-			graduationData.setGradMessage(existingDataSupport.getExistingGradMessage());
 		}
 	}
 
@@ -638,31 +667,34 @@ public class GradAlgorithmService {
 			if(opMessage.equalsIgnoreCase(NON_GRADUATED) || (obj.isOptionalProgramGraduated() && opMessage.equalsIgnoreCase(GRADUATED))) {
 				if (optionalProgramCode.compareTo("AD") == 0 || optionalProgramCode.compareTo("BD") == 0 || optionalProgramCode.compareTo("BC") == 0) {
 					programs.add(obj.getOptionalProgramName());
-				} else if (optionalProgramCode.compareTo("CP") == 0) {
+				}
+				if (optionalProgramCode.compareTo("CP") == 0) {
 					cpCommaSeparated = getCareerProgramNames(ruleProcessorData);
-				} else if (optionalProgramCode.compareTo("DD") != 0) {
+				}
+				if (optionalProgramCode.compareTo("FI") == 0) {
 					optPrograms.add(obj.getOptionalProgramName());
-				}else if(optionalProgramCode.compareTo("DD") == 0) {
+				}
+				if(optionalProgramCode.compareTo("DD") == 0) {
 					dualDogwoodGraduated = true;
 				}
 			}
 		}
 		if(StringUtils.isNotBlank(cpCommaSeparated)) {
 			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 		if(!programs.isEmpty()) {
 			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
-		if(!optPrograms.isEmpty()) {
+		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 
 		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
-			currentGradMessage.append(". ");
+			appendPeriod(currentGradMessage);
 		}
 
 	}
