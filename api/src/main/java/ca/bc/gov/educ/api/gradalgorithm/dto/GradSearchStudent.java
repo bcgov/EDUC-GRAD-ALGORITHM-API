@@ -1,11 +1,10 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
-import org.springframework.stereotype.Component;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @Data
@@ -22,6 +21,7 @@ public class GradSearchStudent {
 	private String dob;
 	private String sexCode;
 	private String genderCode;
+	private String studentCitizenship;
 	private String usualFirstName;
 	private String usualMiddleNames;
 	private String usualLastName;
