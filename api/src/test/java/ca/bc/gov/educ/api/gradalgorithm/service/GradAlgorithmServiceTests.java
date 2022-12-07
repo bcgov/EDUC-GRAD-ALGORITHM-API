@@ -86,17 +86,17 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     }
 
 	@Test
-	public void testGraduateStudent1950() throws Exception {
+	public void testGraduateStudent_1950() throws Exception {
 		UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
 		String pen = "127951309";
 		String gradProgram = "1950";
 		String accessToken = "accessToken";
-		RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData.json");
-		GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+		RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_1950.json");
+		GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord_1950.json");
 		CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
 		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
 		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
-		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_1950.json");
 		School school = createSchoolData("json/school.json");
 
 
