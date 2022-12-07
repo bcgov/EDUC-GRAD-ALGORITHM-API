@@ -266,7 +266,7 @@ public class GradAlgorithmService {
 			} else {
 				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
-			if(!gradMessageRequest.isProjected()) {
+			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
 				appendPeriod(strBuilder);
 				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
 				appendPeriod(strBuilder);
@@ -288,24 +288,29 @@ public class GradAlgorithmService {
 	}
 
 	private void getHonoursMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
-		if(gradMessageRequest.isProjected()) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+			// "should be able to graduate"
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
 		} else {
+			// "has graduated"
 			strBuilder.append(String.format(result.getHonourNote(), gradMessageRequest.getProgramName()));
 		}
 	}
 
 	private void getMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
-		if(gradMessageRequest.isProjected()) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+			// "should be able to graduate"
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
 		} else {
+			// "has graduated"
 			strBuilder.append(String.format(result.getGradMainMessage(),gradMessageRequest.getProgramName()));
 		}
 	}
     
     private String formatGradDate(String gradDate) {
 		try {
-			LocalDate currentDate = LocalDate.parse(StringUtils.replace(gradDate + "/01", "/", "-"));
+			String formatDate = StringUtils.contains(gradDate, "/") ? StringUtils.replace(gradDate + "/01", "/", "-") : gradDate;
+			LocalDate currentDate = LocalDate.parse(formatDate);
 			Month month = currentDate.getMonth();
 			int year = currentDate.getYear();
 			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
@@ -428,7 +433,7 @@ public class GradAlgorithmService {
 				studentCourses.sort(new StudentCoursesComparator(program));
 				break;
 			case "1950":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
+				studentCourses.sort(Comparator.comparing(StudentCourse::getSessionDate).reversed().thenComparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
 				break;
 			case "1996-EN":
 			case "1996-PF":
