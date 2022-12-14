@@ -217,10 +217,12 @@ public class GradAlgorithmService {
 				mainProgramCompletionDate = APIUtils.parsingTraxDate(ruleProcessorData.getGradStatus().getProgramCompletionDate());
 			}
 			if (!gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList().isEmpty()) {
-				String optionalPrgComlDate = getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList());
+				String optionalPrgComlDate = getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList(),
+						gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList());
 				gradStudentOptionalAlg.setOptionalProgramCompletionDate(optionalPrgComlDate == null ? mainProgramCompletionDate:optionalPrgComlDate);
 			} else {
-				gradStudentOptionalAlg.setOptionalProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
+				gradStudentOptionalAlg.setOptionalProgramCompletionDate(
+						getGradDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 			}
 		}
 	}
@@ -320,7 +322,7 @@ public class GradAlgorithmService {
 		}
     }
 
-    private String getGradDate(List<StudentCourse> studentCourses) {
+    private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
         Date gradDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -345,6 +347,23 @@ public class GradAlgorithmService {
 				logger.debug(e.getMessage());
             }
         }
+
+		studentAssessments = studentAssessments
+				.stream()
+				.filter(StudentAssessment::isUsed)
+				.filter(sa -> "E".compareTo(sa.getSpecialCase()) != 0)
+				.collect(Collectors.toList());
+
+		for (StudentAssessment studentAssessment : studentAssessments) {
+			try {
+				if (dateFormat.parse(studentAssessment.getSessionDate() + "/01").compareTo(gradDate) > 0) {
+					gradDate = dateFormat.parse(studentAssessment.getSessionDate() + "/01");
+				}
+			} catch (ParseException e) {
+				logger.debug(e.getMessage());
+			}
+		}
+
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		if(dateFormat.format(gradDate).compareTo("1700-01-01") == 0) {
 			return null;
@@ -477,7 +496,7 @@ public class GradAlgorithmService {
 		if (!gradProgram.equalsIgnoreCase(SCCP) && !gradProgram.equalsIgnoreCase(NOPROGRAM)) {
 			//This is done for Reports only grad run -Student already graduated no change in graduation date
 			if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
-				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses()));
+				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 			}
 			gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
 			Pair<Boolean,String> honoursCheckExemption = checkHonoursExemptRule(gradProgram,ruleProcessorData.getStudentCourses());
