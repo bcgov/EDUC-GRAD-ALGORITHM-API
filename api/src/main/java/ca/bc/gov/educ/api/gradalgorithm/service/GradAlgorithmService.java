@@ -444,7 +444,10 @@ public class GradAlgorithmService {
 		switch (program) {
 			case "2018-EN":
 				studentCourses.sort(new StudentCoursesComparator(program));
-				studentAssessments.sort(Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).thenComparing(StudentAssessment::getSpecialCase,Comparator.nullsLast(String::compareTo)).thenComparing(StudentAssessment::getSessionDate));
+				studentAssessments.sort(
+						Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).reversed()
+								.thenComparing(StudentAssessment::getSpecialCase,Comparator.nullsLast(String::compareTo))
+								.thenComparing(StudentAssessment::getSessionDate));
 				break;
 			case "2018-PF":
 			case "2004-EN":
@@ -452,7 +455,10 @@ public class GradAlgorithmService {
 				studentCourses.sort(new StudentCoursesComparator(program));
 				break;
 			case "1950":
-				studentCourses.sort(Comparator.comparing(StudentCourse::getSessionDate).reversed().thenComparing(StudentCourse::getCourseLevel).thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
+				studentCourses.sort(
+						Comparator.comparing(StudentCourse::getSessionDate).reversed()
+								.thenComparing(StudentCourse::getCourseLevel)
+								.thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
 				break;
 			case "1996-EN":
 			case "1996-PF":
