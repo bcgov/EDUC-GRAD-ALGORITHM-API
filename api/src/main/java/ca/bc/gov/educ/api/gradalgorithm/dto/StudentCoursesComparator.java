@@ -21,8 +21,8 @@ public class StudentCoursesComparator implements Comparator<StudentCourse> {
                 res= new CompareToBuilder()
                         .append(o2.getCompletedCoursePercentage(), o1.getCompletedCoursePercentage())
                         .append(o2.getCredits(), o1.getCredits())
-                        .append(o2.getCourseLevel(), o1.getCourseLevel())
-                        .append(o1.getSessionDate(), o2.getSessionDate()).toComparison();
+                        .append(o1.getSessionDate(), o2.getSessionDate())
+                        .append(o2.getCourseLevel(), o1.getCourseLevel()).toComparison();
                 break;
             default:
 
