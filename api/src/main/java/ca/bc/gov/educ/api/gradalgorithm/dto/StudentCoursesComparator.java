@@ -15,19 +15,21 @@ public class StudentCoursesComparator implements Comparator<StudentCourse> {
         int res = 0;
         switch (program) {
             case "2018-EN":
+            case "2018-PF":
+                res= new CompareToBuilder()
+                        .append(o2.getCompletedCoursePercentage(), o1.getCompletedCoursePercentage())
+                        .append(o2.getCredits(), o1.getCredits())
+                        .append(o1.getSessionDate(), o2.getSessionDate())
+                        .append(o1.getCourseLevel(), o2.getCourseLevel()).toComparison();
+                break;
             case "2004-EN":
             case "2004-PF":
                 res= new CompareToBuilder()
                         .append(o2.getCompletedCoursePercentage(), o1.getCompletedCoursePercentage())
                         .append(o2.getCredits(), o1.getCredits())
-                        .append(o2.getCourseLevel(), o1.getCourseLevel())
-                        .append(o2.getSessionDate(), o1.getSessionDate()).toComparison();
-                break;
-            case "2018-PF":
-                res= new CompareToBuilder()
-                        .append(o2.getCompletedCoursePercentage(), o1.getCompletedCoursePercentage())
-                        .append(o2.getCredits(), o1.getCredits())
-                        .append(o2.getCourseLevel(), o1.getCourseLevel()).toComparison();
+                        .append(o2.getSessionDate(), o1.getSessionDate())
+                        .append(o1.getCourseCode(), o2.getCourseCode())
+                        .append(o1.getCourseLevel(), o2.getCourseLevel()).toComparison();
                 break;
             default:
 
