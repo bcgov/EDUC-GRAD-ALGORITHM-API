@@ -369,11 +369,11 @@ public class GradAlgorithmService {
 			}
 		}
 
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		if(dateFormat.format(gradDate).compareTo("1700-01-01") == 0) {
+		String result = new SimpleDateFormat("yyyy-MM-dd").format(gradDate);
+		if("1700-01-01".compareTo(result) == 0) {
 			return null;
 		}
-		return dateFormat.format(gradDate);
+		return result;
 	}
 
     private String getGPA(List<StudentCourse> studentCourseList,List<LetterGrade> letterGradesList) {
