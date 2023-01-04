@@ -324,35 +324,40 @@ public class GradAlgorithmService {
 
     private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
-        Date gradDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
-        try {
-            gradDate = dateFormat.parse("1700/01/01");
-        } catch (ParseException e) {
-            logger.debug(e.getMessage());
-        }
-
         studentCourses = studentCourses
                 .stream()
                 .filter(StudentCourse::isUsed)
                 .collect(Collectors.toList());
-
-        for (StudentCourse studentCourse : studentCourses) {
-            try {
-                if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
-                    gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
-                }
-            } catch (ParseException e) {
-				logger.debug(e.getMessage());
-            }
-        }
 
 		studentAssessments = studentAssessments
 				.stream()
 				.filter(StudentAssessment::isUsed)
 				.filter(sa -> "E".compareTo(sa.getSpecialCase()) != 0)
 				.collect(Collectors.toList());
+
+        return getLastSessionDate(studentCourses, studentAssessments);
+    }
+
+	private String getLastSessionDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
+
+		Date gradDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+		try {
+			gradDate = dateFormat.parse("1700/01/01");
+		} catch (ParseException e) {
+			logger.debug(e.getMessage());
+		}
+
+		for (StudentCourse studentCourse : studentCourses) {
+			try {
+				if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
+					gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
+				}
+			} catch (ParseException e) {
+				logger.debug(e.getMessage());
+			}
+		}
 
 		for (StudentAssessment studentAssessment : studentAssessments) {
 			try {
@@ -364,12 +369,12 @@ public class GradAlgorithmService {
 			}
 		}
 
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		if(dateFormat.format(gradDate).compareTo("1700-01-01") == 0) {
 			return null;
 		}
-        return dateFormat.format(gradDate);
-    }
+		return dateFormat.format(gradDate);
+	}
 
     private String getGPA(List<StudentCourse> studentCourseList,List<LetterGrade> letterGradesList) {
 
@@ -603,6 +608,7 @@ public class GradAlgorithmService {
 		graduationData.setSchool(ruleProcessorData.getSchool());
 		graduationData.setStudentCourses(new StudentCourses(ruleProcessorData.getStudentCourses()));
 		graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
+		graduationData.setLatestSessionDate(getLastSessionDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 
 		if(ruleProcessorData.getNonGradReasons() != null)
 			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
