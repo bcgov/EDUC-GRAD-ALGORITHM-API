@@ -268,14 +268,18 @@ public class GradAlgorithmService {
 			} else {
 				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
+			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
+			// graduation date & graduation school
 			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
 				appendPeriod(strBuilder);
+				strBuilder.append("\n");
 				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
-				appendPeriod(strBuilder);
-				strBuilder.append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
+				if (StringUtils.isNotBlank(gradMessageRequest.getSchoolAtGradName())) {
+					appendPeriod(strBuilder);
+					strBuilder.append(String.format(result.getGraduationSchool(), gradMessageRequest.getSchoolAtGradName()));
+				}
 			}
 			appendPeriod(strBuilder);
-			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		} else {
 			getMainMessage(gradMessageRequest,strBuilder,result);
 		}
@@ -710,21 +714,21 @@ public class GradAlgorithmService {
 				}
 			}
 		}
-		if(StringUtils.isNotBlank(cpCommaSeparated)) {
-			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
+
+		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
+			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
+			appendPeriod(currentGradMessage);
+		}
+		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
+			currentGradMessage.append("Student has successfully completed the Programme Francophone");
 			appendPeriod(currentGradMessage);
 		}
 		if(!programs.isEmpty()) {
 			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
 			appendPeriod(currentGradMessage);
 		}
-		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
-			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
-			appendPeriod(currentGradMessage);
-		}
-
-		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
-			currentGradMessage.append("Student has successfully completed the Programme Francophone");
+		if(StringUtils.isNotBlank(cpCommaSeparated)) {
+			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
 			appendPeriod(currentGradMessage);
 		}
 
