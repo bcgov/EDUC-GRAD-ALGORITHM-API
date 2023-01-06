@@ -723,11 +723,11 @@ public class GradAlgorithmService {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
 			appendPeriod(currentGradMessage);
 		}
-		if(!programs.isEmpty()) {
+		if(!programs.isEmpty() && StringUtils.isNotBlank(result.getAdIBProgramMessage())) {
 			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
 			appendPeriod(currentGradMessage);
 		}
-		if(StringUtils.isNotBlank(cpCommaSeparated)) {
+		if(StringUtils.isNotBlank(cpCommaSeparated) && StringUtils.isNotBlank(result.getCareerProgramMessage())) {
 			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
 			appendPeriod(currentGradMessage);
 		}
