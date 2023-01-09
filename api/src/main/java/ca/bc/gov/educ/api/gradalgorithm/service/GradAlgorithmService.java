@@ -268,11 +268,11 @@ public class GradAlgorithmService {
 			} else {
 				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
+			strBuilder.append(" ");
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 			// graduation date & graduation school
 			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
-				appendPeriod(strBuilder);
-				strBuilder.append("\n");
+				strBuilder.append("\n\n");
 				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
 				if (StringUtils.isNotBlank(gradMessageRequest.getSchoolAtGradName())) {
 					appendPeriod(strBuilder);
