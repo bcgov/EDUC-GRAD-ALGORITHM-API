@@ -268,14 +268,18 @@ public class GradAlgorithmService {
 			} else {
 				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
+			strBuilder.append(" ");
+			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
+			// graduation date & graduation school
 			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
-				appendPeriod(strBuilder);
+				strBuilder.append("\n\n");
 				strBuilder.append(String.format(result.getGradDateMessage(), formatGradDate(gradMessageRequest.getGradDate())));
-				appendPeriod(strBuilder);
-				strBuilder.append(String.format(result.getGraduationSchool(),gradMessageRequest.getSchoolAtGradName()));
+				if (StringUtils.isNotBlank(gradMessageRequest.getSchoolAtGradName())) {
+					appendPeriod(strBuilder);
+					strBuilder.append(String.format(result.getGraduationSchool(), gradMessageRequest.getSchoolAtGradName()));
+				}
 			}
 			appendPeriod(strBuilder);
-			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 		} else {
 			getMainMessage(gradMessageRequest,strBuilder,result);
 		}
@@ -324,35 +328,40 @@ public class GradAlgorithmService {
 
     private String getGradDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
-        Date gradDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
-        try {
-            gradDate = dateFormat.parse("1700/01/01");
-        } catch (ParseException e) {
-            logger.debug(e.getMessage());
-        }
-
         studentCourses = studentCourses
                 .stream()
                 .filter(StudentCourse::isUsed)
                 .collect(Collectors.toList());
-
-        for (StudentCourse studentCourse : studentCourses) {
-            try {
-                if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
-                    gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
-                }
-            } catch (ParseException e) {
-				logger.debug(e.getMessage());
-            }
-        }
 
 		studentAssessments = studentAssessments
 				.stream()
 				.filter(StudentAssessment::isUsed)
 				.filter(sa -> "E".compareTo(sa.getSpecialCase()) != 0)
 				.collect(Collectors.toList());
+
+        return getLastSessionDate(studentCourses, studentAssessments);
+    }
+
+	private String getLastSessionDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
+
+		Date gradDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+		try {
+			gradDate = dateFormat.parse("1700/01/01");
+		} catch (ParseException e) {
+			logger.debug(e.getMessage());
+		}
+
+		for (StudentCourse studentCourse : studentCourses) {
+			try {
+				if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
+					gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
+				}
+			} catch (ParseException e) {
+				logger.debug(e.getMessage());
+			}
+		}
 
 		for (StudentAssessment studentAssessment : studentAssessments) {
 			try {
@@ -364,12 +373,12 @@ public class GradAlgorithmService {
 			}
 		}
 
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		if(dateFormat.format(gradDate).compareTo("1700-01-01") == 0) {
+		String result = new SimpleDateFormat("yyyy-MM-dd").format(gradDate);
+		if("1700-01-01".compareTo(result) == 0) {
 			return null;
 		}
-        return dateFormat.format(gradDate);
-    }
+		return result;
+	}
 
     private String getGPA(List<StudentCourse> studentCourseList,List<LetterGrade> letterGradesList) {
 
@@ -603,6 +612,7 @@ public class GradAlgorithmService {
 		graduationData.setSchool(ruleProcessorData.getSchool());
 		graduationData.setStudentCourses(new StudentCourses(ruleProcessorData.getStudentCourses()));
 		graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
+		graduationData.setLatestSessionDate(getLastSessionDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 
 		if(ruleProcessorData.getNonGradReasons() != null)
 			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
@@ -704,21 +714,21 @@ public class GradAlgorithmService {
 				}
 			}
 		}
-		if(StringUtils.isNotBlank(cpCommaSeparated)) {
-			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
-			appendPeriod(currentGradMessage);
-		}
-		if(!programs.isEmpty()) {
-			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
-			appendPeriod(currentGradMessage);
-		}
+
 		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
 			appendPeriod(currentGradMessage);
 		}
-
 		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
+			appendPeriod(currentGradMessage);
+		}
+		if(!programs.isEmpty() && StringUtils.isNotBlank(result.getAdIBProgramMessage())) {
+			currentGradMessage.append(String.format(result.getAdIBProgramMessage(),String.join(",", programs)));
+			appendPeriod(currentGradMessage);
+		}
+		if(StringUtils.isNotBlank(cpCommaSeparated) && StringUtils.isNotBlank(result.getCareerProgramMessage())) {
+			currentGradMessage.append(String.format(result.getCareerProgramMessage(),cpCommaSeparated));
 			appendPeriod(currentGradMessage);
 		}
 
