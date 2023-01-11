@@ -472,6 +472,7 @@ public class GradAlgorithmService {
 			case "1996-EN":
 			case "1996-PF":
 			case "1986-EN":
+			case "1986-PF":
 				studentCourses.sort(Comparator.comparing(StudentCourse::getCourseLevel));
 				break;
 			default:
@@ -594,6 +595,7 @@ public class GradAlgorithmService {
 				}
 				break;
 			case "1986-EN":
+			case "1986-PF":
 				if(totalCoursesTSSG > 6) {
 					isExempted = true;
 					honourValue = "N";
