@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ca.bc.gov.educ</groupId>
 	<artifactId>educ-grad-algorithm-api</artifactId>
-	<version>1.7.10</version>
+	<version>1.8.0</version>
 	<name>educ-grad-algorithm-api</name>
 	<description>Graduation Algorithm API for GRAD team</description>
 
