@@ -59,4 +59,38 @@ public class APIUtils {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(gradDate);
     }
+
+    /**
+     * Remove characters from the CourseLevel if any (Example: 12A -> 12, 12B -> 12, etc..)
+     * and Convert Course level into an integer
+     *
+     * @param courseLevel
+     * @return Integer - Course Level
+     */
+    public static Integer getNumericCourseLevel(String courseLevel) {
+
+        if (isBlankString(courseLevel))
+            return 0;
+
+        Integer cl = 0;
+        Integer l = courseLevel.length();
+
+        if (l > 2)
+            cl = Integer.valueOf(
+                    courseLevel.substring(0, l - 1)
+            );
+        else
+            cl = Integer.valueOf(courseLevel);
+
+        return cl;
+    }
+
+    /**
+     *
+     * @param string
+     * @return true or false
+     */
+    public static boolean isBlankString(String string) {
+        return string == null || string.trim().isEmpty();
+    }
 }
