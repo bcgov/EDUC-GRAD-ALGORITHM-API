@@ -616,8 +616,10 @@ public class GradAlgorithmService {
 		graduationData.setStudentAssessments(new StudentAssessments(ruleProcessorData.getStudentAssessments()));
 		graduationData.setLatestSessionDate(getLastSessionDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 
-		if(ruleProcessorData.getNonGradReasons() != null)
+		if(ruleProcessorData.getNonGradReasons() != null) {
 			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
+			graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
+		}
 
 		//This is done for Reports only grad run
 		if(existingProgramCompletionDate == null || ruleProcessorData.isProjected() || gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM)) {
