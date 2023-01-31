@@ -3,7 +3,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=bugs)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 ![Sonar Tests](https://img.shields.io/sonar/tests/bcgov_EDUC-GRAD-ALGORITHM-API?compact_message&server=https%3A%2F%2Fsonarcloud.io) &nbsp;
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bcgov_bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
