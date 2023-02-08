@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

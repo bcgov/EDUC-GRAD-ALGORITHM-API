@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class GradProgramService extends GradService {
