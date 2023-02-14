@@ -294,8 +294,10 @@ public class GradAlgorithmService {
 	}
 
 	private void lastPeriod(StringBuilder strBuilder) {
-		if (strBuilder.length() > 0) {
-			if (' ' == (strBuilder.charAt(strBuilder.length() - 1 ))) {
+		if (strBuilder.length() > 1) {
+			if ('.' == (strBuilder.charAt(strBuilder.length() - 2 )) && ' ' == (strBuilder.charAt(strBuilder.length() - 1 ))) {
+				// if '. ' is at the end, do nothing.
+			} else if (' ' == (strBuilder.charAt(strBuilder.length() - 1 ))) {
 				strBuilder.setCharAt(strBuilder.length() - 1, '.');
 			} else if ('.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
 				strBuilder.append(".");
