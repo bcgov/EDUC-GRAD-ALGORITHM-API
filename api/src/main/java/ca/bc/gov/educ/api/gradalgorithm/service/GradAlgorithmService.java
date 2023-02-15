@@ -255,7 +255,7 @@ public class GradAlgorithmService {
 
 	private void processMessageForUnGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		getMainMessage(gradMessageRequest,strBuilder,result);
-		strBuilder.append(" ");
+		appendPeriod(strBuilder);
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
 		}
@@ -268,7 +268,7 @@ public class GradAlgorithmService {
 			} else {
 				getMainMessage(gradMessageRequest,strBuilder,result);
 			}
-			strBuilder.append(" ");
+			appendPeriod(strBuilder);
 			createCompleteGradMessage(strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
 			// graduation date & graduation school
 			if(!gradMessageRequest.isProjected() || gradMessageRequest.isPullGraduatedMessage()) {
@@ -279,17 +279,29 @@ public class GradAlgorithmService {
 					strBuilder.append(String.format(result.getGraduationSchool(), gradMessageRequest.getSchoolAtGradName()));
 				}
 			}
-			appendPeriod(strBuilder);
+			lastPeriod(strBuilder);
 		} else {
 			getMainMessage(gradMessageRequest,strBuilder,result);
 		}
 	}
 
 	private void appendPeriod(StringBuilder strBuilder) {
-		if(strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
+		if (strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
 			strBuilder.append(". ");
 		} else {
 			strBuilder.append(" ");
+		}
+	}
+
+	private void lastPeriod(StringBuilder strBuilder) {
+		if (strBuilder.length() > 1) {
+			if ('.' == (strBuilder.charAt(strBuilder.length() - 2 )) && ' ' == (strBuilder.charAt(strBuilder.length() - 1 ))) {
+				// if '. ' is at the end, do nothing.
+			} else if (' ' == (strBuilder.charAt(strBuilder.length() - 1 ))) {
+				strBuilder.setCharAt(strBuilder.length() - 1, '.');
+			} else if ('.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
+				strBuilder.append(".");
+			}
 		}
 	}
 
