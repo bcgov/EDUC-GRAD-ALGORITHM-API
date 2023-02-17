@@ -5,9 +5,11 @@ spring:
   datasource:
     hikari:
       pool-name: grad-algorithm-api-cp
-      maximum-pool-size: 1
-      connection-timeout: 6000
-      max-lifetime: 600000
+      connection-timeout: ${CONNECTION_TIMEOUT}
+      maximum-pool-size: ${MAXIMUM_POOL_SIZE}
+      minimum-idle: ${MIN_IDLE}
+      idle-timeout: ${IDLE_TIMEOUT}
+      max-lifetime: ${MAX_LIFETIME}
   jpa:
     show-sql: true
     hibernate:
