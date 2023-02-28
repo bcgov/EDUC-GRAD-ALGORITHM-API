@@ -73,9 +73,9 @@ public class GradProgramService extends GradService {
 	 */
 	@Scheduled(cron = "0 0 0 * * *")
 	public void reloadStudentGraduationCache() {
-		logger.info("started reloading cache..");
+		logger.debug("started reloading cache..");
 		ResponseObj obj = getTokenResponseObject();
 		this.setProgramAlgorithmData(obj.getAccess_token());
-		logger.info("reloading cache completed..");
+		logger.debug("reloading cache completed..");
 	}
 }

@@ -47,7 +47,7 @@ public class GradSchoolService extends GradService {
 	public void init() {
 		ResponseObj obj = getTokenResponseObject();
 		this.setSchoolData(obj.getAccess_token());
-		logger.info("loaded school cache..");
+		logger.debug("loaded school cache..");
 	}
 
 	private void setSchoolData(String accessToken) {
@@ -74,9 +74,9 @@ public class GradSchoolService extends GradService {
 	 */
 	@Scheduled(cron = "0 0 0 * * *")
 	public void reloadCache() {
-		logger.info("started reloading cache..");
+		logger.debug("started reloading cache..");
 		ResponseObj obj = getTokenResponseObject();
 		this.setSchoolData(obj.getAccess_token());
-		logger.info("reloading cache completed..");
+		logger.debug("reloading cache completed..");
 	}
 }
