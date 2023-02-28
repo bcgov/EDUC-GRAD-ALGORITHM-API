@@ -55,9 +55,9 @@ public class GradCourseService extends GradService {
 				studentCourse.setGradReqMetDetail("");
 			}
 
-			logger.info("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
-			logger.info("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
-			logger.info("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
+			logger.debug("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
+			logger.debug("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
+			logger.debug("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
 		}
 		return result;
 	}
