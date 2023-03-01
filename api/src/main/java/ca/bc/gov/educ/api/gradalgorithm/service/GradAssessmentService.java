@@ -52,9 +52,9 @@ public class GradAssessmentService extends GradService {
 				studentAssessment.setGradReqMetDetail("");
 			}
 
-			logger.info("**** # of Student Assessments: {}", result.getStudentAssessments() != null ? result.getStudentAssessments().size() : 0);
-			logger.info("**** # of Assessment Requirements: {}", result.getAssessmentRequirements() != null ? result.getAssessmentRequirements().size() : 0);
-			logger.info("**** # of Assessments: {}", result.getAssessments() != null ? result.getAssessments().size() : 0);
+			logger.debug("**** # of Student Assessments: {}", result.getStudentAssessments() != null ? result.getStudentAssessments().size() : 0);
+			logger.debug("**** # of Assessment Requirements: {}", result.getAssessmentRequirements() != null ? result.getAssessmentRequirements().size() : 0);
+			logger.debug("**** # of Assessments: {}", result.getAssessments() != null ? result.getAssessments().size() : 0);
 		}
 		return result;
 

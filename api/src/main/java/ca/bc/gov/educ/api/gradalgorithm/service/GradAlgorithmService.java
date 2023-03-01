@@ -66,7 +66,7 @@ public class GradAlgorithmService {
 	private static final String NOPROGRAM = "NOPROG";
 
     public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String accessToken) {
-        logger.info("\n************* New Graduation Algorithm START  ************ ");
+        logger.debug("\n************* New Graduation Algorithm START  ************ ");
         //Get Student Demographics
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
 		GraduationData graduationData = new GraduationData();
@@ -88,7 +88,6 @@ public class GradAlgorithmService {
         String pen=ruleProcessorData.getGradStudent().getPen();
 		String schoolOfRecord = ruleProcessorData.getGradStudent().getSchoolOfRecord();
         logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
-        logger.info("**** Grad Program: {}",gradProgram);
 		Mono<AlgorithmDataParallelDTO> parallelyCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelyCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
@@ -155,7 +154,7 @@ public class GradAlgorithmService {
         	graduationData.setException(exception);
         	return graduationData;
         }
-        logger.info("\n************* Graduation Algorithm END  ************");
+        logger.debug("\n************* Graduation Algorithm END  ************");
 
         return graduationData;
     }
