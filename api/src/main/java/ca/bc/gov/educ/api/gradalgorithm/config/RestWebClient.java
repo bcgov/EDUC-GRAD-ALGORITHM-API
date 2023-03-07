@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.*;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
@@ -46,7 +44,8 @@ public class RestWebClient {
                 .doOnNext((clientResponse -> LogHelper.logClientHttpReqResponseDetails(
                         clientRequest.method(),
                         clientRequest.url().toString(),
-                        clientResponse.rawStatusCode(),
+                        //Grad2-1929 Refactoring/Linting replaced rawStatusCode() with statusCode() as it was deprecated
+                        clientResponse.statusCode().value(),
                         clientRequest.headers().get(GradAlgorithmAPIConstants.CORRELATION_ID),
                         constants.isSplunkLogHelperEnabled())
                 ));
