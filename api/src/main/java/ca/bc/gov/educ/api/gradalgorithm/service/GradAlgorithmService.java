@@ -628,6 +628,14 @@ public class GradAlgorithmService {
 		graduationData.setLatestSessionDate(getLastSessionDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 
 		if(ruleProcessorData.getNonGradReasons() != null) {
+
+			//Remove Duplicate NonGradReasons
+			Set<GradRequirement> s = new HashSet<>();
+			s.addAll(ruleProcessorData.getNonGradReasons());
+			List<GradRequirement> list = new ArrayList<>();
+			list.addAll(s);
+			ruleProcessorData.setNonGradReasons(list);
+
 			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
 			graduationData.setNonGradReasons(ruleProcessorData.getNonGradReasons());
 		}
