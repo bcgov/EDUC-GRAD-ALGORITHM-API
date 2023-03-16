@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -457,10 +458,14 @@ public class GradAlgorithmService {
 			ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null);
 			ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
 		}
-		sortCoursesBasedOnProgram(ruleProcessorData.getGradStatus().getProgram(),ruleProcessorData.getStudentCourses() != null?ruleProcessorData.getStudentCourses():new ArrayList<>(),ruleProcessorData.getStudentAssessments() != null? ruleProcessorData.getStudentAssessments():new ArrayList<>());
+		sortCoursesBasedOnProgram(ruleProcessorData.getGradStatus().getProgram(),
+				ruleProcessorData.getStudentCourses() != null?ruleProcessorData.getStudentCourses():new ArrayList<>(),
+				ruleProcessorData.getStudentAssessments() != null? ruleProcessorData.getStudentAssessments():new ArrayList<>(),
+				ruleProcessorData.getGradStatus().getAdultStartDate());
 	}
 
-	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
+	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses,
+										   List<StudentAssessment> studentAssessments, Date adultStartDate) {
 		switch (program) {
 			case "2018-EN":
 				studentCourses.sort(new StudentCoursesComparator(program));
@@ -475,10 +480,51 @@ public class GradAlgorithmService {
 				studentCourses.sort(new StudentCoursesComparator(program));
 				break;
 			case "1950":
-				studentCourses.sort(
-						Comparator.comparing(StudentCourse::getSessionDate).reversed()
-								.thenComparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel()))
-								.thenComparing(StudentCourse::getCompletedCourseLetterGrade,Comparator.nullsLast(String::compareTo)));
+				/**
+				 * Split Student courses into 2 parts
+				 * 1. Courses taken after start date
+				 * 2. Courses taken on or before start date
+				 * Sort #1 by Final LG, Final % desc
+				 * Sort #2 by Final LG, Final % desc
+				 * Join 2 lists
+				 */
+				List<StudentCourse> coursesAfterStartDate = new ArrayList<>();
+				List<StudentCourse> coursesOnOrBeforeStartDate = new ArrayList<>();
+
+				for (StudentCourse sc : studentCourses) {
+					String courseSessionDate = sc.getSessionDate() + "/01";
+					Date temp = null;
+					try {
+						temp = GradAlgorithmApiUtils.parseDate(courseSessionDate, "yyyy/MM/dd");
+					} catch (ParseException e) {
+						logger.debug(e.getMessage());
+					}
+
+					if (adultStartDate != null && temp != null && temp.compareTo(adultStartDate) > 0) {
+						coursesAfterStartDate.add(sc);
+					}
+					else {
+						coursesOnOrBeforeStartDate.add(sc);
+					}
+				}
+				studentCourses.clear();
+
+				if (coursesAfterStartDate != null && coursesAfterStartDate.size() > 0) {
+					coursesAfterStartDate.sort(
+							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade)
+									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
+					);
+					studentCourses.addAll(coursesAfterStartDate);
+				}
+
+				if (coursesOnOrBeforeStartDate != null && coursesOnOrBeforeStartDate.size() > 0) {
+					coursesOnOrBeforeStartDate.sort(
+							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade)
+									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
+					);
+					studentCourses.addAll(coursesOnOrBeforeStartDate);
+				}
+
 				break;
 			case "1996-EN":
 			case "1996-PF":
