@@ -511,16 +511,16 @@ public class GradAlgorithmService {
 
 				if (!coursesAfterStartDate.isEmpty()) {
 					coursesAfterStartDate.sort(
-							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade)
-									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
+							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade, Comparator.nullsLast(String::compareTo))
+									.thenComparingDouble(StudentCourse::getCompletedCoursePercentage)
 					);
 					studentCourses.addAll(coursesAfterStartDate);
 				}
 
 				if (!coursesOnOrBeforeStartDate.isEmpty()) {
 					coursesOnOrBeforeStartDate.sort(
-							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade)
-									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
+							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade, Comparator.nullsLast(String::compareTo))
+									.thenComparingDouble(StudentCourse::getCompletedCoursePercentage)
 					);
 					studentCourses.addAll(coursesOnOrBeforeStartDate);
 				}
