@@ -12,6 +12,8 @@ public class GradAlgorithmApiUtils {
     private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmApiUtils.class);
     private static final String ERROR_MSG = "Error : {}";
 
+    private GradAlgorithmApiUtils() {}
+
     public static Date parseDate(String dateString, String dateFormat) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date date = new Date();

@@ -509,7 +509,7 @@ public class GradAlgorithmService {
 				}
 				studentCourses.clear();
 
-				if (coursesAfterStartDate != null && coursesAfterStartDate.size() > 0) {
+				if (!coursesAfterStartDate.isEmpty()) {
 					coursesAfterStartDate.sort(
 							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade)
 									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
@@ -517,7 +517,7 @@ public class GradAlgorithmService {
 					studentCourses.addAll(coursesAfterStartDate);
 				}
 
-				if (coursesOnOrBeforeStartDate != null && coursesOnOrBeforeStartDate.size() > 0) {
+				if (!coursesOnOrBeforeStartDate.isEmpty()) {
 					coursesOnOrBeforeStartDate.sort(
 							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade)
 									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
