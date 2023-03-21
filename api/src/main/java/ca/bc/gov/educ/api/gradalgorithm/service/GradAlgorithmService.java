@@ -306,7 +306,7 @@ public class GradAlgorithmService {
 	}
 
 	private void getHonoursMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
-		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /* don't has program completion date*/) {
 			// "should be able to graduate"
 			strBuilder.append(String.format(result.getHonourProjectedNote(), gradMessageRequest.getProgramName()));
 		} else {
@@ -316,7 +316,7 @@ public class GradAlgorithmService {
 	}
 
 	private void getMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
-		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /** don't has program completion date**/) {
+		if(gradMessageRequest.isProjected() && !gradMessageRequest.isPullGraduatedMessage() /* don't has program completion date*/) {
 			// "should be able to graduate"
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
 		} else {
@@ -467,20 +467,16 @@ public class GradAlgorithmService {
 	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses,
 										   List<StudentAssessment> studentAssessments, Date adultStartDate) {
 		switch (program) {
-			case "2018-EN":
+			case "2018-EN" -> {
 				studentCourses.sort(new StudentCoursesComparator(program));
 				studentAssessments.sort(
-						Comparator.comparing(StudentAssessment::getProficiencyScore,Comparator.nullsLast(Double::compareTo)).reversed()
-								.thenComparing(StudentAssessment::getSpecialCase,Comparator.nullsLast(String::compareTo))
+						Comparator.comparing(StudentAssessment::getProficiencyScore, Comparator.nullsLast(Double::compareTo)).reversed()
+								.thenComparing(StudentAssessment::getSpecialCase, Comparator.nullsLast(String::compareTo))
 								.thenComparing(StudentAssessment::getSessionDate));
-				break;
-			case "2018-PF":
-			case "2004-EN":
-			case "2004-PF":
-				studentCourses.sort(new StudentCoursesComparator(program));
-				break;
-			case "1950":
-				/**
+			}
+			case "2018-PF", "2004-EN", "2004-PF" -> studentCourses.sort(new StudentCoursesComparator(program));
+			case "1950" -> {
+				/*
 				 * Split Student courses into 2 parts
 				 * 1. Courses taken after start date
 				 * 2. Courses taken on or before start date
@@ -490,7 +486,6 @@ public class GradAlgorithmService {
 				 */
 				List<StudentCourse> coursesAfterStartDate = new ArrayList<>();
 				List<StudentCourse> coursesOnOrBeforeStartDate = new ArrayList<>();
-
 				for (StudentCourse sc : studentCourses) {
 					String courseSessionDate = sc.getSessionDate() + "/01";
 					Date temp = null;
@@ -502,37 +497,30 @@ public class GradAlgorithmService {
 
 					if (adultStartDate != null && temp != null && temp.compareTo(adultStartDate) > 0) {
 						coursesAfterStartDate.add(sc);
-					}
-					else {
+					} else {
 						coursesOnOrBeforeStartDate.add(sc);
 					}
 				}
 				studentCourses.clear();
-
 				if (!coursesAfterStartDate.isEmpty()) {
 					coursesAfterStartDate.sort(
 							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade, Comparator.nullsLast(String::compareTo))
-									.thenComparingDouble(StudentCourse::getCompletedCoursePercentage)
+									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
 					);
 					studentCourses.addAll(coursesAfterStartDate);
 				}
-
 				if (!coursesOnOrBeforeStartDate.isEmpty()) {
 					coursesOnOrBeforeStartDate.sort(
 							Comparator.comparing(StudentCourse::getCompletedCourseLetterGrade, Comparator.nullsLast(String::compareTo))
-									.thenComparingDouble(StudentCourse::getCompletedCoursePercentage)
+									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
 					);
 					studentCourses.addAll(coursesOnOrBeforeStartDate);
 				}
-
-				break;
-			case "1996-EN":
-			case "1996-PF":
-			case "1986-EN":
-			case "1986-PF":
-				studentCourses.sort(Comparator.comparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel())));
-				break;
-			default:
+			}
+			case "1996-EN", "1996-PF", "1986-EN", "1986-PF" ->
+					studentCourses.sort(Comparator.comparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel())));
+			default -> {
+			}
 		}
 	}
 
@@ -676,10 +664,8 @@ public class GradAlgorithmService {
 		if(ruleProcessorData.getNonGradReasons() != null) {
 
 			//Remove Duplicate NonGradReasons
-			Set<GradRequirement> s = new HashSet<>();
-			s.addAll(ruleProcessorData.getNonGradReasons());
-			List<GradRequirement> list = new ArrayList<>();
-			list.addAll(s);
+			Set<GradRequirement> s = new HashSet<>(ruleProcessorData.getNonGradReasons());
+			List<GradRequirement> list = new ArrayList<>(s);
 			ruleProcessorData.setNonGradReasons(list);
 
 			ruleProcessorData.getNonGradReasons().sort(Comparator.comparing(GradRequirement::getRule, Comparator.nullsLast(String::compareTo)));
