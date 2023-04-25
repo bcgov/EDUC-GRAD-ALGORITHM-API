@@ -1,10 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.util;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -30,6 +29,7 @@ public class GradAlgorithmAPIConstants {
 
     //Default Date format constants
     public static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     //Rule Type Constants
     public static final String RULE_TYPE_MATCH = "Match";
