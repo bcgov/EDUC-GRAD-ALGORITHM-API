@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Assertions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class GradAlgorithmApiUtilsTests {
 
@@ -16,8 +17,8 @@ public class GradAlgorithmApiUtilsTests {
         String testDateFormat = "yyyy/MM/DD";
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(testDateFormat);
-        Date actual = simpleDateFormat.parse(testDate);
-        Date expected = GradAlgorithmApiUtils.parseDate("1995/01/01", testDateFormat);
+        LocalDate actual = simpleDateFormat.parse(testDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate expected = GradAlgorithmApiUtils.parseDate("1995/01/01", testDateFormat);
         Assertions.assertEquals(expected, actual);
     }
 }

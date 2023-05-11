@@ -465,7 +465,7 @@ public class GradAlgorithmService {
 	}
 
 	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses,
-										   List<StudentAssessment> studentAssessments, Date adultStartDate) {
+										   List<StudentAssessment> studentAssessments, LocalDate adultStartDate) {
 		switch (program) {
 			case "2018-EN" -> {
 				studentCourses.sort(new StudentCoursesComparator(program));
@@ -488,7 +488,7 @@ public class GradAlgorithmService {
 				List<StudentCourse> coursesOnOrBeforeStartDate = new ArrayList<>();
 				for (StudentCourse sc : studentCourses) {
 					String courseSessionDate = sc.getSessionDate() + "/01";
-					Date temp = null;
+					LocalDate temp = null;
 					try {
 						temp = GradAlgorithmApiUtils.parseDate(courseSessionDate, "yyyy/MM/dd");
 					} catch (ParseException e) {

@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class GradAlgorithmApiUtils {
 
@@ -14,12 +15,12 @@ public class GradAlgorithmApiUtils {
 
     private GradAlgorithmApiUtils() {}
 
-    public static Date parseDate(String dateString, String dateFormat) throws ParseException {
+    public static LocalDate parseDate(String dateString, String dateFormat) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        Date date = new Date();
+        LocalDate date = LocalDate.now();
 
         try {
-            date = simpleDateFormat.parse(dateString);
+            date = simpleDateFormat.parse(dateString).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         } catch (ParseException e) {
             logger.error(ERROR_MSG,e.getMessage());
         }
