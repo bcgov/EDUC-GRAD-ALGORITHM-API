@@ -123,7 +123,7 @@ public class GradAlgorithmService {
 				existingGradMessage = existingData.getGradMessage();
 			}
 		} catch (JsonProcessingException e) {
-			logger.debug("JSON processing Error {}",e.getMessage());
+			logger.error("JSON processing Error {}",e.getMessage());
 		}
         gradStatus.setStudentGradData(null);
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
@@ -245,7 +245,7 @@ public class GradAlgorithmService {
     private String getGradMessages(GradMessageRequest gradMessageRequest,Map<String,OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		StringBuilder strBuilder = new StringBuilder();
 		StudentGraduationAlgorithmData data = studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradMessageRequest.getGradProgram());
-		if(ruleProcessorData.isGraduated()) {
+		if(StringUtils.equalsIgnoreCase(gradMessageRequest.getMsgType(), MSG_TYPE_GRADUATED)) {
 			processMessageForGraduatedStudent(gradMessageRequest,strBuilder, data.getGraduatedMessage(), mapOptional,ruleProcessorData);
 		} else {
 			processMessageForUnGraduatedStudent(gradMessageRequest,strBuilder, data.getNonGraduateMessage(), mapOptional,ruleProcessorData);
@@ -724,12 +724,14 @@ public class GradAlgorithmService {
 				.projected(ruleProcessorData.isProjected())
 				.schoolAtGradName(graduationData.getGradStatus().getSchoolAtGradName())
 				.build();
-			if(ruleProcessorData.isGraduated()) {
-				gradMessageRequest.setMsgType(MSG_TYPE_GRADUATED);
-			} else {
-				gradMessageRequest.setMsgType(MSG_TYPE_NOT_GRADUATED);
-			}
-			graduationData.setGradMessage(getGradMessages(gradMessageRequest,mapOption,ruleProcessorData));
+		// GRAD2-2102: if a student is previously graduated, then treat it as graduated even though not graduated based on nonGradReasons by rule processor
+		boolean isGraduated = existingDataSupport.getExistingProgramCompletionDate() != null;
+		if(isGraduated || ruleProcessorData.isGraduated()) {
+			gradMessageRequest.setMsgType(MSG_TYPE_GRADUATED);
+		} else {
+			gradMessageRequest.setMsgType(MSG_TYPE_NOT_GRADUATED);
+		}
+		graduationData.setGradMessage(getGradMessages(gradMessageRequest,mapOption,ruleProcessorData));
 
 		if(checkSCCPNOPROG) {
 			gradMessageRequest = GradMessageRequest.builder()
