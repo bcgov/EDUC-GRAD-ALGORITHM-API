@@ -1,5 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -24,9 +25,10 @@ public class GradMessageRequest {
         if (StringUtils.isBlank(gradDate)) {
             return false;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String gradDateStr = gradDate.length() < 10? gradDate + "/01" : gradDate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT);
         try {
-            Date dt = dateFormat.parse(gradDate);
+            Date dt = dateFormat.parse(gradDateStr);
             Calendar calGradDate = Calendar.getInstance();
             calGradDate.setTime(dt);
             Calendar now = Calendar.getInstance();
