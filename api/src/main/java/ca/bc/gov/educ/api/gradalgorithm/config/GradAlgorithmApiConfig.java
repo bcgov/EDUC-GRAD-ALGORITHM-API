@@ -19,4 +19,6 @@ public class GradAlgorithmApiConfig {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
+    
 }
