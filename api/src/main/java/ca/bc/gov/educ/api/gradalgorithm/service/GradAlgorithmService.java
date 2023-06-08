@@ -562,8 +562,8 @@ public class GradAlgorithmService {
 
 	private void setGradStatusAlgorithmResponse(String gradProgram, String existingProgramCompletionDate, GradAlgorithmGraduationStudentRecord gradStatus, boolean checkSCCPNOPROG, RuleProcessorData ruleProcessorData) {
 		if (!gradProgram.equalsIgnoreCase(SCCP) && !gradProgram.equalsIgnoreCase(NOPROGRAM)) {
-			//This is done for Reports only grad run -Student already graduated no change in graduation date
-			if(existingProgramCompletionDate == null || ruleProcessorData.isProjected()) {
+			// This is done for Reports only grad run -Student already graduated no change in graduation date
+			if(existingProgramCompletionDate == null) {
 				gradStatus.setProgramCompletionDate(getGradDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 			}
 			gradStatus.setGpa(getGPA(ruleProcessorData.getStudentCourses(),ruleProcessorData.getLetterGradeList()));
