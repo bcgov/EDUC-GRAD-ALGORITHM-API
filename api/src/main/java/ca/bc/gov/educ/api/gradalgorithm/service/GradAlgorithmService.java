@@ -7,6 +7,7 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -118,7 +119,9 @@ public class GradAlgorithmService {
         String existingGradMessage = null;
         try {
 			if(gradStatus.getStudentGradData() != null) {
-				GraduationData existingData = new ObjectMapper().readValue(gradStatus.getStudentGradData(), GraduationData.class);
+				GraduationData existingData = new ObjectMapper()
+						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+						.readValue(gradStatus.getStudentGradData(), GraduationData.class);
 				existingNonGradReasons = existingData.getNonGradReasons();
 				existingGradMessage = existingData.getGradMessage();
 			}
@@ -179,7 +182,9 @@ public class GradAlgorithmService {
 		List<GradRequirement> existingNonGradReasons = null;
 		try {
 			if(obj.getStudentOptionalProgramData() != null) {
-				GradAlgorithmOptionalStudentProgram existingData = new ObjectMapper().readValue(obj.getStudentOptionalProgramData(), GradAlgorithmOptionalStudentProgram.class);
+				GradAlgorithmOptionalStudentProgram existingData = new ObjectMapper()
+						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+						.readValue(obj.getStudentOptionalProgramData(), GradAlgorithmOptionalStudentProgram.class);
 				existingNonGradReasons = existingData.getOptionalNonGradReasons();
 			}
 		} catch (JsonProcessingException e) {
@@ -396,9 +401,9 @@ public class GradAlgorithmService {
 
         studentCourseList = studentCourseList.stream().filter(StudentCourse::isUsed).collect(Collectors.toList());
         float totalCredits = studentCourseList.stream().filter(sc-> sc.isUsed()
-				&& !sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM")
-				&& !sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG")
-				&& !sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS")).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
+				&& !"RM".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+				&& !"SG".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+				&& !"TS".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
         float acquiredCredits = 0;
         String tempGpaMV;
 
@@ -412,10 +417,10 @@ public class GradAlgorithmService {
 
             if (letterGrade != null) {
                 tempGpaMV = letterGrade.getGpaMarkValue();
-            }else {
-            	if(sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM") 
-            			|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG") 
-            			|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS")) {
+            } else {
+            	if ("RM".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+            			|| "SG".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+            			|| "TS".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())) {
             		tempGpaMV = "0";		
             	}
             }
@@ -591,12 +596,12 @@ public class GradAlgorithmService {
 		boolean isExempted = false;
 		String honourValue = null;
 		float totalCreditsTSSGRM = studentCourseList.stream().filter(sc-> sc.isUsed()
-				&& (sc.getCompletedCourseLetterGrade().equalsIgnoreCase("RM")
-				|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG")
-				|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS"))).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
+				&& "RM".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+				|| "SG".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+				|| "TS".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())).mapToInt(StudentCourse::getCreditsUsedForGrad).sum();
 		float totalCoursesTSSG = studentCourseList.stream().filter(sc-> sc.isUsed()
-				&& (sc.getCompletedCourseLetterGrade().equalsIgnoreCase("SG")
-				|| sc.getCompletedCourseLetterGrade().equalsIgnoreCase("TS"))).count();
+				&& ("SG".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
+				|| "TS".equalsIgnoreCase(sc.getCompletedCourseLetterGrade()))).count();
 
 		switch (program) {
 			case "2018-EN":
