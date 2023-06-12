@@ -22,8 +22,34 @@ public class GradMessageRequest {
     String programName;
     String schoolAtGradName;
     boolean projected;
+    boolean existingGraduated;
+    boolean graduated;
 
+    public static final String SCCP_GRAD_PROGRAM = "SCCP";
+    /**
+     *
+      * @return   true   "has graduated"
+     *            false  "should be able to graduate" (projected to graduate)
+     */
     public boolean isPullGraduatedMessage() {
+        if (isPreviouslyGraduated()) { // "has graduated"
+            return true;
+        }
+        if (projected && graduated) { // "should be able to graduate" (projected to graduated)
+            return false;
+        }
+        return graduated;
+    }
+
+    public boolean isPreviouslyGraduated() {
+        return existingGraduated && isGradDatePast();
+    }
+
+    private boolean isGradDatePast() {
+        if (!StringUtils.equalsIgnoreCase(gradProgram, SCCP_GRAD_PROGRAM)) {
+            return true;
+        }
+        // Only for SCCP to check the grad_date is future dated or not to determine graduation
         if (StringUtils.isBlank(gradDate)) {
             return false;
         }
