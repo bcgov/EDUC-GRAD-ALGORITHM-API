@@ -8,6 +8,6 @@ import lombok.Data;
 public class ExistingDataSupport {
     private String existingProgramCompletionDate;
     private String existingGradMessage;
-    private String gradProgam;
+    private String gradProgram;
 
 }
