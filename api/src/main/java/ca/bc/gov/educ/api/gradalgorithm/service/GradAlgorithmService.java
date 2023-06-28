@@ -482,14 +482,14 @@ public class GradAlgorithmService {
 	private void sortCoursesBasedOnProgram(String program, List<StudentCourse> studentCourses,
 										   List<StudentAssessment> studentAssessments, Date adultStartDate) {
 		switch (program) {
-			case "2018-EN" -> {
+			case "2018-EN", "2023-EN" -> {
 				studentCourses.sort(new StudentCoursesComparator(program));
 				studentAssessments.sort(
 						Comparator.comparing(StudentAssessment::getProficiencyScore, Comparator.nullsLast(Double::compareTo)).reversed()
 								.thenComparing(StudentAssessment::getSpecialCase, Comparator.nullsLast(String::compareTo))
 								.thenComparing(StudentAssessment::getSessionDate));
 			}
-			case "2018-PF", "2004-EN", "2004-PF" -> studentCourses.sort(new StudentCoursesComparator(program));
+			case "2018-PF", "2023-PF", "2004-EN", "2004-PF" -> studentCourses.sort(new StudentCoursesComparator(program));
 			case "1950" -> {
 				/*
 				 * Split Student courses into 2 parts
