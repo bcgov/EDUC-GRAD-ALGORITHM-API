@@ -1,9 +1,11 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
+import ca.bc.gov.educ.api.gradalgorithm.util.DateUtils;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -26,5 +28,9 @@ public class GradAlgorithmGraduationStudentRecord {
     private String studentCitizenship;
     private String consumerEducationRequirementMet;
     private String schoolAtGradName;
-    private Date adultStartDate;
+    private LocalDate adultStartDate;
+
+    public Date getAdultStartDate() {
+        return DateUtils.toDate(adultStartDate);
+    }
 }
