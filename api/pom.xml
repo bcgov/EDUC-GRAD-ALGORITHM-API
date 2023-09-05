@@ -21,7 +21,7 @@
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/config/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/exception/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/dto/**,
-			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**
+			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/service/caching/**
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>
@@ -29,7 +29,7 @@
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/config/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/exception/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/dto/**,
-			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**
+			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/service/caching/**
 		</sonar.coverage.exclusions>
 		<java.version>18</java.version>
