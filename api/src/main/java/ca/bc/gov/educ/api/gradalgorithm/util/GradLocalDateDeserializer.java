@@ -5,8 +5,6 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -17,8 +15,6 @@ import java.time.format.DateTimeFormatter;
 import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT;
 
 public class GradLocalDateDeserializer extends JsonDeserializer<LocalDate> {
-
-    private static final Logger logger = LoggerFactory.getLogger(GradLocalDateDeserializer.class);
 
     @Override
     public LocalDate deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
