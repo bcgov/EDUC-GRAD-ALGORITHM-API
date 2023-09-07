@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.TimeZone;
 
 @Component
@@ -21,13 +22,17 @@ public class JsonTransformer implements Transformer {
 
     static {
         OBJECT_MAPPER = new ObjectMapper();
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(LocalDate.class, new GradLocalDateSerializer());
+        simpleModule.addDeserializer(LocalDate.class, new GradLocalDateDeserializer());
         OBJECT_MAPPER
+                .findAndRegisterModules()
+                .registerModule(simpleModule)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .disable(SerializationFeature.INDENT_OUTPUT)
                 .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(JsonGenerator.Feature.ESCAPE_NON_ASCII)
-                .setDateFormat(new SimpleDateFormat("yyyy-MM-dd h:mm:ss"))
                 .setTimeZone(TimeZone.getDefault())
         //        .enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS)
         ;
