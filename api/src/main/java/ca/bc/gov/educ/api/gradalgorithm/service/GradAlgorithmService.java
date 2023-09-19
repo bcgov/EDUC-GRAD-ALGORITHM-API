@@ -4,11 +4,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
-import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ca.bc.gov.educ.api.gradalgorithm.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -17,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import javax.xml.transform.TransformerException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -63,6 +60,9 @@ public class GradAlgorithmService {
     
     @Autowired
 	StudentGraduationService studentGraduationService;
+
+	@Autowired
+	JsonTransformer jsonTransformer;
 
 	private static final String SCCP = "SCCP";
 	private static final String NOPROGRAM = "NOPROG";
@@ -119,16 +119,14 @@ public class GradAlgorithmService {
         String existingGradMessage = null;
         try {
 			if(gradStatus.getStudentGradData() != null) {
-				GraduationData existingData = new ObjectMapper()
-						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-						.readValue(gradStatus.getStudentGradData(), GraduationData.class);
+				GraduationData existingData = (GraduationData)jsonTransformer.unmarshall(gradStatus.getStudentGradData(), GraduationData.class);
 				existingNonGradReasons = existingData.getNonGradReasons();
 				existingGradMessage = existingData.getGradMessage();
 			}
-		} catch (JsonProcessingException e) {
+		} catch (TransformerException e) {
 			logger.error("JSON processing Error {}",e.getMessage());
 		}
-        gradStatus.setStudentGradData(null);
+		gradStatus.setStudentGradData(null);
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
 		if(ruleProcessorData.isGraduated()) {
 			setGradStatusAlgorithmResponse(gradProgram,existingProgramCompletionDate,gradStatus,checkSCCPNOPROG,ruleProcessorData);
@@ -182,12 +180,10 @@ public class GradAlgorithmService {
 		List<GradRequirement> existingNonGradReasons = null;
 		try {
 			if(obj.getStudentOptionalProgramData() != null) {
-				GradAlgorithmOptionalStudentProgram existingData = new ObjectMapper()
-						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-						.readValue(obj.getStudentOptionalProgramData(), GradAlgorithmOptionalStudentProgram.class);
+				GradAlgorithmOptionalStudentProgram existingData = (GradAlgorithmOptionalStudentProgram)jsonTransformer.unmarshall(obj.getStudentOptionalProgramData(), GradAlgorithmOptionalStudentProgram.class);
 				existingNonGradReasons = existingData.getOptionalNonGradReasons();
 			}
-		} catch (JsonProcessingException e) {
+		} catch (TransformerException e) {
 			logger.debug("JSON processing Error {}",e.getMessage());
 		}
 
