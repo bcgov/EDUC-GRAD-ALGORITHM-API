@@ -81,7 +81,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
 
@@ -128,7 +128,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 		assertNotNull(gradData);
 	}
 
@@ -176,7 +176,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 		assertNotNull(gradData);
 	}
     
@@ -244,7 +244,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "FI")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -310,7 +310,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "AD")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception)).thenReturn(gradOptionalResponseList);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -377,7 +377,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "BD")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception)).thenReturn(gradOptionalResponseList);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -446,7 +446,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "BC")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
 		Mockito.when(gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception)).thenReturn(gradOptionalResponseList);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -513,7 +513,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "CP")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -581,7 +581,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "DD")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -640,7 +640,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
 	    assertNotNull(gradData);
     }
     
@@ -701,7 +701,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
 	    assertNotNull(gradData);
     }
 
@@ -764,7 +764,54 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
 		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
-		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, accessToken);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
+		assertNotNull(gradData);
+	}
+
+	@Test
+	public void testHypotheticalGraduateStudent() throws Exception {
+		UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
+		String pen = "127951309";
+		String gradProgram = "2018-EN";
+		String accessToken = "accessToken";
+		RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData.json");
+		GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+		CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
+		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
+		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+		School school = createSchoolData("json/school.json");
+
+
+		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
+
+
+		RuleProcessorData ruleProcessorData = new RuleProcessorData();
+		ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+		ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
+		ruleProcessorData.setStudentCourses(parallelDTO.courseAlgorithmData().getStudentCourses());
+		ruleProcessorData.setCourseRestrictions(parallelDTO.courseAlgorithmData().getCourseRestrictions() != null ? parallelDTO.courseAlgorithmData().getCourseRestrictions():null);
+		ruleProcessorData.setCourseRequirements(parallelDTO.courseAlgorithmData().getCourseRequirements() != null ? parallelDTO.courseAlgorithmData().getCourseRequirements():null);
+		ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+		ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
+		ruleProcessorData.setMapOptional(new HashMap<>());
+		ruleProcessorData.setSchool(school);
+		ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
+		ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
+		ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());
+		ruleProcessorData.setStudentAssessments(parallelDTO.assessmentAlgorithmData().getStudentAssessments());
+		ruleProcessorData.setAssessmentRequirements(parallelDTO.assessmentAlgorithmData().getAssessmentRequirements() != null ? parallelDTO.assessmentAlgorithmData().getAssessmentRequirements():null);
+		ruleProcessorData.setAssessmentList(parallelDTO.assessmentAlgorithmData().getAssessments() != null ? parallelDTO.assessmentAlgorithmData().getAssessments():null);
+		Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken,exception)).thenReturn(gradStudentAlgorithmData);
+		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception)).thenReturn(ruleProcessorDatas);
+		String schoolOfRecord = ruleProcessorDatas.getGradStudent().getSchoolOfRecord();
+		Mockito.when(parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception)).thenReturn(Mono.just(parallelDTO));
+		Mockito.when(gradCourseService.prepareCourseDataForAlgorithm(parallelDTO.courseAlgorithmData())).thenReturn(parallelDTO.courseAlgorithmData());
+		Mockito.when(gradAssessmentService.prepareAssessmentDataForAlgorithm(parallelDTO.assessmentAlgorithmData())).thenReturn(parallelDTO.assessmentAlgorithmData());
+		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
+		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
+		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, "2018", accessToken);
 		assertNotNull(gradData);
 	}
 }

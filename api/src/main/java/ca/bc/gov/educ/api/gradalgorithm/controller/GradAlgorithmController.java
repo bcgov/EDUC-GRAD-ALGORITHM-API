@@ -31,9 +31,10 @@ public class GradAlgorithmController {
     public GraduationData graduateStudent(@RequestParam(name = "studentID") String studentID,
                                           @RequestParam(name = "gradProgram") String gradProgram,
                                           @RequestParam(required = false) boolean projected,
+                                          @RequestParam(required = false, defaultValue = "") String hypotheticalGradYear,
                                           @RequestHeader(name="Authorization") String accessToken) {
         logger.debug("**** GRAD ALGORITHM Started ****");
-        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, accessToken.replaceAll("Bearer ", ""));
+        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, hypotheticalGradYear, accessToken.replaceAll("Bearer ", ""));
     }
 
 }
