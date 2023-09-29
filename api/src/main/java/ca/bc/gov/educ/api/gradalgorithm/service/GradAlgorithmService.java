@@ -499,9 +499,7 @@ public class GradAlgorithmService {
 			for (StudentCourse studentCourse : studentCourses) {
 				try {
 					if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(basisSessionDate) >= 0) {
-						logger.debug("Student Course [{}/{}] Session Date [{}] - Hypothetical pass gradYear = {}",
-								studentCourse.getCourseCode(), studentCourse.getCourseLevel(),
-								studentCourse.getSessionDate() , hypotheticalGradYear);
+						logger.debug("Student Course [{}/{}] Session Date [{}] - Hypothetically passed", studentCourse.getCourseCode(), studentCourse.getCourseLevel(), studentCourse.getSessionDate());
 						studentCourse.setCompletedCourseLetterGrade("P");
 					}
 				} catch (ParseException e) {
