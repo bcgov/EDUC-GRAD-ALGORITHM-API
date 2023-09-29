@@ -25,6 +25,9 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.DEFAULT_DATE_FORMAT;
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT;
+
 @Service
 public class GradAlgorithmService {
 
@@ -370,7 +373,7 @@ public class GradAlgorithmService {
 	private String getLastSessionDate(List<StudentCourse> studentCourses, List<StudentAssessment> studentAssessments) {
 
 		Date gradDate = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		DateFormat dateFormat = new SimpleDateFormat(SECONDARY_DATE_FORMAT);
 
 		try {
 			gradDate = dateFormat.parse("1700/01/01");
@@ -398,7 +401,7 @@ public class GradAlgorithmService {
 			}
 		}
 
-		String result = new SimpleDateFormat("yyyy-MM-dd").format(gradDate);
+		String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(gradDate);
 		if("1700-01-01".compareTo(result) == 0) {
 			return null;
 		}
@@ -483,7 +486,7 @@ public class GradAlgorithmService {
 	}
 
 	private void setCoursesForHypotheticalPass(List<StudentCourse> studentCourses, String hypotheticalGradYear) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		DateFormat dateFormat = new SimpleDateFormat(SECONDARY_DATE_FORMAT);
 		String basisSession = hypotheticalGradYear + "/09/01";
 		Date basisSessionDate = null;
 		try {
@@ -496,9 +499,9 @@ public class GradAlgorithmService {
 			for (StudentCourse studentCourse : studentCourses) {
 				try {
 					if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(basisSessionDate) >= 0) {
-						logger.debug("Student Course [{}/{}] Session Date [{}] - Hypothetically passed on {}",
+						logger.debug("Student Course [{}/{}] Session Date [{}] - Hypothetical pass gradYear = {}",
 								studentCourse.getCourseCode(), studentCourse.getCourseLevel(),
-								studentCourse.getSessionDate() , basisSession);
+								studentCourse.getSessionDate() , hypotheticalGradYear);
 						studentCourse.setCompletedCourseLetterGrade("P");
 					}
 				} catch (ParseException e) {
@@ -534,7 +537,7 @@ public class GradAlgorithmService {
 					String courseSessionDate = sc.getSessionDate() + "/01";
 					Date temp = null;
 					try {
-						temp = GradAlgorithmApiUtils.parseDate(courseSessionDate, "yyyy/MM/dd");
+						temp = GradAlgorithmApiUtils.parseDate(courseSessionDate, SECONDARY_DATE_FORMAT);
 					} catch (ParseException e) {
 						logger.debug(e.getMessage());
 					}
