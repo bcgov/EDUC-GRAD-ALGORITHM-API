@@ -645,54 +645,51 @@ public class GradAlgorithmService {
 				|| "TS".equalsIgnoreCase(sc.getCompletedCourseLetterGrade()))).count();
 
 		switch (program) {
-			case "2018-EN":
-			case "2018-PF":
+			case "2023-EN", "2023-PF", "2018-EN", "2018-PF" -> {
 				StudentCourse sCCheck = studentCourseList.stream().filter(sc -> sc.isUsed() && (sc.getCourseCode().equalsIgnoreCase("GT")
 								|| sc.getCourseCode().equalsIgnoreCase("GTF")
 								|| sc.getCourseCode().equalsIgnoreCase("PORT")
 								|| sc.getCourseCode().equalsIgnoreCase("PORTF")))
 						.findAny()
 						.orElse(null);
-				if(sCCheck == null) {
-					if(totalCreditsTSSGRM > 32) {
-						isExempted=true;
-						honourValue="N";
+				if (sCCheck == null) {
+					if (totalCreditsTSSGRM > 32) {
+						isExempted = true;
+						honourValue = "N";
 					}
 				} else {
-					if(totalCreditsTSSGRM > 36) {
-						isExempted=true;
-						honourValue="N";
+					if (totalCreditsTSSGRM > 36) {
+						isExempted = true;
+						honourValue = "N";
 					}
 				}
-				break;
-			case "1950":
-				if(totalCoursesTSSG > 3) {
+			}
+			case "1950" -> {
+				if (totalCoursesTSSG > 3) {
 					isExempted = true;
 					honourValue = "N";
 				}
-				break;
-			case "2004-EN":
-			case "2004-PF":
-				if(totalCreditsTSSGRM > 36) {
-					isExempted=true;
-					honourValue="N";
-				}
-				break;
-			case "1996-EN":
-			case "1996-PF":
-				if(totalCreditsTSSGRM > 24) {
-					isExempted=true;
-					honourValue="N";
-				}
-				break;
-			case "1986-EN":
-			case "1986-PF":
-				if(totalCoursesTSSG > 6) {
+			}
+			case "2004-EN", "2004-PF" -> {
+				if (totalCreditsTSSGRM > 36) {
 					isExempted = true;
 					honourValue = "N";
 				}
-				break;
-			default:
+			}
+			case "1996-EN", "1996-PF" -> {
+				if (totalCreditsTSSGRM > 24) {
+					isExempted = true;
+					honourValue = "N";
+				}
+			}
+			case "1986-EN", "1986-PF" -> {
+				if (totalCoursesTSSG > 6) {
+					isExempted = true;
+					honourValue = "N";
+				}
+			}
+			default -> {
+			}
 		}
 		return Pair.of(isExempted,honourValue);
 	}
