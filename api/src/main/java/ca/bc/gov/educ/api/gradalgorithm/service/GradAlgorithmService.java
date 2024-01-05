@@ -4,7 +4,9 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
-import ca.bc.gov.educ.api.gradalgorithm.util.*;
+import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
+import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -819,7 +821,7 @@ public class GradAlgorithmService {
 		}
 
 		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
-			currentGradMessage.append(String.format(result.getProgramCadre(),String.join(",", optPrograms)));
+			currentGradMessage.append(String.format(result.getFrenchImmersionMessage(),String.join(",", optPrograms)));
 			appendPeriod(currentGradMessage);
 		}
 		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
