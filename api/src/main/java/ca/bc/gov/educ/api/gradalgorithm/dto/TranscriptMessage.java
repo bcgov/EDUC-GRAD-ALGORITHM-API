@@ -1,10 +1,9 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
-import java.util.UUID;
-
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
+import java.util.UUID;
 
 @Data
 @Component
@@ -17,7 +16,7 @@ public class TranscriptMessage {
 	private String gradDateMessage;
 	private String honourNote;
 	private String adIBProgramMessage;
-	private String programCadre;
+	private String frenchImmersionMessage;
 	private String careerProgramMessage;
 	private String gradProjectedMessage;
 	private String honourProjectedNote;
