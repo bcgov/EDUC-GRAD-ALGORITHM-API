@@ -7,6 +7,7 @@ env:
   OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   OPENSHIFT_NAMESPACE: ${{ secrets.GRAD_BUSINESS_NAMESPACE }}-test
+  GRAD_NAMESPACE: ${{ secrets.GRAD_NAMESPACE }}
   COMMON_NAMESPACE: ${{ secrets.COMMON_NAMESPACE }}
   BUSINESS_NAMESPACE: ${{ secrets.GRAD_BUSINESS_NAMESPACE }}
 
@@ -14,7 +15,6 @@ env:
 
   REPO_NAME: "educ-grad-algorithm-api"
   APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
-  NAMESPACE: ${{ secrets.GRAD_BUSINESS_NAMESPACE }}
   TAG: "latest"
   BRANCH: "main"
 
@@ -65,14 +65,14 @@ jobs:
           oc rollout cancel dc/${{ env.SPRING_BOOT_IMAGE_NAME }} 2> /dev/null \
           || true && echo "No rollout in progress"
           
-          oc tag ${{ env.NAMESPACE }}-dev/${{ env.REPO_NAME }}:${{ steps.get-latest-tag.outputs.tag }} ${{ env.NAMESPACE }}-test/${{ env.REPO_NAME }}:${{ steps.get-latest-tag.outputs.tag }}
+          oc tag ${{ env.BUSINESS_NAMESPACE }}-dev/${{ env.REPO_NAME }}:${{ steps.get-latest-tag.outputs.tag }} ${{ env.BUSINESS_NAMESPACE }}-test/${{ env.REPO_NAME }}:${{ steps.get-latest-tag.outputs.tag }}
           
           # Process and apply deployment template
           oc process -f tools/openshift/api.dc.yaml -p IS_NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }} -p REPO_NAME=${{ env.REPO_NAME }} -p TAG_NAME=${{ steps.get-latest-tag.outputs.tag }} -p HOST_ROUTE=${{ env.REPO_NAME }}-${{ env.OPENSHIFT_NAMESPACE }}.${{ env.APP_DOMAIN }} -p MIN_REPLICAS=${{ env.MIN_REPLICAS }} -p MAX_REPLICAS=${{ env.MAX_REPLICAS }} -p MIN_CPU=${{ env.MIN_CPU }} -p MAX_CPU=${{ env.MAX_CPU }} -p MIN_MEM=${{ env.MIN_MEM }} -p MAX_MEM=${{ env.MAX_MEM }}  \
           | oc apply -f -
           
           # UPDATE Configmaps
-          curl -s https://raw.githubusercontent.com/bcgov/${{ env.REPO_NAME }}/${{ env.BRANCH }}/tools/update-configmap.sh | bash /dev/stdin test ${{ env.REPO_NAME }} ${{ env.NAMESPACE }} ${{ env.COMMON_NAMESPACE }} ${{ env.BUSINESS_NAMESPACE }} ${{ secrets.SPLUNK_TOKEN }}
+          curl -s https://raw.githubusercontent.com/bcgov/${{ env.REPO_NAME }}/${{ env.BRANCH }}/tools/update-configmap.sh | bash /dev/stdin test ${{ env.REPO_NAME }} ${{ env.GRAD_NAMESPACE }} ${{ env.COMMON_NAMESPACE }} ${{ env.BUSINESS_NAMESPACE }} ${{ secrets.SPLUNK_TOKEN }}
           
           # Start rollout (if necessary) and follow it
           oc rollout latest dc/${{ env.SPRING_BOOT_IMAGE_NAME }} 2> /dev/null \
