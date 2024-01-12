@@ -40,7 +40,7 @@ PARSER_CONFIG="
 #Setup for config-maps
 ###########################################################
 echo Creating config map "$APP_NAME"-config-map
-oc create -n "$GRAD_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map \
+oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map \
   --from-literal=GRAD_TRAX_API="http://educ-grad-trax-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=GRAD_STUDENT_API="http://educ-grad-student-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=GRAD_COURSE_API="http://educ-grad-course-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
@@ -55,7 +55,7 @@ oc create -n "$GRAD_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map \
   --dry-run=client -o yaml | oc apply -f -
 
 echo Creating config map "$APP_NAME"-flb-sc-config-map
-oc create -n "$GRAD_NAMESPACE"-"$envValue" configmap "$APP_NAME"-flb-sc-config-map \
+oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-flb-sc-config-map \
   --from-literal=fluent-bit.conf="$FLB_CONFIG" \
   --from-literal=parsers.conf="$PARSER_CONFIG" \
   --dry-run=client -o yaml | oc apply -f -
