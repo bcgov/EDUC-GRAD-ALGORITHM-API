@@ -26,7 +26,6 @@ on:
 jobs:
   tag_image:
     name: Tag Image
-    # ubuntu-20.04 can also be used.
     runs-on: ubuntu-20.04
     environment: dev
 
