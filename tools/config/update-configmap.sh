@@ -41,17 +41,17 @@ PARSER_CONFIG="
 ###########################################################
 echo Creating config map "$APP_NAME"-config-map
 oc create -n "$GRAD_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map \
-  --from-literal=GRAD_TRAX_API="http://educ-grad-trax-api.$GRAD_NAMESPACE.svc.cluster.local:8080/" \
-  --from-literal=GRAD_STUDENT_API="http://educ-grad-student-api.$GRAD_NAMESPACE.svc.cluster.local:8080/" \
-  --from-literal=GRAD_COURSE_API="http://educ-grad-course-api.$GRAD_NAMESPACE.svc.cluster.local:8080/" \
+  --from-literal=GRAD_TRAX_API="http://educ-grad-trax-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
+  --from-literal=GRAD_STUDENT_API="http://educ-grad-student-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
+  --from-literal=GRAD_COURSE_API="http://educ-grad-course-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=ENABLE_SPLUNK_LOG_HELPER="true" \
   --from-literal=APP_LOG_LEVE="INFO" \
-  --from-literal=GRAD_ASSESSMENT_API="http://educ-grad-assessment-api.$GRAD_NAMESPACE.svc.cluster.local:8080/" \
-  --from-literal=GRAD_PROGRAM_API="http://educ-grad-program-api.$GRAD_NAMESPACE.svc.cluster.local:8080/" \
+  --from-literal=GRAD_ASSESSMENT_API="http://educ-grad-assessment-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
+  --from-literal=GRAD_PROGRAM_API="http://educ-grad-program-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=MAX_RETRY_ATTEMPTS="3" \
-  --from-literal=GRAD_RULE_PROCESSOR_API="http://educ-rule-engine-api.$GRAD_BUSINESS_NAMESPACE.svc.cluster.local:8080" \
+  --from-literal=GRAD_RULE_PROCESSOR_API="http://educ-rule-engine-api.$BUSINESS_NAMESPACE-$envValue.svc.cluster.local:8080" \
   --from-literal=KEYCLOAK_TOKEN_URL="https://soam-dev.apps.silver.devops.gov.bc.ca/" \
-  --from-literal=GRAD_STUDENT_GRADUATION_API="http://educ-grad-student-graduation-api.$GRAD_NAMESPACE.svc.cluster.local:8080/" \
+  --from-literal=GRAD_STUDENT_GRADUATION_API="http://educ-grad-student-graduation-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --dry-run=client -o yaml | oc apply -f -
 
 echo Creating config map "$APP_NAME"-flb-sc-config-map
