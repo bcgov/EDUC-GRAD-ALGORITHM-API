@@ -4,17 +4,17 @@ env:
   # 🖊️ EDIT your repository secrets to log into your OpenShift cluster and set up the context.
   # See https://github.com/redhat-actions/oc-login#readme for how to retrieve these values.
   # To get a permanent token, refer to https://github.com/redhat-actions/oc-login/wiki/Using-a-Service-Account-for-GitHub-Actions
-  OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
+  OPENSHIFT_SERVER: ${{ vars.OPENSHIFT_SERVER }}
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-  OPENSHIFT_NAMESPACE: ${{ secrets.GRAD_BUSINESS_NAMESPACE }}-test
-  GRAD_NAMESPACE: ${{ secrets.GRAD_NAMESPACE }}
-  COMMON_NAMESPACE: ${{ secrets.COMMON_NAMESPACE }}
-  BUSINESS_NAMESPACE: ${{ secrets.GRAD_BUSINESS_NAMESPACE }}
+  OPENSHIFT_NAMESPACE: ${{ vars.GRAD_BUSINESS_NAMESPACE }}-test
+  GRAD_NAMESPACE: ${{ vars.GRAD_NAMESPACE }}
+  COMMON_NAMESPACE: ${{ vars.COMMON_NAMESPACE }}
+  BUSINESS_NAMESPACE: ${{ vars.GRAD_BUSINESS_NAMESPACE }}
 
   SPRING_BOOT_IMAGE_NAME: educ-grad-algorithm-api-dc
 
   REPO_NAME: "educ-grad-algorithm-api"
-  APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
+  APP_DOMAIN: ${{ vars.APP_DOMAIN }}
   TAG: "latest"
   BRANCH: "main"
 
