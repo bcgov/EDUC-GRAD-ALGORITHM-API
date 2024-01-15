@@ -1,7 +1,6 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import static org.junit.Assert.assertNotNull;
-import java.util.*;
+import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
@@ -14,8 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import ca.bc.gov.educ.api.gradalgorithm.EducGradAlgorithmTestBase;
 import reactor.core.publisher.Mono;
+
+import java.util.*;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -608,7 +610,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         msg.setGradMainMessage("ASdasdad");
         msg.setHonourNote("asda");
         msg.setMessageTypeCode(msgType);
-        msg.setProgramCadre("Adasd");
+        msg.setFrenchImmersionMessage("Adasd");
         msg.setProgramCode(gradProgram);
         msg.setTranscriptMessageID(new UUID(1, 1));
 		msg.setGradProjectedMessage("asdadad");
@@ -666,7 +668,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
         msg.setGradMainMessage("ASdasdad");
         msg.setHonourNote("asda");
         msg.setMessageTypeCode(msgType);
-        msg.setProgramCadre("Adasd");
+        msg.setFrenchImmersionMessage("Adasd");
 		msg.setGradProjectedMessage("sdada");
         msg.setProgramCode(gradProgram);
         msg.setTranscriptMessageID(new UUID(1, 1));
@@ -729,7 +731,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		msg.setGradMainMessage("ASdasdad");
 		msg.setHonourNote("asda");
 		msg.setMessageTypeCode(msgType);
-		msg.setProgramCadre("Adasd");
+		msg.setFrenchImmersionMessage("Adasd");
 		msg.setGradProjectedMessage("sdada");
 		msg.setProgramCode(gradProgram);
 		msg.setTranscriptMessageID(new UUID(1, 1));
