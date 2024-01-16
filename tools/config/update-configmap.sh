@@ -30,6 +30,15 @@ FLB_CONFIG="[SERVICE]
    Name   stdout
    Match  absolutely_nothing_bud
    Log_Level    off
+[OUTPUT]
+   Name  splunk
+   Match *
+   Host  $SPLUNK_URL
+   Port  443
+   TLS         On
+   TLS.Verify  Off
+   Message_Key $APP_NAME
+   Splunk_Token $SPLUNK_TOKEN
 "
 PARSER_CONFIG="
 [PARSER]
