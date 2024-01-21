@@ -13,5 +13,5 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=bcgov_EDUC-GRAD-ALGORITHM-API&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=bcgov_EDUC-GRAD-ALGORITHM-API) &nbsp;
 
-# EDUC-GRAD-ALGORITHM-API &nbsp; ![GitHub repo size](https://img.shields.io/github/repo-size/bcgov/EDUC-GRAD-ALGORITHM-API)
+# EDUC-GRAD-ALGORITHM-API &nbsp; ![GitHub repo size](https://img.shields.io/github/repo-size/bcgov/EDUC-GRAD-ALGORITHM-API) ![GitHub Tag](https://img.shields.io/github/v/tag/bcgov/EDUC-GRAD-ALGORITHM-API)
 The API to run the grad algorithm for a student
