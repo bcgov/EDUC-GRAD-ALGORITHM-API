@@ -7,6 +7,7 @@ GRAD_NAMESPACE=$3
 COMMON_NAMESPACE=$4
 BUSINESS_NAMESPACE=$5
 SPLUNK_TOKEN=$6
+APP_LOG_LEVEL=$7
 
 SPLUNK_URL="gww.splunk.educ.gov.bc.ca"
 FLB_CONFIG="[SERVICE]
@@ -54,7 +55,7 @@ oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map 
   --from-literal=GRAD_STUDENT_API="http://educ-grad-student-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=GRAD_COURSE_API="http://educ-grad-course-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=ENABLE_SPLUNK_LOG_HELPER="true" \
-  --from-literal=APP_LOG_LEVE="INFO" \
+  --from-literal=APP_LOG_LEVEL="$APP_LOG_LEVEL" \
   --from-literal=GRAD_ASSESSMENT_API="http://educ-grad-assessment-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=GRAD_PROGRAM_API="http://educ-grad-program-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=MAX_RETRY_ATTEMPTS="3" \
