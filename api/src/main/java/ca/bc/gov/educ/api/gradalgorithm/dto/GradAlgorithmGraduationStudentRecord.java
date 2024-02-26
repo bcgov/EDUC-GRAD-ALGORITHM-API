@@ -1,10 +1,15 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
+import ca.bc.gov.educ.api.gradalgorithm.util.DateUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
+
+import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.DEFAULT_DATE_FORMAT;
 
 @Data
 @Component
@@ -26,5 +31,10 @@ public class GradAlgorithmGraduationStudentRecord {
     private String studentCitizenship;
     private String consumerEducationRequirementMet;
     private String schoolAtGradName;
-    private Date adultStartDate;
+    @JsonFormat(pattern=DEFAULT_DATE_FORMAT)
+    private LocalDate adultStartDate;
+
+    public Date getAdultStartDate() {
+        return DateUtils.toDate(adultStartDate);
+    }
 }

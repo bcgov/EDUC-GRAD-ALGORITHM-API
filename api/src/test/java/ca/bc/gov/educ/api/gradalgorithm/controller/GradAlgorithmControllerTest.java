@@ -82,9 +82,9 @@ class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
         entity.setSchool(ruleProcessorData.getSchool());
 
 
-        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, "accessToken")).thenReturn(entity);
-        gradAlgorithmController.graduateStudent(studentID, gradProgram, false, "accessToken");
-        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, "accessToken");
+        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, null, "accessToken")).thenReturn(entity);
+        gradAlgorithmController.graduateStudent(studentID, gradProgram, false, null, "accessToken");
+        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, null, "accessToken");
 
         LOG.debug(">graduateStudentTest");
     }
