@@ -29,7 +29,8 @@ public class GradAlgorithmAPIConstants {
     protected static final Date DEFAULT_UPDATED_TIMESTAMP = new Date();
 
     //Default Date format constants
-    public static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String SECONDARY_DATE_FORMAT = "yyyy/MM/dd";
 
     //Rule Type Constants
     public static final String RULE_TYPE_MATCH = "Match";
