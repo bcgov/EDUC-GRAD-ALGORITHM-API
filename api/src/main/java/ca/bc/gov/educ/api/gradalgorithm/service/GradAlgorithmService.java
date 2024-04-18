@@ -216,11 +216,10 @@ public class GradAlgorithmService {
 	}
 
 	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
-		Date gradDate = new Date();
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
 
-			String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(gradDate);
+			String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(new Date());
 			gradStudentOptionalAlg.setOptionalProgramCompletionDate(result);
 		}
 	}
