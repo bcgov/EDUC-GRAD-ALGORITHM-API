@@ -216,21 +216,11 @@ public class GradAlgorithmService {
 	}
 
 	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
+
 		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
-			String mainProgramCompletionDate;
-			if (ruleProcessorData.getGradStatus().getProgramCompletionDate().length() > 7) {
-				mainProgramCompletionDate = ruleProcessorData.getGradStatus().getProgramCompletionDate();
-			}else {
-				mainProgramCompletionDate = APIUtils.parsingTraxDate(ruleProcessorData.getGradStatus().getProgramCompletionDate());
-			}
-			if (!gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList().isEmpty()) {
-				String optionalPrgComlDate = getGradDate(gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList(),
-						gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList());
-				gradStudentOptionalAlg.setOptionalProgramCompletionDate(optionalPrgComlDate == null ? mainProgramCompletionDate:optionalPrgComlDate);
-			} else {
-				gradStudentOptionalAlg.setOptionalProgramCompletionDate(
-						getGradDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
-			}
+
+			String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(new Date());
+			gradStudentOptionalAlg.setOptionalProgramCompletionDate(result);
 		}
 	}
 
