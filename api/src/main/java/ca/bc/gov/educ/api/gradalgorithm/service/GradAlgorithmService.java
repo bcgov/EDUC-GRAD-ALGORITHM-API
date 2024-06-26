@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -336,7 +337,7 @@ public class GradAlgorithmService {
     private String formatGradDate(String gradDate) {
 		try {
 			String formatDate = StringUtils.contains(gradDate, "/") ? StringUtils.replace(gradDate + "/01", "/", "-") : gradDate;
-			LocalDate currentDate = LocalDate.parse(formatDate);
+			LocalDate currentDate = LocalDate.parse(formatDate).with(TemporalAdjusters.lastDayOfMonth());
 			Month month = currentDate.getMonth();
 			int year = currentDate.getYear();
 			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
@@ -375,8 +376,9 @@ public class GradAlgorithmService {
 
 		for (StudentCourse studentCourse : studentCourses) {
 			try {
-				if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(gradDate) > 0) {
-					gradDate = dateFormat.parse(studentCourse.getSessionDate() + "/01");
+				Date dateToCompare = toLastDayOfMonth(dateFormat.parse(studentCourse.getSessionDate() + "/01"));
+				if (dateToCompare.compareTo(gradDate) > 0) {
+					gradDate = dateToCompare;
 				}
 			} catch (ParseException e) {
 				logger.debug(e.getMessage());
@@ -385,8 +387,9 @@ public class GradAlgorithmService {
 
 		for (StudentAssessment studentAssessment : studentAssessments) {
 			try {
-				if (dateFormat.parse(studentAssessment.getSessionDate() + "/01").compareTo(gradDate) > 0) {
-					gradDate = dateFormat.parse(studentAssessment.getSessionDate() + "/01");
+				Date dateToCompare = toLastDayOfMonth(dateFormat.parse(studentAssessment.getSessionDate() + "/01"));
+				if (dateToCompare.compareTo(gradDate) > 0) {
+					gradDate = dateToCompare;
 				}
 			} catch (ParseException e) {
 				logger.debug(e.getMessage());
@@ -490,7 +493,8 @@ public class GradAlgorithmService {
 		if (basisSessionDate != null && !studentCourses.isEmpty()) {
 			for (StudentCourse studentCourse : studentCourses) {
 				try {
-					if (dateFormat.parse(studentCourse.getSessionDate() + "/01").compareTo(basisSessionDate) >= 0) {
+					Date dateToCompare = toLastDayOfMonth(dateFormat.parse(studentCourse.getSessionDate() + "/01"));
+					if (dateToCompare.compareTo(basisSessionDate) >= 0) {
 						logger.debug("Student Course [{}/{}] Session Date [{}] - Hypothetically passed", studentCourse.getCourseCode(), studentCourse.getCourseLevel(), studentCourse.getSessionDate());
 						studentCourse.setCompletedCourseLetterGrade("P");
 					}
@@ -527,7 +531,7 @@ public class GradAlgorithmService {
 					String courseSessionDate = sc.getSessionDate() + "/01";
 					Date temp = null;
 					try {
-						temp = GradAlgorithmApiUtils.parseDate(courseSessionDate, SECONDARY_DATE_FORMAT);
+						temp = toLastDayOfMonth(GradAlgorithmApiUtils.parseDate(courseSessionDate, SECONDARY_DATE_FORMAT));
 					} catch (ParseException e) {
 						logger.debug(e.getMessage());
 					}
@@ -837,4 +841,10 @@ public class GradAlgorithmService {
 		return null;
 	}
 
+	private Date toLastDayOfMonth(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return cal.getTime();
+	}
 }
