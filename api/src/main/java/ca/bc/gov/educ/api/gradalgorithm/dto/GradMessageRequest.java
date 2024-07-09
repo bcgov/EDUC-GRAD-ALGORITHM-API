@@ -53,13 +53,14 @@ public class GradMessageRequest {
         if (StringUtils.isBlank(gradDate)) {
             return false;
         }
-        String gradDateStr = gradDate.length() < 10? gradDate + "/01" : gradDate;
+        String gradDateStr = gradDate.length() < 10 ? gradDate + "/01" : gradDate;
         log.debug("GradMessageRequest: Grad Date = {}", gradDateStr);
         SimpleDateFormat dateFormat = new SimpleDateFormat(gradDate.length() < 10? GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT : GradAlgorithmAPIConstants.DEFAULT_DATE_FORMAT);
         try {
             Date dt = dateFormat.parse(gradDateStr);
             Calendar calGradDate = Calendar.getInstance();
             calGradDate.setTime(dt);
+            calGradDate.set(Calendar.DAY_OF_MONTH, calGradDate.getActualMaximum(Calendar.DAY_OF_MONTH));
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
             return calGradDate.before(now);

@@ -7,11 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class APIUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(APIUtils.class);
@@ -45,19 +40,6 @@ public class APIUtils {
         }
 
         return json;
-    }
-
-    public static String parsingTraxDate(String pcDate) {
-        String actualPCDate = pcDate + "/01";
-        Date gradDate=null;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        try {
-            gradDate = dateFormat.parse(actualPCDate);
-        } catch (ParseException e) {
-            logger.debug("ERROR {}",e.getLocalizedMessage());
-        }
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.format(gradDate);
     }
 
     /**
