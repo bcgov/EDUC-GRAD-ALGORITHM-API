@@ -54,3 +54,6 @@ build/
 ### VS Code ###
 .vscode/
 /api/.run
+
+### Local dev ###
+**/application-local.yaml
