@@ -667,6 +667,17 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
 	    assertNotNull(gradData);
     }
+
+	@Test
+	public void testGraduateStudent_with_Exception() {
+		UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
+		String gradProgram = "2018-EN";
+		String accessToken = "accessToken";
+
+		Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken,exception)).thenReturn(null);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
+		assertNotNull(gradData);
+	}
     
     @Test
     public void testGraduateStudent_projected_SCCP() throws Exception {
