@@ -187,7 +187,6 @@ public class GradAlgorithmService {
 			gradStudentOptionalAlg.setCpList(ruleProcessorData.getCpList());
 		}
 
-//		List<GradRequirement> existingNonGradReasons = null;
 		try {
 			if(obj.getStudentOptionalProgramData() != null) {
 				GradAlgorithmOptionalStudentProgram existingData = (GradAlgorithmOptionalStudentProgram)jsonTransformer.unmarshall(obj.getStudentOptionalProgramData(), GradAlgorithmOptionalStudentProgram.class);
