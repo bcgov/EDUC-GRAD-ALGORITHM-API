@@ -237,7 +237,7 @@ public class GradAlgorithmService {
 			for (StudentOptionalProgram sp : gradOptionalResponseList) {
 				OptionalProgramRuleProcessor opRulePro = new OptionalProgramRuleProcessor();
 				opRulePro.setHasOptionalProgram(true);
-				opRulePro.setOptionalProgramGraduated(StringUtils.isNotBlank(sp.getOptionalProgramCompletionDate()));
+				opRulePro.setOptionalProgramGraduated(true);
 				opRulePro.setStudentOptionalProgramData(sp.getStudentOptionalProgramData());
 				opRulePro.setOptionalProgramName(sp.getOptionalProgramName());
 				mapOpt.put(sp.getOptionalProgramCode(), opRulePro);
