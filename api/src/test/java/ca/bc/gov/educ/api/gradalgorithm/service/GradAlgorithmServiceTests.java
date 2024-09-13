@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
+import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -26,6 +27,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
     @Autowired GradAlgorithmService gradAlgorithmService;
     @Autowired ExceptionMessage exception;
+	@Autowired JsonTransformer jsonTransformer;
     @MockBean GradStudentService gradStudentService;
     @MockBean GradAssessmentService gradAssessmentService;
     @MockBean GradCourseService gradCourseService;
@@ -195,6 +197,19 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm.json");
     	School school = createSchoolData("json/school.json");
+
+		GradRequirement optionalNoGradReason = new GradRequirement();
+		optionalNoGradReason.setProjected(false);
+		optionalNoGradReason.setRule("Test Rule");
+		optionalNoGradReason.setDescription("Test Rule is failed!");
+		optionalNoGradReason.setTranscriptRule("Transcript Rule");
+
+		GradAlgorithmOptionalStudentProgram studentOptionProgramClob = new GradAlgorithmOptionalStudentProgram();
+		studentOptionProgramClob.setStudentID(studentID);
+		studentOptionProgramClob.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		studentOptionProgramClob.setOptionalProgramCode("FI");
+		studentOptionProgramClob.setOptionalGraduated(true);
+		studentOptionProgramClob.setOptionalNonGradReasons(List.of(optionalNoGradReason));
     	
     	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
@@ -203,6 +218,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setProgramCode("2018-EN");
     	sp.setOptionalProgramCode("FI");
     	sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
     	gradOptionalResponseList.add(sp);
 
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
@@ -212,8 +228,14 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		obj.setHasOptionalProgram(true);
 		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
 		mapOptional.put("FI",obj);
-    	
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		}
+
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
