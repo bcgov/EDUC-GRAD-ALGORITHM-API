@@ -101,7 +101,11 @@ public class GradAlgorithmService {
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
 		if(algorithmDataParallelDTO != null) {
-			setCourseAssessmentDataForAlgorithm(algorithmDataParallelDTO.courseAlgorithmData(), algorithmDataParallelDTO.assessmentAlgorithmData(), ruleProcessorData, hypotheticalGradYear);
+			setCourseAssessmentDataForAlgorithm(
+					algorithmDataParallelDTO.courseAlgorithmData(),
+					algorithmDataParallelDTO.assessmentAlgorithmData(),
+					ruleProcessorData,
+					hypotheticalGradYear);
 		}
 		//Set Projected flag
 		ruleProcessorData.setProjected(projected);
@@ -110,12 +114,12 @@ public class GradAlgorithmService {
 		//Get All Letter Grades,Optional Case and AlgorithmRules
 		setAlgorithmSupportData(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram),ruleProcessorData);
         //Set Optional Program Flag
-		checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken,exception);
+		checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken, exception);
 		manageProgramRules(gradProgram,ruleProcessorData);
 
 		//Calling Rule Processor
-        ruleProcessorData = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception);
-        if(exception.getExceptionName() != null) {
+        ruleProcessorData = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken, exception);
+        if(ruleProcessorData == null || exception.getExceptionName() != null) {
 			graduationData.setException(exception);
 			return graduationData;
         }
@@ -134,9 +138,12 @@ public class GradAlgorithmService {
 			logger.error("JSON processing Error {}",e.getMessage());
 		}
 		gradStatus.setStudentGradData(null);
-		boolean checkSCCPNOPROG = existingProgramCompletionDate != null && (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
+		boolean checkSCCPNOPROG = existingProgramCompletionDate != null
+				&& (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
 		if(ruleProcessorData.isGraduated()) {
-			setGradStatusAlgorithmResponse(gradProgram,existingProgramCompletionDate,gradStatus,checkSCCPNOPROG,ruleProcessorData);
+			setGradStatusAlgorithmResponse(gradProgram,
+					existingProgramCompletionDate, gradStatus,
+					checkSCCPNOPROG,ruleProcessorData);
         }
         ruleProcessorData.setGradStatus(gradStatus);
 
@@ -147,7 +154,9 @@ public class GradAlgorithmService {
 		for (Map.Entry<String, OptionalProgramRuleProcessor> entry : mapOption.entrySet()) {
 			String optionalProgramCode = entry.getKey();
 			OptionalProgramRuleProcessor obj = entry.getValue();
-			getListOfOptionalProgramStatus(optionalProgramCode, obj, optionalProgramStatusList,ruleProcessorData, existingOptionalNonGradReasons);
+			getListOfOptionalProgramStatus(optionalProgramCode, obj,
+					optionalProgramStatusList, ruleProcessorData,
+					existingOptionalNonGradReasons);
 		}
 
         //Convert ruleProcessorData into GraduationData object
@@ -159,7 +168,7 @@ public class GradAlgorithmService {
 				.gradProgram(gradProgram)
 				.optionalNonGradReasons(existingOptionalNonGradReasons)
 				.build();
-		processGradMessages(checkSCCPNOPROG,existingDataSupport,mapOption,ruleProcessorData,graduationData);
+		processGradMessages(checkSCCPNOPROG, existingDataSupport, mapOption, ruleProcessorData, graduationData);
 
         if(exception.getExceptionName() != null) {
 			graduationData.setException(exception);
@@ -223,7 +232,6 @@ public class GradAlgorithmService {
 	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
-
 			String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(new Date());
 			gradStudentOptionalAlg.setOptionalProgramCompletionDate(result);
 		}
@@ -249,9 +257,11 @@ public class GradAlgorithmService {
 		StringBuilder strBuilder = new StringBuilder();
 		StudentGraduationAlgorithmData data = studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradMessageRequest.getGradProgram());
 		if(StringUtils.equalsIgnoreCase(gradMessageRequest.getMsgType(), MSG_TYPE_GRADUATED)) {
-			processMessageForGraduatedStudent(gradMessageRequest,strBuilder, data.getGraduatedMessage(), mapOptional,ruleProcessorData);
+			processMessageForGraduatedStudent(gradMessageRequest, strBuilder,
+					data.getGraduatedMessage(), mapOptional, ruleProcessorData);
 		} else {
-			processMessageForUnGraduatedStudent(gradMessageRequest,strBuilder, data.getNonGraduateMessage(), mapOptional,ruleProcessorData);
+			processMessageForUnGraduatedStudent(gradMessageRequest, strBuilder,
+					data.getNonGraduateMessage(), mapOptional, ruleProcessorData);
 		}
 		return strBuilder.toString();
 	}
@@ -260,19 +270,19 @@ public class GradAlgorithmService {
 		getMainMessageForNonGrad(gradMessageRequest,strBuilder,result);
 		appendPeriod(strBuilder);
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
-			createCompleteGradMessage(gradMessageRequest,strBuilder,result,mapOptional,ruleProcessorData,NON_GRADUATED);
+			createCompleteGradMessage(gradMessageRequest, strBuilder, result, mapOptional, ruleProcessorData, NON_GRADUATED);
 		}
 	}
 
 	private void processMessageForGraduatedStudent(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result, Map<String, OptionalProgramRuleProcessor> mapOptional,RuleProcessorData ruleProcessorData) {
 		if(!gradMessageRequest.getGradProgram().equalsIgnoreCase(SCCP)) {
 			if("Y".equalsIgnoreCase(gradMessageRequest.getHonours())) {
-				getHonoursMainMessage(gradMessageRequest,strBuilder,result);
+				getHonoursMainMessage(gradMessageRequest, strBuilder, result);
 			} else {
-				getMainMessage(gradMessageRequest,strBuilder,result);
+				getMainMessage(gradMessageRequest, strBuilder, result);
 			}
 			appendPeriod(strBuilder);
-			createCompleteGradMessage(gradMessageRequest,strBuilder,result,mapOptional,ruleProcessorData,GRADUATED);
+			createCompleteGradMessage(gradMessageRequest, strBuilder, result, mapOptional, ruleProcessorData, GRADUATED);
 			// graduation date & graduation school
 			if(gradMessageRequest.isPullGraduatedMessage()) {
 				strBuilder.append("\n\n");
@@ -321,7 +331,7 @@ public class GradAlgorithmService {
 	private void getMainMessage(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
 		if (gradMessageRequest.isPullGraduatedMessage()) {
 			// "has graduated"
-			strBuilder.append(String.format(result.getGradMainMessage(),gradMessageRequest.getProgramName()));
+			strBuilder.append(String.format(result.getGradMainMessage(), gradMessageRequest.getProgramName()));
 		} else {
 			// "should be able to graduate"
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
@@ -331,7 +341,7 @@ public class GradAlgorithmService {
 	private void getMainMessageForNonGrad(GradMessageRequest gradMessageRequest, StringBuilder strBuilder, TranscriptMessage result) {
 		if (!gradMessageRequest.isProjected()) {
 			// "has not yet graduated"
-			strBuilder.append(String.format(result.getGradMainMessage(),gradMessageRequest.getProgramName()));
+			strBuilder.append(String.format(result.getGradMainMessage(), gradMessageRequest.getProgramName()));
 		} else {
 			// "cannot satisfy"
 			strBuilder.append(String.format(result.getGradProjectedMessage(), gradMessageRequest.getProgramName()));
@@ -806,7 +816,8 @@ public class GradAlgorithmService {
 			String optionalProgramCode = entry.getKey();
 			OptionalProgramRuleProcessor obj = entry.getValue();
 
-			if(opMessage.equalsIgnoreCase(NON_GRADUATED) || (obj.isOptionalProgramGraduated() && opMessage.equalsIgnoreCase(GRADUATED))) {
+			if(opMessage.equalsIgnoreCase(NON_GRADUATED)
+				|| (obj.isOptionalProgramGraduated() && opMessage.equalsIgnoreCase(GRADUATED))) {
 				if (optionalProgramCode.compareTo("AD") == 0 || optionalProgramCode.compareTo("BD") == 0 || optionalProgramCode.compareTo("BC") == 0) {
 					programs.add(obj.getOptionalProgramName());
 				}
@@ -822,11 +833,10 @@ public class GradAlgorithmService {
 			}
 		}
 
-		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)) {
-			if (!gradMessageRequest.isProjected() || gradMessageRequest.isExistingOptionalProgramGraduated()) {
-				currentGradMessage.append(String.format(result.getFrenchImmersionMessage(), String.join(",", optPrograms)));
-				appendPeriod(currentGradMessage);
-			}
+		if(!optPrograms.isEmpty() && opMessage.equalsIgnoreCase(GRADUATED)
+			&& (!gradMessageRequest.isProjected() || gradMessageRequest.isExistingOptionalProgramGraduated())) {
+			currentGradMessage.append(String.format(result.getFrenchImmersionMessage(), String.join(",", optPrograms)));
+			appendPeriod(currentGradMessage);
 		}
 		if(ruleProcessorData.getGradProgram().getProgramCode().contains("-PF") && dualDogwoodGraduated && opMessage.equalsIgnoreCase(GRADUATED)) {
 			currentGradMessage.append("Student has successfully completed the Programme Francophone");
