@@ -89,7 +89,7 @@ public class GradAlgorithmService {
 			ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
 			gradStatus = gradStudentAlgorithmData.getGraduationStudentRecord();
         }
-        if(gradStudentAlgorithmData == null || exception.getExceptionName() != null) {
+        if(exception.getExceptionName() != null) {
 			graduationData.setException(exception);
 			return graduationData;
         }
@@ -119,7 +119,7 @@ public class GradAlgorithmService {
 
 		//Calling Rule Processor
         ruleProcessorData = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken, exception);
-        if(ruleProcessorData == null || exception.getExceptionName() != null) {
+        if(exception.getExceptionName() != null) {
 			graduationData.setException(exception);
 			return graduationData;
         }
