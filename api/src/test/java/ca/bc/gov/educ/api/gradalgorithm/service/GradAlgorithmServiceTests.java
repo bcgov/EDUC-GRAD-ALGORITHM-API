@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
+import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -26,6 +27,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
     @Autowired GradAlgorithmService gradAlgorithmService;
     @Autowired ExceptionMessage exception;
+	@Autowired JsonTransformer jsonTransformer;
     @MockBean GradStudentService gradStudentService;
     @MockBean GradAssessmentService gradAssessmentService;
     @MockBean GradCourseService gradCourseService;
@@ -195,6 +197,19 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm.json");
     	School school = createSchoolData("json/school.json");
+
+		GradRequirement optionalNoGradReason = new GradRequirement();
+		optionalNoGradReason.setProjected(false);
+		optionalNoGradReason.setRule("Test Rule");
+		optionalNoGradReason.setDescription("Test Rule is failed!");
+		optionalNoGradReason.setTranscriptRule("Transcript Rule");
+
+		GradAlgorithmOptionalStudentProgram studentOptionProgramClob = new GradAlgorithmOptionalStudentProgram();
+		studentOptionProgramClob.setStudentID(studentID);
+		studentOptionProgramClob.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		studentOptionProgramClob.setOptionalProgramCode("FI");
+		studentOptionProgramClob.setOptionalGraduated(true);
+		studentOptionProgramClob.setOptionalNonGradReasons(List.of(optionalNoGradReason));
     	
     	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
@@ -203,6 +218,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setProgramCode("2018-EN");
     	sp.setOptionalProgramCode("FI");
     	sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
     	gradOptionalResponseList.add(sp);
 
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
@@ -212,8 +228,14 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		obj.setHasOptionalProgram(true);
 		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
 		mapOptional.put("FI",obj);
-    	
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		}
+
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
     	ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
@@ -645,8 +667,98 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
 	    assertNotNull(gradData);
     }
-    
-    @Test
+
+	@Test
+	public void testGraduateStudent_projected_withoptionalPrograms_FI() throws Exception {
+		UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
+		String pen = "127951309";
+		String gradProgram = "2018-EN";
+		String accessToken = "accessToken";
+		RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_FI.json");
+		GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+		CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
+		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
+		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm.json");
+		School school = createSchoolData("json/school.json");
+
+		GradRequirement optionalNoGradReason = new GradRequirement();
+		optionalNoGradReason.setProjected(true);
+		optionalNoGradReason.setRule("Test Rule");
+		optionalNoGradReason.setDescription("Test Rule is failed!");
+		optionalNoGradReason.setTranscriptRule("Transcript Rule");
+
+		GradAlgorithmOptionalStudentProgram studentOptionProgramClob = new GradAlgorithmOptionalStudentProgram();
+		studentOptionProgramClob.setStudentID(studentID);
+		studentOptionProgramClob.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		studentOptionProgramClob.setOptionalProgramCode("FI");
+		studentOptionProgramClob.setOptionalGraduated(true);
+		studentOptionProgramClob.setOptionalNonGradReasons(List.of(optionalNoGradReason));
+
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		mapOptional.put("FI",obj);
+
+		ruleProcessorDatas.setProjected(true);
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		}
+
+		RuleProcessorData ruleProcessorData = new RuleProcessorData();
+		ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+		ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
+		ruleProcessorData.setSchool(school);
+		ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
+		ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
+		ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());
+		ruleProcessorData.setStudentCourses(courseAlgorithmData.getStudentCourses());
+		ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions():null);
+		ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements():null);
+		ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+		ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
+		ruleProcessorData.setMapOptional(mapOptional);
+		ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
+		ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
+		ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());
+		ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
+		ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements():null);
+		ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments():null);
+		ruleProcessorData.setProjected(true);
+		Mockito.when(gradStudentService.getGradStudentData(studentID,accessToken,exception)).thenReturn(gradStudentAlgorithmData);
+		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception)).thenReturn(ruleProcessorDatas);
+		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
+		String schoolOfRecord = ruleProcessorDatas.getGradStudent().getSchoolOfRecord();
+		Mockito.when(parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception)).thenReturn(Mono.just(parallelDTO));
+		Mockito.when(gradCourseService.prepareCourseDataForAlgorithm(parallelDTO.courseAlgorithmData())).thenReturn(parallelDTO.courseAlgorithmData());
+		Mockito.when(gradAssessmentService.prepareAssessmentDataForAlgorithm(parallelDTO.assessmentAlgorithmData())).thenReturn(parallelDTO.assessmentAlgorithmData());
+		Mockito.when(gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception)).thenReturn(gradOptionalResponseList);
+		Mockito.when(gradCourseService.prepareCourseDataForAlgorithm(parallelDTO.courseAlgorithmData())).thenReturn(parallelDTO.courseAlgorithmData());
+		Mockito.when(gradAssessmentService.prepareAssessmentDataForAlgorithm(parallelDTO.assessmentAlgorithmData())).thenReturn(parallelDTO.assessmentAlgorithmData());
+		Mockito.when(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord)).thenReturn(school);
+		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "FI")).thenReturn(programAlgorithmData);
+		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, true, null, accessToken);
+		assertNotNull(gradData);
+	}
+
+	@Test
     public void testGraduateStudent_projected_SCCP() throws Exception {
     	UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
     	String pen = "127951309";

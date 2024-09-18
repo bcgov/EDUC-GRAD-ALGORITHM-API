@@ -24,6 +24,7 @@ public class GradMessageRequest {
     boolean projected;
     boolean existingGraduated;
     boolean graduated;
+    boolean existingOptionalProgramGraduated;
 
     public static final String SCCP_GRAD_PROGRAM = "SCCP";
     /**
