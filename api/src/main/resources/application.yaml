@@ -89,9 +89,9 @@ endpoint:
     getToken: ${KEYCLOAK_TOKEN_URL}auth/realms/master/protocol/openid-connect/token
   grad-trax-api:
     school-by-min-code:
-      url: ${GRAD_TRAX_API}api/v1/trax/school/%s
+      url: ${GRAD_TRAX_API}api/v2/trax/school-clob/%s
     school-all-school:
-      url: ${GRAD_TRAX_API}api/v1/trax/school
+      url: ${GRAD_TRAX_API}api/v2/trax/school-clob
   grad-program-api:
     get-program-algorithm-data:
       url: ${GRAD_PROGRAM_API}api/v1/program/algorithmdatalist
