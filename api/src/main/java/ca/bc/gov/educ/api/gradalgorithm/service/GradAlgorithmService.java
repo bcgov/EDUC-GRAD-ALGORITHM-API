@@ -95,7 +95,7 @@ public class GradAlgorithmService {
         }
         ruleProcessorData.setGradStatus(gradStatus);
         String pen=ruleProcessorData.getGradStudent().getPen();
-		String schoolOfRecord = ruleProcessorData.getGradStudent().getSchoolOfRecord();
+		String schoolOfRecordId = ruleProcessorData.getGradStudent().getSchoolOfRecordId();
         logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
 		Mono<AlgorithmDataParallelDTO> parallelCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelCollectedData.block();
@@ -110,7 +110,7 @@ public class GradAlgorithmService {
 		//Set Projected flag
 		ruleProcessorData.setProjected(projected);
 		//Set School of Record for Student
-		ruleProcessorData.setSchool(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord));
+		ruleProcessorData.setSchool(gradSchoolService.retrieveSchoolBySchoolId(schoolOfRecordId));
 		//Get All Letter Grades,Optional Case and AlgorithmRules
 		setAlgorithmSupportData(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram),ruleProcessorData);
         //Set Optional Program Flag
@@ -627,7 +627,7 @@ public class GradAlgorithmService {
 			}
 		}
 		if(gradStatus.getSchoolAtGrad() != null) {
-			School sch = gradSchoolService.retrieveSchoolByMincode(gradStatus.getSchoolAtGrad());
+			School sch = gradSchoolService.retrieveSchoolBySchoolId(gradStatus.getSchoolAtGrad());
 			if(sch != null) {
 				gradStatus.setSchoolAtGradName(sch.getSchoolName());
 			}

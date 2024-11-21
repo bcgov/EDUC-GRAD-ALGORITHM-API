@@ -22,8 +22,8 @@ public class School {
     private String postal;
 	private String openFlag;
 	private String schoolCategoryCode;
-	private String schoolCategoryCodeInstitute;
-    
+	private String schoolCategoryLegacyCode;
+
 	public String getSchoolName() {
 		return  schoolName != null ? schoolName.trim(): null;
 	}
@@ -54,7 +54,7 @@ public class School {
 
 	@Override
 	public String toString() {
-		return "School [minCode=" + minCode + ", schoolId=" + schoolId + ", schoolCategoryCode=" + schoolCategoryCode + ", schoolCategoryCodeInstitute=" + schoolCategoryCodeInstitute
+		return "School [minCode=" + minCode + ", schoolId=" + schoolId + ", schoolCategoryCode=" + schoolCategoryCode + ", schoolCategoryLegacyCode=" + schoolCategoryLegacyCode
 				+ ", schoolName=" + schoolName + ", districtName=" + districtName + ", transcriptEligibility=" + transcriptEligibility + ", certificateEligibility=" + certificateEligibility
 				+ ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", provCode=" + provCode + ", countryCode=" + countryCode + ", postal=" + postal + ", openFlag=" + openFlag
 				+ "]";
