@@ -121,7 +121,7 @@ objects:
     metadata:
       labels:
         app: "${REPO_NAME}"
-      name: "${REPO_NAME}-service"
+      name: "${REPO_NAME}"
     spec:
       ports:
         - name: ${CONTAINER_PORT}-tcp
