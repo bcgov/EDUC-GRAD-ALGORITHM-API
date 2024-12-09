@@ -140,6 +140,7 @@ objects:
         name: "${REPO_NAME}"
       minReplicas: ${{MIN_REPLICAS}}
       maxReplicas: ${{MAX_REPLICAS}}
+      subresource: scale
       metrics:
         - type: Resource
           resource:
