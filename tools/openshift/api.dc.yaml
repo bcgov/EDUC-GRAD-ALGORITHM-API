@@ -21,8 +21,8 @@ objects:
           app: "${REPO_NAME}"
       strategy:
         rollingUpdate:
-          maxUnavailable: 1
-          maxSurge: 33%
+          maxUnavailable: 25%
+          maxSurge: 25%
       template:
         metadata:
           labels:
