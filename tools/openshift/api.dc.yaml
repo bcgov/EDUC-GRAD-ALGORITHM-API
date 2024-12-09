@@ -15,14 +15,14 @@ objects:
         app.openshift.io/runtime: spring-boot
       name: "${REPO_NAME}"
     spec:
-      replicas: 1
+      replicas: ${{MIN_REPLICAS}}
       selector:
         matchLabels:
           app: "${REPO_NAME}"
       strategy:
         rollingUpdate:
           maxUnavailable: 1
-          maxSurge: 25%
+          maxSurge: 33%
       template:
         metadata:
           labels:
