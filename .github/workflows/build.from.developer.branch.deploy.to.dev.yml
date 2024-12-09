@@ -17,7 +17,7 @@ env:
   IMAGE_REGISTRY_USER: ${{ github.actor }}
   IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
 
-  SPRING_BOOT_IMAGE_NAME: educ-grad-algorithm-api-dc
+  SPRING_BOOT_IMAGE_NAME: educ-grad-algorithm-api
 
   REPO_NAME: "educ-grad-algorithm-api"
   APP_DOMAIN: ${{ vars.APP_DOMAIN }}
