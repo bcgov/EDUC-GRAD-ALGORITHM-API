@@ -626,16 +626,18 @@ public class GradAlgorithmService {
 				gradStatus.setHonoursStanding(honoursValue);
 			}
 		}
-		if(gradStatus.getSchoolAtGrad() != null) {
-			School sch = gradSchoolService.retrieveSchoolBySchoolId(gradStatus.getSchoolAtGrad());
+		if(gradStatus.getSchoolAtGradId() != null) {
+			School sch = gradSchoolService.retrieveSchoolBySchoolId(gradStatus.getSchoolAtGradId().toString());
 			if(sch != null) {
 				gradStatus.setSchoolAtGradName(sch.getSchoolName());
 			}
 		}
 
 		//This is done for Reports only grad run -Student already graduated no change in graduation date
-		if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGrad() == null) {
+		if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGradId() == null) {
 			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+			gradStatus.setSchoolAtGradId(ruleProcessorData.getGradStudent().getSchoolOfRecordId() != null?
+					UUID.fromString(ruleProcessorData.getGradStudent().getSchoolOfRecordId()) : null);
 			gradStatus.setSchoolAtGradName(ruleProcessorData.getSchool().getSchoolName());
 		}
 
