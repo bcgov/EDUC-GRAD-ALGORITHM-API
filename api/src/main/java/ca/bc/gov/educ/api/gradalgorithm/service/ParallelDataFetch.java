@@ -5,21 +5,20 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
+@AllArgsConstructor
 public class ParallelDataFetch {
     private static final Logger logger = LoggerFactory.getLogger(ParallelDataFetch.class);
 
-    @Autowired
-    GradCourseService gradCourseService;
+    private GradCourseService gradCourseService;
 
-    @Autowired
-    GradAssessmentService gradAssessmentService;
+    private GradAssessmentService gradAssessmentService;
 
 
     @Retry(name = "generalgetcall")

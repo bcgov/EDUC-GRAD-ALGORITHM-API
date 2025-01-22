@@ -59,12 +59,12 @@ public class GradGraduationStatusServiceTests {
 
     @BeforeClass
     public static void setup() {
-
+        //Placeholder method
     }
 
     @After
     public void tearDown() {
-
+        //Placeholder method
     }
 
     @Before
@@ -125,11 +125,6 @@ public class GradGraduationStatusServiceTests {
         LOG.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         UUID studentID = UUID.randomUUID();
         String accessToken = "accessToken";
-
-        List<StudentOptionalProgram> entity = new ArrayList<>();
-
-        ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
-        };
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID))).thenReturn(this.requestHeadersMock);
