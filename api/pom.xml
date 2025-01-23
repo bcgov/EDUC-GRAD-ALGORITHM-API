@@ -38,7 +38,8 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<resilience4j.version>2.3.0</resilience4j.version>
 		<maven.test.skip>false</maven.test.skip>
-		<log4j.version>2.20.0</log4j.version>
+		<log4j.version>2.24.3</log4j.version>
+		<jackson.version>2.18.2</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -71,27 +72,27 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>2.18.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.18.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.18.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.18.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc11</artifactId>
-			<version>21.3.0.0</version>
+			<version>23.6.0.24.10</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -245,7 +246,7 @@
 					<plugin>
 						<groupId>org.hibernate.orm.tooling</groupId>
 						<artifactId>hibernate-enhance-maven-plugin</artifactId>
-						<version>6.6.4.Final</version>
+						<version>6.6.5.Final</version>
 						<executions>
 							<execution>
 								<configuration>
