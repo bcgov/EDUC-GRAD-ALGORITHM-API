@@ -61,12 +61,12 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
 
     @BeforeClass
     public static void setup() {
-
+        //Placeholder method
     }
 
     @After
     public void tearDown() {
-
+        //Placeholder method
     }
 
     @Before
@@ -121,7 +121,7 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
     @Test
     public void testgetGradStudentData_withexception() throws Exception {
     	
-    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+    	createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	
     	String studentID = new UUID(1, 1).toString();
     	String accessToken = "accessToken";
