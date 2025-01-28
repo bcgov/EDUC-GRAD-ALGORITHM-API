@@ -643,6 +643,8 @@ public class GradAlgorithmService {
 
 		if(checkSCCPNOPROG) {
 			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+			gradStatus.setSchoolAtGradId(
+					UUID.fromString(ruleProcessorData.getGradStudent().getSchoolOfRecordId()));
 		}
 	}
 
