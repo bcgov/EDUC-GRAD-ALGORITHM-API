@@ -641,10 +641,10 @@ public class GradAlgorithmService {
 			gradStatus.setSchoolAtGradName(ruleProcessorData.getSchool().getSchoolName());
 		}
 
-		if(checkSCCPNOPROG) {
-			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
-			gradStatus.setSchoolAtGradId(
-					UUID.fromString(ruleProcessorData.getGradStudent().getSchoolOfRecordId()));
+		if(checkSCCPNOPROG && gradStatus.getSchoolAtGradId() == null) {
+				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+				gradStatus.setSchoolAtGradId(
+						UUID.fromString(ruleProcessorData.getGradStudent().getSchoolOfRecordId()));
 		}
 	}
 
