@@ -119,11 +119,11 @@ class APIMetadataController {
                                 .toUpperCase(),
                         getApiPath(attributes.getStringArray("value")),
                         ofNullable(AnnotationUtils.findAnnotation(method, PreAuthorize.class))
-                                .map(p -> p.value().replace("hasAuthority\\('", "")
-                                            .replace("'\\) and", "")
-                                            .replace("'\\)", "")
+                                .map(p -> p.value().replace("hasAuthority('", "")
+                                            .replace("') and", "")
+                                            .replace("')", "")
                                             .replace("SCOPE_", "")
-                                )
+                                    )
                                 .orElse(""),
                         method.getName()
                 ));
