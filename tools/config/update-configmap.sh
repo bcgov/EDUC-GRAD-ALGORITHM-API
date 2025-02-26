@@ -60,7 +60,7 @@ oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map 
   --from-literal=GRAD_ASSESSMENT_API="http://educ-grad-assessment-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=GRAD_PROGRAM_API="http://educ-grad-program-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=MAX_RETRY_ATTEMPTS="3" \
-  --from-literal=GRAD_RULE_PROCESSOR_API="http://educ-rule-engine-api.$BUSINESS_NAMESPACE-$envValue.svc.cluster.local:8080" \
+  --from-literal=GRAD_RULE_PROCESSOR_API="http://educ-rule-engine-api.$BUSINESS_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=KEYCLOAK_TOKEN_URL="https://soam-$envValue.apps.silver.devops.gov.bc.ca/" \
   --from-literal=GRAD_STUDENT_GRADUATION_API="http://educ-grad-student-graduation-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --dry-run=client -o yaml | oc apply -f -
