@@ -48,9 +48,7 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
 
-    @Value("${endpoint.rule-engine-api.base-url}")
-    private String ruleEngineBaseUrl;
-    @Value("${endpoint.rule-engine-api.endpoints.run-grad-algorithm-rules}")
+    @Value("${endpoint.rule-engine-api.run-grad-algorithm-rules.url}")
     private String ruleEngineRunGradAlgorithmRulesUrl;
 
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
@@ -84,7 +82,7 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
         RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
 
         when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
-        when(this.requestBodyUriMock.uri(ruleEngineBaseUrl + "/" + ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
+        when(this.requestBodyUriMock.uri(ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);
@@ -104,7 +102,7 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
         RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
         
     	when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
-        when(this.requestBodyUriMock.uri(ruleEngineBaseUrl + "/" + ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
+        when(this.requestBodyUriMock.uri(ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);

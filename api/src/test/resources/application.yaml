@@ -104,13 +104,8 @@ endpoint:
       get-optional-programs:
         url: https://gradstudent-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/student/optionalprogram/studentid/%s
   rule-engine-api:
-    base-domain: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca
-    api-keyword: api
-    version: v1
-    root: rule-engine
-    base-url: ${endpoint.rule-engine-api.base-domain}/${endpoint.rule-engine-api.api-keyword}/${endpoint.rule-engine-api.version}/${endpoint.rule-engine-api.root}
-    endpoints:
-      run-grad-algorithm-rules: run-grad-algorithm-rules
+    run-grad-algorithm-rules:
+      url: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca/run-grad-algorithm-rules
 
 #Splunk LogHelper
 splunk:
