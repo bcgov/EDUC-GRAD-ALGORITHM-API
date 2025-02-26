@@ -22,7 +22,7 @@
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/exception/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/dto/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**,
-			src/main/java/ca/bc/gov/educ/api/gradalgorithm/service/caching/**
+			src/main/java/ca/bc/gov/educ/api/gradalgorithm/service/caching/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/controller/APIMetadataController.java
 
 		</sonar.exclusions>
