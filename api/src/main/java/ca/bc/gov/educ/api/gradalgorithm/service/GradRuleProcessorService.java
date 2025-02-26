@@ -28,7 +28,7 @@ public class GradRuleProcessorService extends GradService {
         {
         	start();
 	        RuleProcessorData result = webClient.post()
-	                .uri(constants.getRuleEngineBaseURL() + "/" + constants.getRunRules())
+	                .uri(constants.getRunRules())
 	                .headers(h -> {
 										h.setBearerAuth(accessToken);
 										h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());

@@ -40,10 +40,7 @@ public class GradAlgorithmAPIConstants {
     public static final String RULE_TYPE_ACTIVE_FLAG_N = "N";
 
     
-    @Value("${endpoint.rule-engine-api.base-url}")
-    private String ruleEngineBaseURL;
-    
-    @Value("${endpoint.rule-engine-api.endpoints.run-grad-algorithm-rules}")
+    @Value("${endpoint.rule-engine-api.run-grad-algorithm-rules.url}")
     private String runRules;
     
     @Value("${endpoint.grad-trax-api.school-all-school.url}")
