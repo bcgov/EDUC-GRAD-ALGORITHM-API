@@ -13,12 +13,14 @@
 		"honoursStanding": null,
 		"recalculateGradStatus": null,
 		"schoolOfRecord": "00599119",
+		"schoolOfRecordId": "b69bc244-b93b-2a9f-d2b1-3d8ffae92866",
 		"schoolName": null,
 		"studentGrade": "12",
 		"studentStatus": "A",
 		"studentStatusName": null,
 		"studentID": "ac339d70-7649-1a2e-8176-4a336de91d4f",
 		"schoolAtGrad": "00599119",
+		"schoolAtGradId": "b69bc244-b93b-2a9f-d2b1-3d8ffae92866",
 		"schoolAtGradName": null
 	},
 	"gradStudent": {
@@ -47,6 +49,7 @@
 		"trueStudentID": null,
 		"program": "2018-EN",
 		"schoolOfRecord": "00599119",
+		"schoolOfRecordId": "b69bc244-b93b-2a9f-d2b1-3d8ffae92866",
 		"schoolOfRecordName": "PORT MOODY SECONDARY",
 		"schoolOfRecordindependentAffiliation": "",
 		"studentGrade": "12",

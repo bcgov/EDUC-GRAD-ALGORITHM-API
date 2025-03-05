@@ -26,17 +26,14 @@ import java.util.stream.Collectors;
 public class GradSchoolService extends GradService {
 
 	private static final Logger logger = LoggerFactory.getLogger(GradSchoolService.class);
-	private final ReadWriteLock minCodeSchoolMapLock = new ReentrantReadWriteLock();
-	private Map<String, School> mincodeSchoolEntityMap;
+	private final ReadWriteLock schoolClobMapLock = new ReentrantReadWriteLock();
+	private Map<String, School> schoolClobMap;
 
 	/**
-	 * Search for SchoolEntity by Mincode
-	 *
-	 * @param mincode the unique mincode for a given school.
-	 * @return the School entity if found.
+	 * Search for SchoolEntity by SchoolId
 	 */
-	public School retrieveSchoolByMincode(String mincode) {
-		Optional<School> result = Optional.ofNullable(this.mincodeSchoolEntityMap.get(mincode));
+	public School retrieveSchoolBySchoolId(String schoolId) {
+		Optional<School> result = Optional.ofNullable(this.schoolClobMap.get(schoolId));
 		return result.orElse(null);
 	}
 
@@ -51,7 +48,7 @@ public class GradSchoolService extends GradService {
 	}
 
 	private void setSchoolData(String accessToken) {
-		val writeLock = minCodeSchoolMapLock.writeLock();
+		val writeLock = schoolClobMapLock.writeLock();
 		try {
 			writeLock.lock();
 			List<School> schoolList = webClient.get()
@@ -63,7 +60,7 @@ public class GradSchoolService extends GradService {
 					.retrieve()
 					.bodyToMono(new ParameterizedTypeReference<List<School>>(){}).block();
 			if(schoolList != null)
-				this.mincodeSchoolEntityMap = schoolList.stream().collect(Collectors.toConcurrentMap(School::getMinCode, Function.identity()));
+				this.schoolClobMap = schoolList.stream().collect(Collectors.toConcurrentMap(School::getSchoolId, Function.identity()));
 		} finally {
 			writeLock.unlock();
 		}

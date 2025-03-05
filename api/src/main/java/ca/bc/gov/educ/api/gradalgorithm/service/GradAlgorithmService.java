@@ -95,7 +95,7 @@ public class GradAlgorithmService {
         }
         ruleProcessorData.setGradStatus(gradStatus);
         String pen=ruleProcessorData.getGradStudent().getPen();
-		String schoolOfRecord = ruleProcessorData.getGradStudent().getSchoolOfRecord();
+		String schoolOfRecordId = ruleProcessorData.getGradStudent().getSchoolOfRecordId();
         logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
 		Mono<AlgorithmDataParallelDTO> parallelCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelCollectedData.block();
@@ -110,7 +110,7 @@ public class GradAlgorithmService {
 		//Set Projected flag
 		ruleProcessorData.setProjected(projected);
 		//Set School of Record for Student
-		ruleProcessorData.setSchool(gradSchoolService.retrieveSchoolByMincode(schoolOfRecord));
+		ruleProcessorData.setSchool(gradSchoolService.retrieveSchoolBySchoolId(schoolOfRecordId));
 		//Get All Letter Grades,Optional Case and AlgorithmRules
 		setAlgorithmSupportData(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram),ruleProcessorData);
         //Set Optional Program Flag
@@ -626,21 +626,25 @@ public class GradAlgorithmService {
 				gradStatus.setHonoursStanding(honoursValue);
 			}
 		}
-		if(gradStatus.getSchoolAtGrad() != null) {
-			School sch = gradSchoolService.retrieveSchoolByMincode(gradStatus.getSchoolAtGrad());
+		if(gradStatus.getSchoolAtGradId() != null) {
+			School sch = gradSchoolService.retrieveSchoolBySchoolId(gradStatus.getSchoolAtGradId().toString());
 			if(sch != null) {
 				gradStatus.setSchoolAtGradName(sch.getSchoolName());
 			}
 		}
 
 		//This is done for Reports only grad run -Student already graduated no change in graduation date
-		if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGrad() == null) {
+		if((existingProgramCompletionDate == null || ruleProcessorData.isProjected()) && gradStatus.getSchoolAtGradId() == null) {
 			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+			gradStatus.setSchoolAtGradId(ruleProcessorData.getGradStudent().getSchoolOfRecordId() != null?
+					UUID.fromString(ruleProcessorData.getGradStudent().getSchoolOfRecordId()) : null);
 			gradStatus.setSchoolAtGradName(ruleProcessorData.getSchool().getSchoolName());
 		}
 
-		if(checkSCCPNOPROG) {
-			gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+		if(checkSCCPNOPROG && gradStatus.getSchoolAtGradId() == null) {
+				gradStatus.setSchoolAtGrad(ruleProcessorData.getGradStudent().getSchoolOfRecord());
+				gradStatus.setSchoolAtGradId(
+						UUID.fromString(ruleProcessorData.getGradStudent().getSchoolOfRecordId()));
 		}
 	}
 

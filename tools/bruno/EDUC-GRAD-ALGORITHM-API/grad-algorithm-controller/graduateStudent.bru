@@ -1,0 +1,20 @@
+meta {
+  name: graduateStudent
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/graduatestudent
+  body: none
+  auth: none
+}
+
+params:query {
+  studentID: 
+  gradProgram: 
+  ~projected: 
+  ~hypotheticalGradYear: 
+}
+
+

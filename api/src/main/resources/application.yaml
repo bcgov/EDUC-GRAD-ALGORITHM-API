@@ -88,10 +88,10 @@ endpoint:
   keycloak:
     getToken: ${KEYCLOAK_TOKEN_URL}auth/realms/master/protocol/openid-connect/token
   grad-trax-api:
-    school-by-min-code:
-      url: ${GRAD_TRAX_API}api/v1/trax/school/%s
+    school-clob-by-school-id:
+      url: ${GRAD_TRAX_API}api/v2/trax/school-clob/%s
     school-all-school:
-      url: ${GRAD_TRAX_API}api/v1/trax/school
+      url: ${GRAD_TRAX_API}api/v2/trax/school-clob
   grad-program-api:
     get-program-algorithm-data:
       url: ${GRAD_PROGRAM_API}api/v1/program/algorithmdatalist
@@ -121,13 +121,8 @@ endpoint:
       get-optional-programs:
         url: ${GRAD_STUDENT_API}api/v1/student/optionalprogram/studentid/%s
   rule-engine-api:
-    base-domain: ${GRAD_RULE_PROCESSOR_API}
-    api-keyword: api
-    version: v1
-    root: rule-engine
-    base-url: ${endpoint.rule-engine-api.base-domain}/${endpoint.rule-engine-api.api-keyword}/${endpoint.rule-engine-api.version}/${endpoint.rule-engine-api.root}
-    endpoints:
-      run-grad-algorithm-rules: run-grad-algorithm-rules
+    run-grad-algorithm-rules:
+      url: ${GRAD_RULE_PROCESSOR_API}api/v1/rule-engine/run-grad-algorithm-rules
 
 #Splunk LogHelper
 splunk:
