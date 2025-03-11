@@ -29,10 +29,7 @@ public class GradRuleProcessorService extends GradService {
         	start();
 	        RuleProcessorData result = webClient.post()
 	                .uri(constants.getRunRules())
-	                .headers(h -> {
-										h.setBearerAuth(accessToken);
-										h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-									})
+	                .headers(h -> h.setBearerAuth(accessToken))
 	                .body(BodyInserters.fromValue(ruleProcessorData))
 	                .retrieve()
 	                .bodyToMono(RuleProcessorData.class)

@@ -22,10 +22,7 @@ public class GradStudentService extends GradService {
         start();
         GradSearchStudent result = webClient.get()
                 .uri(String.format(constants.getStudentDemographics(), studentID))
-                .headers(h -> {
-									h.setBearerAuth(accessToken);
-									h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-								})
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GradSearchStudent.class)
                 .block();
