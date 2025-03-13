@@ -56,10 +56,7 @@ public class StudentGraduationService extends GradService {
 			writeLock.lock();
 			List<StudentGraduationAlgorithmData> data = webClient.get()
 					.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata")
-					.headers(h -> {
-						h.setBearerAuth(accessToken);
-						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-					})
+					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 					.bodyToMono(new ParameterizedTypeReference<List<StudentGraduationAlgorithmData>>(){}).block();
 

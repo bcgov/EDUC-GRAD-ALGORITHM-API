@@ -53,10 +53,7 @@ public class GradSchoolService extends GradService {
 			writeLock.lock();
 			List<School> schoolList = webClient.get()
 					.uri(constants.getAllSchools())
-					.headers(h -> {
-						h.setBearerAuth(accessToken);
-						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-					})
+					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 					.bodyToMono(new ParameterizedTypeReference<List<School>>(){}).block();
 			if(schoolList != null)
