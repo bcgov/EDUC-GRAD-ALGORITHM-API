@@ -31,10 +31,7 @@ public class GradGraduationStatusService extends GradService {
     	start();
         GradAlgorithmGraduationStudentRecord result = webClient.get()
                 .uri(String.format(constants.getGraduationStudentRecord(),studentID))
-                .headers(h -> {
-									h.setBearerAuth(accessToken);
-									h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-								})
+                .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(GradAlgorithmGraduationStudentRecord.class)
                 .block();
@@ -54,10 +51,7 @@ public class GradGraduationStatusService extends GradService {
 	        start();
 	        List<StudentOptionalProgram> result = webClient.get()
 	                .uri(String.format(constants.getStudentOptionalPrograms(), studentID))
-	                .headers(h -> {
-										h.setBearerAuth(accessToken);
-										h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-									})
+	                .headers(h -> h.setBearerAuth(accessToken))
 	                .retrieve()
 	                .bodyToMono(new ParameterizedTypeReference<List<StudentOptionalProgram>>(){})
 	                .block();

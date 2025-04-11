@@ -30,10 +30,7 @@ public class GradAssessmentService extends GradService {
 			start();
 			Mono<AssessmentAlgorithmData> result = webClient.get()
 					.uri(String.format(constants.getAssessmentData(),pen))
-					.headers(h -> {
-						h.setBearerAuth(accessToken);
-						h.set(GradAlgorithmAPIConstants.CORRELATION_ID, ThreadLocalStateUtil.getCorrelationID());
-					})
+					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 					.bodyToMono(AssessmentAlgorithmData.class);
 			end();
