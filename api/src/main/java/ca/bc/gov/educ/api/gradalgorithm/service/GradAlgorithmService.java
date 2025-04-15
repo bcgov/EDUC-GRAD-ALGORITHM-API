@@ -232,8 +232,7 @@ public class GradAlgorithmService {
 	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
-			String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(new Date());
-			gradStudentOptionalAlg.setOptionalProgramCompletionDate(result);
+			gradStudentOptionalAlg.setOptionalProgramCompletionDate(getLastSessionDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
 		}
 	}
 
