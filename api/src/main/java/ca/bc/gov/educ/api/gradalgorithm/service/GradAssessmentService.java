@@ -2,9 +2,9 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -15,12 +15,13 @@ import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import reactor.core.publisher.Mono;
 
 @Service
+@AllArgsConstructor
 public class GradAssessmentService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradAssessmentService.class);
     
-    @Autowired WebClient webClient;
-    @Autowired GradAlgorithmAPIConstants constants;
+    private WebClient webClient;
+	private GradAlgorithmAPIConstants constants;
 
 	@Retry(name = "generalgetcall")
 	Mono<AssessmentAlgorithmData> getAssessmentDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
