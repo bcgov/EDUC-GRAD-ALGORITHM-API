@@ -1,0 +1,23 @@
+{
+  "optionalStudentCourses": {
+    "studentCourseList": [
+      {
+        "courseCode": "MATH101",
+        "courseLevel": "12",
+        "sessionDate": "2022/06",
+        "gradReqMet": "Y",
+        "gradReqMetDetail": "Satisfied"
+      }
+    ]
+  },
+  "optionalStudentAssessments": {
+    "studentAssessmentList": [
+      {
+        "assessmentCode": "ENG12",
+        "sessionDate": "2022/05",
+        "gradReqMet": "Y",
+        "gradReqMetDetail": "Passed"
+      }
+    ]
+  }
+}

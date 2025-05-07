@@ -54,7 +54,33 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
-    	School school = createSchoolData("json/school.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
+		School school = createSchoolData("json/school.json");
+
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
 
 		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
@@ -101,7 +127,32 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
 		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
 		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_1950.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
 		School school = createSchoolData("json/school.json");
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
 
 		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
@@ -148,7 +199,33 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
 		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
 		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_1950.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
 		School school = createSchoolData("json/school.json");
+
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
 
 		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
@@ -196,7 +273,8 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm.json");
-    	School school = createSchoolData("json/school.json");
+    	String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
+		School school = createSchoolData("json/school.json");
 
 		GradRequirement optionalNoGradReason = new GradRequirement();
 		optionalNoGradReason.setProjected(false);
@@ -218,7 +296,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setProgramCode("2018-EN");
     	sp.setOptionalProgramCode("FI");
     	sp.setOptionalProgramName("French Immersion");
-		sp.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
     	gradOptionalResponseList.add(sp);
 
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
@@ -228,12 +306,12 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		obj.setHasOptionalProgram(true);
 		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
-		obj.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
 		mapOptional.put("FI",obj);
 
 		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
 		if (opRuleProcessor != null) {
-			opRuleProcessor.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
 		}
 
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
@@ -487,7 +565,8 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm_cp.json");
-    	School school = createSchoolData("json/school.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
+		School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
@@ -496,6 +575,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setProgramCode("2018-EN");
     	sp.setOptionalProgramCode("CP");
     	sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
     	gradOptionalResponseList.add(sp);
 
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
@@ -505,7 +585,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		obj.setOptionalProgramID(UUID.fromString("c732d2c0-b97c-3487-e053-98e9228e24f2"));
 		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
 		mapOptional.put("CP",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("CP");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
@@ -554,7 +640,8 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm_dd.json");
     	GradAlgorithmGraduationStudentRecord gradAlgorithmGraduationStatus = createGradStatusData("json/gradstatus_PF.json");
-    	School school = createSchoolData("json/school.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
+		School school = createSchoolData("json/school.json");
     	
     	List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
     	StudentOptionalProgram sp = new StudentOptionalProgram();
@@ -563,6 +650,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	sp.setProgramCode("2018-PF");
     	sp.setOptionalProgramCode("DD");
     	sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
     	gradOptionalResponseList.add(sp);
 
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
@@ -572,7 +660,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
 		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
 		mapOptional.put("DD",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("DD");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
     	
     	RuleProcessorData ruleProcessorData = new RuleProcessorData();
     	ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
@@ -623,7 +717,32 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
     	School school = createSchoolData("json/school.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
 		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
 		TranscriptMessage msg = new TranscriptMessage();
         msg.setAdIBProgramMessage("dsada");
@@ -680,6 +799,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
 		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
 		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program_optional_pgm.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
 		School school = createSchoolData("json/school.json");
 
 		GradRequirement optionalNoGradReason = new GradRequirement();
@@ -702,7 +822,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		sp.setProgramCode("2018-EN");
 		sp.setOptionalProgramCode("FI");
 		sp.setOptionalProgramName("French Immersion");
-		sp.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
 		gradOptionalResponseList.add(sp);
 
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
@@ -712,13 +832,13 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		obj.setHasOptionalProgram(true);
 		obj.setOptionalProgramName("French Immersion");
 		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
-		obj.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
 		mapOptional.put("FI",obj);
 
 		ruleProcessorDatas.setProjected(true);
 		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
 		if (opRuleProcessor != null) {
-			opRuleProcessor.setStudentOptionalProgramData(jsonTransformer.marshall(studentOptionProgramClob));
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
 		}
 
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
@@ -771,7 +891,33 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
     	AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
     	StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
     	GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
     	School school = createSchoolData("json/school.json");
+
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
     	
     	TranscriptMessage msg = new TranscriptMessage();
         msg.setAdIBProgramMessage("dsada");
@@ -832,7 +978,33 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
 		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
 		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
 		School school = createSchoolData("json/school.json");
+
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
 		gradStudentAlgorithmData.getGraduationStudentRecord().setProgramCompletionDate("2900/09"); // future date: 2900 Sept.
 
@@ -894,8 +1066,33 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
 		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
 		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+		String studentOptionalProgramData = createStudentOptionalProgramData("json/studentOptionalProgramData.json");
 		School school = createSchoolData("json/school.json");
 
+		List<StudentOptionalProgram> gradOptionalResponseList = new ArrayList<>();
+		StudentOptionalProgram sp = new StudentOptionalProgram();
+		sp.setId(new UUID(1, 1));
+		sp.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		sp.setProgramCode("2018-EN");
+		sp.setOptionalProgramCode("FI");
+		sp.setOptionalProgramName("French Immersion");
+		sp.setStudentOptionalProgramData(studentOptionalProgramData);
+		gradOptionalResponseList.add(sp);
+
+		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
+		OptionalProgramRuleProcessor obj = new OptionalProgramRuleProcessor();
+		obj.setOptionalProgramGraduated(true);
+		obj.setOptionalProgramID(UUID.fromString("c71ba15e-1cb8-ccce-e053-98e9228e1b71"));
+		obj.setHasOptionalProgram(true);
+		obj.setOptionalProgramName("French Immersion");
+		obj.setOptionalProgramRules(programAlgorithmData.getOptionalProgramRules());
+		obj.setStudentOptionalProgramData(studentOptionalProgramData);
+		mapOptional.put("FI",obj);
+
+		OptionalProgramRuleProcessor opRuleProcessor = ruleProcessorDatas.getMapOptional().get("FI");
+		if (opRuleProcessor != null) {
+			opRuleProcessor.setStudentOptionalProgramData(studentOptionalProgramData);
+		}
 
 		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData,assessmentAlgorithmData);
 

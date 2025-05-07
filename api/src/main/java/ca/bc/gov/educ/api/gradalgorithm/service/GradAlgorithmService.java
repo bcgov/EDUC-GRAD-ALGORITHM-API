@@ -217,8 +217,8 @@ public class GradAlgorithmService {
     }
 
     private void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
-        List<StudentCourse> coursesPassed = new ArrayList<>();
-        List<StudentAssessment> assessmentsPassed = new ArrayList<>();
+        List<StudentCourse> coursesPassed = null;
+        List<StudentAssessment> assessmentsPassed = null;
 
         if (ruleProcessorData.getMapOptional() == null || ruleProcessorData.getMapOptional().isEmpty()) {
             return;
@@ -232,32 +232,38 @@ public class GradAlgorithmService {
                 if (studentOptionalProgramsAttempted.isHasOptionalProgram() && studentOptionalProgramsAttempted.isOptionalProgramGraduated()) {
 
                     String studentOptionalProgramData = studentOptionalProgramsAttempted.getStudentOptionalProgramData();
-                    if (studentOptionalProgramData == null || studentOptionalProgramData.trim().isEmpty()) continue;
+                    if (studentOptionalProgramData != null || !studentOptionalProgramData.trim().isEmpty()) {
 
-                    // Extract and filter valid courses
-                    coursesPassed = APIUtils.getStreamFromJsonArrayField(studentOptionalProgramData, "optionalStudentCourses", "studentCourseList").filter(this::hasValidGradRequirement).map(cp -> {
-                        StudentCourse course = new StudentCourse();
-                        course.setCourseCode(cp.path("courseCode").asText(null));
-                        course.setSessionDate(cp.path("sessionDate").asText(null));
-                        return course;
-                    }).collect(Collectors.toList());
+                        // Extract and filter valid courses
+                        coursesPassed = APIUtils.getStreamFromJsonArrayField(studentOptionalProgramData, "optionalStudentCourses", "studentCourseList")
+                                .filter(this::hasValidGradRequirement)
+                                .map(cp -> {
+                            StudentCourse course = new StudentCourse();
+                            course.setCourseCode(cp.path("courseCode").asText(null));
+                            course.setSessionDate(cp.path("sessionDate").asText(null));
+                            return course;
+                        }).toList();
 
-                    // Extract and filter valid assessments
-                    assessmentsPassed = APIUtils.getStreamFromJsonArrayField(studentOptionalProgramData, "optionalStudentAssessments", "studentAssessmentList").filter(this::hasValidGradRequirement).map(ap -> {
-                        StudentAssessment assessment = new StudentAssessment();
-                        assessment.setAssessmentCode(ap.path("assessmentCode").asText(null));
-                        assessment.setSessionDate(ap.path("sessionDate").asText(null));
-                        return assessment;
-                    }).collect(Collectors.toList());
-				}
+                        // Extract and filter valid assessments
+                        assessmentsPassed = APIUtils.getStreamFromJsonArrayField(studentOptionalProgramData, "optionalStudentAssessments", "studentAssessmentList")
+                                .filter(this::hasValidGradRequirement)
+                                .map(ap -> {
+                            StudentAssessment assessment = new StudentAssessment();
+                            assessment.setAssessmentCode(ap.path("assessmentCode").asText(null));
+                            assessment.setSessionDate(ap.path("sessionDate").asText(null));
+                            return assessment;
+                        }).toList();
+                    }
+                }
                 gradStudentOptionalAlg.setOptionalProgramCompletionDate(getLastSessionDate(coursesPassed != null ? coursesPassed : new ArrayList<>(), assessmentsPassed != null ? assessmentsPassed : new ArrayList<>()));
             }
 
         }
     }
 
-    private boolean hasValidGradRequirement(JsonNode node) {
-        return node.hasNonNull("gradReqMet") && !node.get("gradReqMet").asText().trim().isEmpty() && node.hasNonNull("gradReqMetDetail") && !node.get("gradReqMetDetail").asText().trim().isEmpty();
+    private boolean hasValidGradRequirement(JsonNode studentOptionalPrgmsCoursesNAssessments) {
+        return studentOptionalPrgmsCoursesNAssessments.hasNonNull("gradReqMet") && !studentOptionalPrgmsCoursesNAssessments.get("gradReqMet").asText().trim().isEmpty()
+                && studentOptionalPrgmsCoursesNAssessments.hasNonNull("gradReqMetDetail") && !studentOptionalPrgmsCoursesNAssessments.get("gradReqMetDetail").asText().trim().isEmpty();
     }
 
     private void checkForOptionalProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken, ExceptionMessage exception) {
