@@ -67,6 +67,12 @@ public class EducGradAlgorithmTestBase {
 		String json = readInputStream(inputStream);
 		return (GradProgramAlgorithmData)jsonTransformer.unmarshall(json, GradProgramAlgorithmData.class);
 	}
+
+	protected String createStudentOptionalProgramData(String jsonPath) throws Exception {
+		ClassLoader classLoader = getClass().getClassLoader();
+		InputStream inputStream = classLoader.getResourceAsStream(jsonPath);
+		return readInputStream(inputStream);
+	}
 	
 	protected StudentGraduationAlgorithmData createStudentGraduationAlgorithmData(String jsonPath) throws Exception {
 		ClassLoader classLoader = getClass().getClassLoader();
