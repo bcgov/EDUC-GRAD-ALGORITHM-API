@@ -232,13 +232,8 @@ public class GradAlgorithmService {
 	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
 
 		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
-            List<StudentCourse> studentCourses = gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList().stream()
-					.filter(StudentCourse::isUsed)
-					.toList();
-            List<StudentAssessment> studentAssessments = gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList().stream()
-					.filter(StudentAssessment::isUsed)
-					.toList();
-            gradStudentOptionalAlg.setOptionalProgramCompletionDate(getLastSessionDate(studentCourses, studentAssessments));
+			String result = new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(new Date());
+            gradStudentOptionalAlg.setOptionalProgramCompletionDate(result);
 		}
 	}
 
