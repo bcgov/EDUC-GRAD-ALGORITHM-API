@@ -18,9 +18,10 @@ public class GradAlgorithmOptionalStudentProgram {
     private String optionalProgramCompletionDate;
     private StudentCourses optionalStudentCourses;
     private StudentAssessments optionalStudentAssessments;
-    private boolean isOptionalGraduated;
+    private boolean isOptionalProgramGraduated;
     private List<GradRequirement> optionalNonGradReasons;
     private List<GradRequirement> optionalRequirementsMet;
     private UUID studentID;
     private List<StudentCareerProgram> cpList;
+    private boolean hasOptionalProgram;
 }

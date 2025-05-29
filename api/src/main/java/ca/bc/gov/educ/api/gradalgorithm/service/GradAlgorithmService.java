@@ -74,7 +74,7 @@ public class GradAlgorithmService {
 	private static final String SCCP = "SCCP";
 	private static final String NOPROGRAM = "NOPROG";
 
-    public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String hypotheticalGradYear, String accessToken) {
+	public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String hypotheticalGradYear, String accessToken) {
         logger.debug("\n************* New Graduation Algorithm START  ************ ");
         //Get Student Demographics
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
@@ -190,8 +190,9 @@ public class GradAlgorithmService {
 		GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg = new GradAlgorithmOptionalStudentProgram();
 		gradStudentOptionalAlg.setOptionalProgramID(obj.getOptionalProgramID());
 		gradStudentOptionalAlg.setStudentID(UUID.fromString(ruleProcessorData.getGradStudent().getStudentID()));
-		gradStudentOptionalAlg.setOptionalGraduated(obj.isOptionalProgramGraduated());
+		gradStudentOptionalAlg.setOptionalProgramGraduated(obj.isOptionalProgramGraduated());
 		gradStudentOptionalAlg.setOptionalProgramCode(optionalProgramCode);
+		gradStudentOptionalAlg.setHasOptionalProgram(obj.isHasOptionalProgram());
 		if(optionalProgramCode.equalsIgnoreCase("CP")) {
 			gradStudentOptionalAlg.setCpList(ruleProcessorData.getCpList());
 		}
@@ -231,8 +232,17 @@ public class GradAlgorithmService {
 
 	private  void processGraduation(GradAlgorithmOptionalStudentProgram gradStudentOptionalAlg, RuleProcessorData ruleProcessorData) {
 
-		if (gradStudentOptionalAlg.isOptionalGraduated() && ruleProcessorData.isGraduated()) {
-			gradStudentOptionalAlg.setOptionalProgramCompletionDate(getLastSessionDate(ruleProcessorData.getStudentCourses(), ruleProcessorData.getStudentAssessments()));
+		if (ruleProcessorData.isGraduated() && gradStudentOptionalAlg.isHasOptionalProgram() && gradStudentOptionalAlg.isOptionalProgramGraduated()) {
+
+			List<StudentCourse> studentCourses = gradStudentOptionalAlg.getOptionalStudentCourses().getStudentCourseList();
+			List<StudentAssessment> studentAssessments = gradStudentOptionalAlg.getOptionalStudentAssessments().getStudentAssessmentList();
+
+			gradStudentOptionalAlg.setOptionalProgramCompletionDate(
+					getGradDate(
+							studentCourses != null ? studentCourses : new ArrayList<>(),
+							studentAssessments != null ? studentAssessments : new ArrayList<>()
+					)
+			);
 		}
 	}
 
@@ -365,13 +375,13 @@ public class GradAlgorithmService {
         studentCourses = studentCourses
                 .stream()
                 .filter(StudentCourse::isUsed)
-                .collect(Collectors.toList());
+				.toList();
 
 		studentAssessments = studentAssessments
 				.stream()
 				.filter(StudentAssessment::isUsed)
 				.filter(sa -> "E".compareTo(sa.getSpecialCase()) != 0)
-				.collect(Collectors.toList());
+				.toList();
 
         return getLastSessionDate(studentCourses, studentAssessments);
     }
