@@ -54,7 +54,6 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
-    @MockBean RESTService restServiceMock;
     @Autowired
     GradAlgorithmAPIConstants constants;
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
@@ -93,8 +92,12 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
         gradSearchStudentResponse.setLegalFirstName("JOHN");
         gradSearchStudentResponse.setLegalLastName("SILVER");
 
-        when(this.restServiceMock.get(String.format(constants.getStudentDemographics(), studentID), GradSearchStudent.class, algorithmApiClient))
-                .thenReturn(gradSearchStudentResponse);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getStudentDemographics(), studentID))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(GradSearchStudent.class)).thenReturn(Mono.just(gradSearchStudentResponse));
 
         GradSearchStudent result = gradStudentService.getStudentDemographics(UUID.fromString(studentID));
         assertNotNull(result);
@@ -102,58 +105,36 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
     }
     
     @Test
-    public void testGetGradStudentData() throws Exception {
+    public void testgetGradStudentData() throws Exception {
     	
     	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+    	
     	String studentID = new UUID(1, 1).toString();
-
-        when(this.restServiceMock.get(String.format(constants.getGradStudentAlgorithmData(), studentID),
-                GradStudentAlgorithmData.class, algorithmApiClient)).thenReturn(gradStudentAlgorithmData);
-
-        GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
-        assertThat(res).isNotNull();
-    }
-
-    @Test
-    public void testGetGradStudentData_withNullGradStudent() throws Exception {
-
-        GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
-        String studentID = new UUID(1, 1).toString();
-        gradStudentAlgorithmData.setGradStudent(null);
-
-        when(this.restServiceMock.get(String.format(constants.getGradStudentAlgorithmData(), studentID),
-                GradStudentAlgorithmData.class, algorithmApiClient)).thenReturn(gradStudentAlgorithmData);
-
+    	when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(GradStudentAlgorithmData.class)).thenReturn(Mono.just(gradStudentAlgorithmData));
+        
         GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
         assertThat(res).isNotNull();
     }
     
     @Test
-    public void testGetGradStudentData_throwException() {
-        String studentID = new UUID(1, 1).toString();
-
-        when(this.restServiceMock.get(String.format(constants.getGradStudentAlgorithmData(), studentID),
-                GradStudentAlgorithmData.class, algorithmApiClient)).thenThrow(new RuntimeException());
-
+    public void testgetGradStudentData_withexception() throws Exception {
+    	
+    	String studentID = new UUID(1, 1).toString();
+    	when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.requestHeadersUriMock.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
+        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
+        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        
         GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
         assertThat(res).isNull();
-    }
-
-    @Test
-    public void testGetStudentDemographics_withNullResult() {
-        String pen = "12312123123";
-        String studentID = new UUID(1, 1).toString();
-
-        GradSearchStudent gradSearchStudentResponse = new GradSearchStudent();
-        gradSearchStudentResponse.setPen(pen);
-        gradSearchStudentResponse.setLegalFirstName("JOHN");
-        gradSearchStudentResponse.setLegalLastName("SILVER");
-
-        when(this.restServiceMock.get(String.format(constants.getStudentDemographics(), studentID),
-                GradSearchStudent.class, algorithmApiClient)).thenReturn(null);
-
-        GradSearchStudent res = gradStudentService.getStudentDemographics(UUID.fromString(studentID));
-        assertThat(res).isNull();
+         
     }
 
     @Test
