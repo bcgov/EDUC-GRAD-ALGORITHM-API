@@ -1,4 +1,4 @@
-name: Build & Deploy to DEV from Release Branch
+name: Build & Deploy to DEV
 
 env:
   # 🖊️ EDIT your repository secrets to log into your OpenShift cluster and set up the context.
@@ -24,7 +24,7 @@ env:
 
   REPO_NAME: "educ-grad-algorithm-api"
   APP_DOMAIN: ${{ vars.APP_DOMAIN }}
-  BRANCH: "grad-release"
+  BRANCH: ${{ github.ref }}
   TAG: "latest"
   MIN_CPU: "20m"
   MAX_CPU: "100m"
@@ -36,12 +36,6 @@ env:
 on:
   # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
   workflow_dispatch:
-  push:
-    branches:
-      - grad-release
-    paths:
-      - 'api/**'
-      - 'tools/**'
 
 jobs:
   openshift-ci-cd:
@@ -53,7 +47,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          ref: grad-release
+          ref: ${{ env.BRANCH }}
 
       - name: Determine image tags
         if: env.TAG == ''
