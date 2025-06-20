@@ -7,15 +7,15 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
@@ -35,18 +35,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class GradGraduationStatusServiceTests {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradGraduationStatusServiceTests.class);
     private static final String CLASS_NAME = GradGraduationStatusServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired GradGraduationStatusService gradGraduationStatusService;
     @Autowired ExceptionMessage exception;
-    @MockBean WebClient webClient;
+    @MockBean(name = "algorithmApiClient")
+    @Qualifier("algorithmApiClient")
+    WebClient algorithmApiClient;
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
@@ -78,67 +80,62 @@ public class GradGraduationStatusServiceTests {
    
     @Test
     public void getStudentGraduationStatusTest() {
-        LOG.debug("<{}.getStudentOptionalProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        log.debug("<{}.getStudentOptionalProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "1111111111";
         UUID studentID = UUID.randomUUID();
-        String accessToken = "accessToken";
 
         GradAlgorithmGraduationStudentRecord entity = new GradAlgorithmGraduationStudentRecord();
         entity.setPen(pen);
         entity.setStudentID(studentID);
 
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getGraduationStudentRecord(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradAlgorithmGraduationStudentRecord.class)).thenReturn(Mono.just(entity));
 
-        GradAlgorithmGraduationStudentRecord result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString(), accessToken);
+        GradAlgorithmGraduationStudentRecord result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString());
         assertNotNull(result);
-        LOG.debug(">getStudentOptionalProgramsTest");
+        log.debug(">getStudentOptionalProgramsTest");
     }
 
     @Test
     public void getStudentOptionalProgramsByIdTest() {
-        LOG.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        log.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         UUID studentID = UUID.randomUUID();
-        String accessToken = "accessToken";
 
         List<StudentOptionalProgram> entity = new ArrayList<>();
 
         ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
         };
 
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(optionalProgramResponseType)).thenReturn(Mono.just(entity));
 
-        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception);
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), exception);
         assertNotNull(result);
-        LOG.debug(">getStudentOptionalProgramsByIdTest");
+        log.debug(">getStudentOptionalProgramsByIdTest");
     }
 
     @Test
     public void getStudentOptionalProgramsByIdTest_Exception() {
-        LOG.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        log.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         UUID studentID = UUID.randomUUID();
-        String accessToken = "accessToken";
 
-        List<StudentOptionalProgram> entity = new ArrayList<>();
-
-        ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
-        };
-
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
 
-        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), accessToken,exception);
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), exception);
         assertNotNull(result);
-        LOG.debug(">getStudentOptionalProgramsByIdTest");
+        log.debug(">getStudentOptionalProgramsByIdTest");
     }
 }

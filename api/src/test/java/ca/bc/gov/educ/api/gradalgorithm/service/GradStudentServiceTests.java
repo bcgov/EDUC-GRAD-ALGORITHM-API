@@ -9,6 +9,7 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.After;
 import org.junit.Before;
@@ -16,9 +17,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,21 +38,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradStudentServiceTests.class);
     private static final String CLASS_NAME = GradStudentServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired GradStudentService gradStudentService;
-    @MockBean WebClient webClient;
+    @MockBean(name = "algorithmApiClient")
+    @Qualifier("algorithmApiClient")
+    WebClient algorithmApiClient;
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
-    @Autowired GradAlgorithmAPIConstants constants;
+    @Autowired
+    GradAlgorithmAPIConstants constants;
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
     @Mock WebClient.ResponseSpec responseMock;
@@ -80,25 +83,25 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
 
     @Test
     public void getStudentDemographicsTest() {
-        LOG.debug("<{}.getStudentDemographicsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        log.debug("<{}.getStudentDemographicsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         String pen = "12312123123";
         String studentID = new UUID(1, 1).toString();
-        String accessToken = "accessToken";
 
         GradSearchStudent gradSearchStudentResponse = new GradSearchStudent();
         gradSearchStudentResponse.setPen(pen);
         gradSearchStudentResponse.setLegalFirstName("JOHN");
         gradSearchStudentResponse.setLegalLastName("SILVER");
 
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getStudentDemographics(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradSearchStudent.class)).thenReturn(Mono.just(gradSearchStudentResponse));
 
-        GradSearchStudent result = gradStudentService.getStudentDemographics(UUID.fromString(studentID), accessToken);
+        GradSearchStudent result = gradStudentService.getStudentDemographics(UUID.fromString(studentID));
         assertNotNull(result);
-        LOG.debug(">getStudentDemographicsTest");
+        log.debug(">getStudentDemographicsTest");
     }
     
     @Test
@@ -107,31 +110,29 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
     	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
     	
     	String studentID = new UUID(1, 1).toString();
-    	String accessToken = "accessToken";
-    	when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+    	when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradStudentAlgorithmData.class)).thenReturn(Mono.just(gradStudentAlgorithmData));
         
-        GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), accessToken, new ExceptionMessage());
+        GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
         assertThat(res).isNotNull();
     }
     
     @Test
     public void testgetGradStudentData_withexception() throws Exception {
     	
-    	GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
-    	
     	String studentID = new UUID(1, 1).toString();
-    	String accessToken = "accessToken";
-    	when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+    	when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getGradStudentAlgorithmData(), studentID))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
         
-        GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), accessToken, new ExceptionMessage());
+        GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
         assertThat(res).isNull();
          
     }
@@ -142,7 +143,7 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
         tokenObject.setAccess_token("123");
         tokenObject.setRefresh_token("456");
 
-        when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
+        when(this.algorithmApiClient.post()).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.uri(constants.getTokenUrl())).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);

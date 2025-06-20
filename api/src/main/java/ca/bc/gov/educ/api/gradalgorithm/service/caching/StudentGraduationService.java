@@ -2,17 +2,16 @@ package ca.bc.gov.educ.api.gradalgorithm.service.caching;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.service.GradService;
-import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
+import ca.bc.gov.educ.api.gradalgorithm.service.RESTService;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-
 import jakarta.annotation.PostConstruct;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,13 +20,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class StudentGraduationService extends GradService {
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentGraduationService.class);
-
-	private final ReadWriteLock programStudentGraduationMapLock = new ReentrantReadWriteLock();
+    private final ReadWriteLock programStudentGraduationMapLock = new ReentrantReadWriteLock();
 	private Map<String, StudentGraduationAlgorithmData> programStudentGraduationAlgorithmDataMap;
+
+	public StudentGraduationService(GradAlgorithmAPIConstants constants, WebClient algorithmApiClient, RESTService restService) {
+		super(constants, algorithmApiClient, restService);
+	}
 
 	/**
 	 * Search for StudentGraduationAlgorithmData by program code
@@ -45,20 +47,16 @@ public class StudentGraduationService extends GradService {
 	 */
 	@PostConstruct
 	public void init() {
-		ResponseObj obj = getTokenResponseObject();
-		this.setStudentGraduationAlgorithmData(obj.getAccess_token());
-		logger.debug("loaded student graduation cache..");
+		this.setStudentGraduationAlgorithmData();
+		log.debug("loaded student graduation cache..");
 	}
 
-	private void setStudentGraduationAlgorithmData(String accessToken) {
+	private void setStudentGraduationAlgorithmData() {
 		val writeLock = programStudentGraduationMapLock.writeLock();
 		try {
 			writeLock.lock();
-			List<StudentGraduationAlgorithmData> data = webClient.get()
-					.uri(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata")
-					.headers(h -> h.setBearerAuth(accessToken))
-					.retrieve()
-					.bodyToMono(new ParameterizedTypeReference<List<StudentGraduationAlgorithmData>>(){}).block();
+			List<StudentGraduationAlgorithmData> data = restService.get(constants.getStudentGraduationAlgorithmURL() + "/algorithmdata",
+					new ParameterizedTypeReference<List<StudentGraduationAlgorithmData>>(){}, algorithmApiClient);
 
 			if(data != null)
 				this.programStudentGraduationAlgorithmDataMap = data.stream().collect(Collectors.toConcurrentMap(StudentGraduationAlgorithmData::getGradProgram, Function.identity()));
@@ -72,10 +70,9 @@ public class StudentGraduationService extends GradService {
 	 */
 	@Scheduled(cron = "0 0 0 * * *")
 	public void reloadStudentGraduationCache() {
-		logger.debug("started reloading cache..");
-		ResponseObj obj = getTokenResponseObject();
-		this.setStudentGraduationAlgorithmData(obj.getAccess_token());
-		logger.debug("reloading cache completed..");
+		log.debug("started reloading cache..");
+		this.setStudentGraduationAlgorithmData();
+		log.debug("reloading cache completed..");
 	}
     
 }
