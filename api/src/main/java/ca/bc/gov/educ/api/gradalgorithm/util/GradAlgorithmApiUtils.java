@@ -1,15 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Slf4j
 public class GradAlgorithmApiUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmApiUtils.class);
     private static final String ERROR_MSG = "Error : {}";
 
     private GradAlgorithmApiUtils() {}
@@ -21,7 +19,7 @@ public class GradAlgorithmApiUtils {
         try {
             date = simpleDateFormat.parse(dateString);
         } catch (ParseException e) {
-            logger.error(ERROR_MSG,e.getMessage());
+            log.error(ERROR_MSG,e.getMessage());
         }
 
         return date;

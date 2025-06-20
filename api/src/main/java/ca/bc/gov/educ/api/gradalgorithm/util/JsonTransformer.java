@@ -3,8 +3,7 @@ package ca.bc.gov.educ.api.gradalgorithm.util;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.xml.transform.TransformerException;
@@ -13,10 +12,9 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.TimeZone;
 
+@Slf4j
 @Component
 public class JsonTransformer implements Transformer {
-
-    private static final Logger log = LoggerFactory.getLogger(JsonTransformer.class);
 
     private static final ObjectMapper OBJECT_MAPPER;
 

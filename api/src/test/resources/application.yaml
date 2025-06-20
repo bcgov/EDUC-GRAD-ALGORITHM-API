@@ -27,6 +27,16 @@ spring:
         jwt:
           issuer-uri: https://soam-dev.apps.silver.devops.gov.bc.ca/auth/realms/master
           jwk-set-uri: https://soam-dev.apps.silver.devops.gov.bc.ca/auth/realms/master/protocol/openid-connect/certs
+      client:
+        registration:
+          algorithm-api-client:
+            client-id: algorithm-client
+            client-secret: algorithm-secret
+            authorization-grant-type: client_credentials
+        provider:
+          algorithm-api-client:
+            issuer-uri: https://soam-dev.apps.silver.devops.gov.bc.ca/auth/realms/master
+            token-uri: https://soam-dev.apps.silver.devops.gov.bc.ca/auth/realms/master/protocol/openid-connect/token
 
 #Logging properties
 logging:
@@ -69,7 +79,7 @@ authorization:
 #Endpoint properties
 endpoint:
   keycloak:
-    getToken: https://soam-dev.apps.silver.devops.gov.bc.ca/auth/realms/master/protocol/openid-connect/token
+    getToken: https://my-keycloak.com/protocol/openid-connect/token
   grad-trax-api:
     school-clob-by-school-id:
       url: https://educ-grad-trax-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v2/trax/school-clob/%s

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 import java.util.function.Consumer;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
@@ -17,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,7 +35,9 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
 
     @Autowired GradCourseService gradCourseService;
     @Autowired ExceptionMessage exception;
-    @MockBean WebClient webClient;
+    @MockBean(name = "algorithmApiClient")
+    @Qualifier("algorithmApiClient")
+    WebClient algorithmApiClient;
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
@@ -67,17 +69,17 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     @Test
     public void testGetCourseDataForAlgorithm() throws Exception {
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
-        String accessToken = "accessToken";
-        String pen = "1312311231";        
+        String pen = "1312311231";
 
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getCourseData(), pen))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(CourseAlgorithmData.class)).thenReturn(Mono.just(courseAlgorithmData));
         
 
-        Mono<CourseAlgorithmData> res = gradCourseService.getCourseDataForAlgorithm(pen, accessToken,exception);
+        Mono<CourseAlgorithmData> res = gradCourseService.getCourseDataForAlgorithm(pen, exception);
         assertNotNull(res.block());
     }
 

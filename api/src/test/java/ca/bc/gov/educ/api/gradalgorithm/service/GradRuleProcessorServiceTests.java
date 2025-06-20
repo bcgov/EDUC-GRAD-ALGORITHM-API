@@ -6,15 +6,15 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.RuleProcessorData;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,18 +32,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GradRuleProcessorServiceTests.class);
     private static final String CLASS_NAME = GradRuleProcessorServiceTests.class.getSimpleName();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired GradRuleProcessorService gradRuleProcessorService;
     @Autowired ExceptionMessage exception;
-    @MockBean WebClient webClient;
+    @MockBean(name = "algorithmApiClient")
+    @Qualifier("algorithmApiClient")
+    WebClient algorithmApiClient;
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
@@ -76,32 +78,30 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
 
     @Test
     public void getRuleProcessorTest() throws Exception {
-        LOG.debug("<{}.getRuleProcessorTest at {}", CLASS_NAME, dateFormat.format(new Date()));
-        String accessToken = "accessToken";
+        log.debug("<{}.getRuleProcessorTest at {}", CLASS_NAME, dateFormat.format(new Date()));
 
         RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
 
-        when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
+        when(this.algorithmApiClient.post()).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.uri(ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.body(any(BodyInserter.class))).thenReturn(this.requestHeadersMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(RuleProcessorData.class)).thenReturn(Mono.just(ruleProcessorData));
 
-        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception);
+        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, exception);
         assertNotNull(result);
-        LOG.debug(">getRuleProcessorTest");
+        log.debug(">getRuleProcessorTest");
     }
     
     @Test
     public void testgetGradStudentData_withexception() throws Exception {
     	
-    	String accessToken = "accessToken";
-
         RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
         
-    	when(this.webClient.post()).thenReturn(this.requestBodyUriMock);
+    	when(this.algorithmApiClient.post()).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.uri(ruleEngineRunGradAlgorithmRulesUrl)).thenReturn(this.requestBodyUriMock);
         when(this.requestBodyUriMock.headers(any(Consumer.class))).thenReturn(this.requestBodyMock);
         when(this.requestBodyMock.contentType(any())).thenReturn(this.requestBodyMock);
@@ -109,7 +109,7 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
         
-        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken,exception);
+        RuleProcessorData result = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, exception);
         assertNull(result);
          
     }

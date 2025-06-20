@@ -1,43 +1,34 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import io.github.resilience4j.retry.annotation.Retry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentCourse;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 public class GradCourseService extends GradService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradCourseService.class);
-    
-    @Autowired
-    private WebClient webClient;
-    
-    @Autowired
-    private GradAlgorithmAPIConstants constants;
+	public GradCourseService(GradAlgorithmAPIConstants constants, WebClient algorithmApiClient, RESTService restService) {
+		super(constants, algorithmApiClient, restService);
+	}
 
 	@Retry(name = "generalgetcall")
-	Mono<CourseAlgorithmData> getCourseDataForAlgorithm(String pen,String accessToken, ExceptionMessage exception) {
+	Mono<CourseAlgorithmData> getCourseDataForAlgorithm(String pen, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
 		{
 			start();
-			Mono<CourseAlgorithmData> result = webClient.get()
-					.uri(String.format(constants.getCourseData(),pen))
-					.headers(h -> h.setBearerAuth(accessToken))
-					.retrieve()
-					.bodyToMono(CourseAlgorithmData.class);
+			CourseAlgorithmData result = restService.get(String.format(constants.getCourseData(),pen),
+					CourseAlgorithmData.class, algorithmApiClient);
 			end();
-			return result;
+			return Mono.just(result);
 		} catch (Exception e) {
 			exception.setExceptionName("GRAD-COURSE-API IS DOWN");
 			exception.setExceptionDetails(e.getLocalizedMessage());
@@ -52,9 +43,9 @@ public class GradCourseService extends GradService {
 				studentCourse.setGradReqMetDetail("");
 			}
 
-			logger.debug("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
-			logger.debug("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
-			logger.debug("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
+			log.debug("**** # of Student Courses: {} ",result.getStudentCourses() != null ? result.getStudentCourses().size() : 0);
+			log.debug("**** # of Course Requirements: {}",result.getCourseRequirements() != null ? result.getCourseRequirements().size() : 0);
+			log.debug("**** # of Course Restrictions: {}",result.getCourseRestrictions() != null ? result.getCourseRestrictions().size() : 0);
 		}
 		return result;
 	}
