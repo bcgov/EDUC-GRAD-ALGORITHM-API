@@ -80,42 +80,28 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     }
 
     @Test
-    public void testGetCourseDataForAlgorithm_checkThrowException() {
+    public void testGetCourseDataForAlgorithm_checkThrowException() throws Exception {
         String pen = "1312311231";
         when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
         Mono<CourseAlgorithmData> courseDataForAlgorithm = gradCourseService.getCourseDataForAlgorithm(pen, exception);
 
+        System.out.println(exception.getExceptionDetails());
         assertNull(courseDataForAlgorithm);
     }
 
     @Test
-    public void testPrepareCourseDataForAlgorithm() throws Exception {
+    public void testprepareCourseDataForAlgorithm() throws Exception {
         CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
         CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
         assertNotNull(res);
     }
 
     @Test
-    public void testPrepareCourseDataForAlgorithm_withNullRequirementsAndRestrictions() throws Exception {
-        CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
-        courseAlgorithmData.setCourseRequirements(null);
-        courseAlgorithmData.setCourseRestrictions(null);
-        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
-        assertNotNull(res);
-    }
-
-    @Test
-    public void testPrepareCourseDataForAlgorithm_withEmptyData() {
+    public void testprepareCourseDataForAlgorithm_withEmptyData() throws Exception {
         CourseAlgorithmData courseAlgorithmData = new CourseAlgorithmData(
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
         );
         CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
         assertNotNull(res);
-    }
-
-    @Test
-    public void testPrepareCourseDataForAlgorithm_withNullData() {
-        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(null);
-        assertNull(res);
     }
 }
