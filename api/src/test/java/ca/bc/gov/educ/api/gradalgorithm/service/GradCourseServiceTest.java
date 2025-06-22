@@ -1,18 +1,17 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +44,6 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
     @Mock WebClient.ResponseSpec responseMock;
-    @Mock WebClient.RequestBodySpec requestBodyMock;
-    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
     public static void setup() {
@@ -77,15 +74,33 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(CourseAlgorithmData.class)).thenReturn(Mono.just(courseAlgorithmData));
-        
 
         Mono<CourseAlgorithmData> res = gradCourseService.getCourseDataForAlgorithm(pen, exception);
         assertNotNull(res.block());
     }
 
     @Test
+    public void testGetCourseDataForAlgorithm_checkThrowException() throws Exception {
+        String pen = "1312311231";
+        when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
+        Mono<CourseAlgorithmData> courseDataForAlgorithm = gradCourseService.getCourseDataForAlgorithm(pen, exception);
+
+        System.out.println(exception.getExceptionDetails());
+        assertNull(courseDataForAlgorithm);
+    }
+
+    @Test
     public void testprepareCourseDataForAlgorithm() throws Exception {
         CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
+        assertNotNull(res);
+    }
+
+    @Test
+    public void testprepareCourseDataForAlgorithm_withEmptyData() throws Exception {
+        CourseAlgorithmData courseAlgorithmData = new CourseAlgorithmData(
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+        );
         CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
         assertNotNull(res);
     }
