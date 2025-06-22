@@ -5,9 +5,9 @@ import java.util.List;
 
 import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,12 +18,13 @@ import ca.bc.gov.educ.api.gradalgorithm.dto.StudentOptionalProgram;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 
 @Service
+@AllArgsConstructor
 public class GradGraduationStatusService extends GradService {
 
     private static final Logger logger = LoggerFactory.getLogger(GradGraduationStatusService.class);
-    
-    @Autowired WebClient webClient;
-    @Autowired GradAlgorithmAPIConstants constants;
+
+	private WebClient webClient;
+	private GradAlgorithmAPIConstants constants;
 
 	@Retry(name = "generalgetcall")
     GradAlgorithmGraduationStudentRecord getStudentGraduationStatus(String studentID,String accessToken) {

@@ -7,12 +7,12 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -32,6 +32,7 @@ import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.DE
 import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT;
 
 @Service
+@AllArgsConstructor
 public class GradAlgorithmService {
 
 	private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
@@ -41,35 +42,25 @@ public class GradAlgorithmService {
 	public static final String MSG_TYPE_GRADUATED = "GRADUATED";
 	public static final String MSG_TYPE_NOT_GRADUATED = "NOT_GRADUATED";
 
-	@Autowired
-	GradStudentService gradStudentService;
+	private GradStudentService gradStudentService;
 
-    @Autowired
-    GradAssessmentService gradAssessmentService;
+	private GradAssessmentService gradAssessmentService;
 
-    @Autowired
-    GradCourseService gradCourseService;
+	private GradCourseService gradCourseService;
 
-    @Autowired
-	GradProgramService gradProgramService;
+	private GradProgramService gradProgramService;
 
-    @Autowired
-    GradGraduationStatusService gradGraduationStatusService;
+	private GradGraduationStatusService gradGraduationStatusService;
 
-    @Autowired
-    GradRuleProcessorService gradRuleProcessorService;
+	private GradRuleProcessorService gradRuleProcessorService;
 
-    @Autowired
-	GradSchoolService gradSchoolService;
+	private GradSchoolService gradSchoolService;
 
-	@Autowired
-	ParallelDataFetch parallelDataFetch;
-    
-    @Autowired
-	StudentGraduationService studentGraduationService;
+	private ParallelDataFetch parallelDataFetch;
 
-	@Autowired
-	JsonTransformer jsonTransformer;
+	private StudentGraduationService studentGraduationService;
+
+	private JsonTransformer jsonTransformer;
 
 	private static final String SCCP = "SCCP";
 	private static final String NOPROGRAM = "NOPROG";
@@ -366,13 +357,13 @@ public class GradAlgorithmService {
         studentCourses = studentCourses
                 .stream()
                 .filter(StudentCourse::isUsed)
-                .collect(Collectors.toList());
+                .toList();
 
 		studentAssessments = studentAssessments
 				.stream()
 				.filter(StudentAssessment::isUsed)
 				.filter(sa -> "E".compareTo(sa.getSpecialCase()) != 0)
-				.collect(Collectors.toList());
+				.toList();
 
         return getLastSessionDate(studentCourses, studentAssessments);
     }
@@ -419,7 +410,7 @@ public class GradAlgorithmService {
 
     private String getGPA(List<StudentCourse> studentCourseList,List<LetterGrade> letterGradesList) {
 
-        studentCourseList = studentCourseList.stream().filter(StudentCourse::isUsed).collect(Collectors.toList());
+        studentCourseList = studentCourseList.stream().filter(StudentCourse::isUsed).toList();
         float totalCredits = studentCourseList.stream().filter(sc-> sc.isUsed()
 				&& !"RM".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
 				&& !"SG".equalsIgnoreCase(sc.getCompletedCourseLetterGrade())
@@ -576,8 +567,8 @@ public class GradAlgorithmService {
 				}
 			}
 			case "1996-EN", "1996-PF", "1986-EN", "1986-PF" -> studentCourses.sort(Comparator.comparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel())));
-			default -> {
-			}
+			default -> logger.error("Unknown program Error {}", program);
+
 		}
 	}
 
@@ -703,8 +694,7 @@ public class GradAlgorithmService {
 					honourValue = "N";
 				}
 			}
-			default -> {
-			}
+			default -> logger.error("Unknown program Error {}", program);
 		}
 		return Pair.of(isExempted,honourValue);
 	}

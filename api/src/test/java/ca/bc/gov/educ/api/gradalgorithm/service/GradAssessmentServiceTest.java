@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 import java.util.function.Consumer;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
@@ -53,12 +52,12 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
 
     @BeforeClass
     public static void setup() {
-
+        //Placeholder method
     }
 
     @After
     public void tearDown() {
-
+        //Placeholder method
     }
 
     @Before

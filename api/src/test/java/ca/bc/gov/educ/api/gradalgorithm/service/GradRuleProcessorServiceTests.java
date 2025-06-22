@@ -58,12 +58,12 @@ public class GradRuleProcessorServiceTests extends EducGradAlgorithmTestBase {
 
     @BeforeClass
     public static void setup() {
-
+        //Placeholder method
     }
 
     @After
     public void tearDown() {
-
+        //Placeholder method
     }
 
     @Before
