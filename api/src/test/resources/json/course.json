@@ -27,7 +27,7 @@
 			"genericCourseType": "A",
 			"language": "",
 			"workExpFlag": " ",
-			"used": false,
+			"used": true,
 			"projected": false,
 			"failed": false,
 			"careerPrep": false,

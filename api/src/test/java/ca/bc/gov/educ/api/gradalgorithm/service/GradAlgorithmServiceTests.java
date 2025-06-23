@@ -18,8 +18,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
@@ -918,5 +920,18 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
 		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, "2018");
 		assertNotNull(gradData);
+	}
+
+	@Test
+	public void testPrivateMethodUsingReflection() throws Exception {
+		Method getGradDate = gradAlgorithmService.getClass().getDeclaredMethod("getGradDate", List.class, List.class);
+		getGradDate.setAccessible(true); // Allow access to private method
+		CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+		List<StudentCourse> studentCourses = courseAlgorithmData.getStudentCourses();
+		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
+		List<StudentAssessment> studentAssessments = assessmentAlgorithmData.getStudentAssessments();
+
+		String result = (String) getGradDate.invoke(gradAlgorithmService, studentCourses, studentAssessments); // Invoke the private method
+		assertEquals("2019-01-31", result);
 	}
 }
