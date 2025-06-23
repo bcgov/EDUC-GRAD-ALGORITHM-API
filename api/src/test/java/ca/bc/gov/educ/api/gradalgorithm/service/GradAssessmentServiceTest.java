@@ -1,9 +1,12 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.time.Instant;
 import java.util.function.Consumer;
 
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
@@ -84,6 +87,15 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
         
         Mono<AssessmentAlgorithmData> res = gradAssessmentService.getAssessmentDataForAlgorithm(pen, exception);
         assertNotNull(res.block());
+    }
+
+    @Test
+    public void testGetAssessmentDataForAlgorithm_throwsException() throws Exception {
+        String pen = "1312311231";
+        when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
+
+        Mono<AssessmentAlgorithmData> res = gradAssessmentService.getAssessmentDataForAlgorithm(pen, exception);
+        assertNull(res);
     }
 
     @Test
