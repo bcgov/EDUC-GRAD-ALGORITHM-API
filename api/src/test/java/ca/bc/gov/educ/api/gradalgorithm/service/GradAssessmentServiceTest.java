@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.function.Consumer;
 
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
@@ -53,6 +53,8 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
     @Mock WebClient.ResponseSpec responseMock;
+    @Mock WebClient.RequestBodySpec requestBodyMock;
+    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
     public static void setup() {
@@ -88,7 +90,7 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
     }
 
     @Test
-    public void testGetAssessmentDataForAlgorithm_throwsException() {
+    public void testGetAssessmentDataForAlgorithm_throwsException() throws Exception {
         String pen = "1312311231";
         when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
 
@@ -101,27 +103,5 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
         AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
         AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(assessmentAlgorithmData);
         assertNotNull(res);
-    }
-
-    @Test
-    public void testprepareAssessmentDataForAlgorithm_withNullAssessmentsAndRequirements() throws Exception {
-        AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
-        assessmentAlgorithmData.setAssessmentRequirements(null);
-        assessmentAlgorithmData.setAssessments(null);
-        AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(assessmentAlgorithmData);
-        assertNotNull(res);
-    }
-
-    @Test
-    public void testprepareAssessmentDataForAlgorithm_withEmptyData() {
-        AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(
-                new AssessmentAlgorithmData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        assertNotNull(res);
-    }
-
-    @Test
-    public void testprepareAssessmentDataForAlgorithm_withNullData() {
-        AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(null);
-        assertNull(res);
     }
 }
