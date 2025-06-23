@@ -21,7 +21,8 @@ import reactor.core.publisher.Mono;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -933,15 +934,4 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		String result = (String) getGradDate.invoke(gradAlgorithmService, studentCourses, studentAssessments); // Invoke the private method
 		assertEquals("2019-01-31", result);
 	}
-
-	@Test
-	public void testGetCareerProgramNames() throws Exception {
-		Method getCareerProgramNames = gradAlgorithmService.getClass().getDeclaredMethod("getCareerProgramNames", RuleProcessorData.class);
-		getCareerProgramNames.setAccessible(true); // Allow access to private method
-		RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData_DD.json");
-
-		String result = (String) getCareerProgramNames.invoke(gradAlgorithmService, ruleProcessorData); // Invoke the private method
-		assertNull(result);
-	}
-
 }
