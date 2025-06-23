@@ -115,7 +115,7 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
     }
     
     @Test
-    public void testGetGradStudentData_withexception() throws Exception {
+    public void testGetGradStudentData_withexception() {
         String studentID = new UUID(1, 1).toString();
 
         when(this.restServiceMock.get(String.format(constants.getGradStudentAlgorithmData(), studentID),
