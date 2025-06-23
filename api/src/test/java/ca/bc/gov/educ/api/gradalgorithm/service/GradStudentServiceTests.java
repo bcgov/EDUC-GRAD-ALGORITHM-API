@@ -113,9 +113,23 @@ public class GradStudentServiceTests extends EducGradAlgorithmTestBase {
         GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
         assertThat(res).isNotNull();
     }
+
+    @Test
+    public void testGetGradStudentData_withNullGradStudent() throws Exception {
+
+        GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+        String studentID = new UUID(1, 1).toString();
+        gradStudentAlgorithmData.setGradStudent(null);
+
+        when(this.restServiceMock.get(String.format(constants.getGradStudentAlgorithmData(), studentID),
+                GradStudentAlgorithmData.class, algorithmApiClient)).thenReturn(gradStudentAlgorithmData);
+
+        GradStudentAlgorithmData res = gradStudentService.getGradStudentData(UUID.fromString(studentID), new ExceptionMessage());
+        assertThat(res).isNotNull();
+    }
     
     @Test
-    public void testGetGradStudentData_withexception() {
+    public void testGetGradStudentData_throwException() {
         String studentID = new UUID(1, 1).toString();
 
         when(this.restServiceMock.get(String.format(constants.getGradStudentAlgorithmData(), studentID),
