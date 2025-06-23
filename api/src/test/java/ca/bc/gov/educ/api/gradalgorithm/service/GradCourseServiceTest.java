@@ -80,7 +80,7 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     }
 
     @Test
-    public void testGetCourseDataForAlgorithm_checkThrowException() throws Exception {
+    public void testGetCourseDataForAlgorithm_checkThrowException() {
         String pen = "1312311231";
         when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
         Mono<CourseAlgorithmData> courseDataForAlgorithm = gradCourseService.getCourseDataForAlgorithm(pen, exception);

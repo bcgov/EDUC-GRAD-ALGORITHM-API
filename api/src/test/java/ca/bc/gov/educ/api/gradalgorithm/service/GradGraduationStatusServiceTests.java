@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,16 +21,14 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -52,12 +49,8 @@ public class GradGraduationStatusServiceTests {
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
+    @MockBean RESTService restServiceMock;
     @Autowired GradAlgorithmAPIConstants constants;
-    @Mock WebClient.RequestHeadersSpec requestHeadersMock;
-    @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
-    @Mock WebClient.ResponseSpec responseMock;
-    @Mock WebClient.RequestBodySpec requestBodyMock;
-    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
     public static void setup() {
@@ -88,12 +81,8 @@ public class GradGraduationStatusServiceTests {
         entity.setPen(pen);
         entity.setStudentID(studentID);
 
-        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(constants.getGraduationStudentRecord(), studentID))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(GradAlgorithmGraduationStudentRecord.class)).thenReturn(Mono.just(entity));
+        when(this.restServiceMock.get(String.format(constants.getGraduationStudentRecord(), studentID), GradAlgorithmGraduationStudentRecord.class,
+                algorithmApiClient)).thenReturn(entity);
 
         GradAlgorithmGraduationStudentRecord result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString());
         assertNotNull(result);
@@ -101,21 +90,33 @@ public class GradGraduationStatusServiceTests {
     }
 
     @Test
+    public void getStudentGraduationStatusTest_returnNullResponse() {
+        log.debug("<{}.getStudentOptionalProgramsTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        String pen = "1111111111";
+        UUID studentID = UUID.randomUUID();
+
+        GradAlgorithmGraduationStudentRecord entity = new GradAlgorithmGraduationStudentRecord();
+        entity.setPen(pen);
+        entity.setStudentID(studentID);
+
+        when(this.restServiceMock.get(String.format(constants.getGraduationStudentRecord(), studentID), GradAlgorithmGraduationStudentRecord.class,
+                algorithmApiClient)).thenReturn(null);
+
+        GradAlgorithmGraduationStudentRecord result = gradGraduationStatusService.getStudentGraduationStatus(studentID.toString());
+        assertNull(result);
+        log.debug(">getStudentGraduationStatusTest_returnNullResponse");
+    }
+
+    @Test
     public void getStudentOptionalProgramsByIdTest() {
         log.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         UUID studentID = UUID.randomUUID();
-
         List<StudentOptionalProgram> entity = new ArrayList<>();
-
         ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
         };
 
-        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(optionalProgramResponseType)).thenReturn(Mono.just(entity));
+        when(this.restServiceMock.get(String.format(constants.getStudentOptionalPrograms(), studentID), optionalProgramResponseType,
+                algorithmApiClient)).thenReturn(entity);
 
         List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), exception);
         assertNotNull(result);
@@ -126,13 +127,11 @@ public class GradGraduationStatusServiceTests {
     public void getStudentOptionalProgramsByIdTest_Exception() {
         log.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
         UUID studentID = UUID.randomUUID();
+        ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
+        };
 
-        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
-        when(this.requestHeadersUriMock.uri(String.format(constants.getStudentOptionalPrograms(), studentID))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
-        when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
-        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(Exception.class)).thenReturn(Mono.just(new Exception()));
+        when(this.restServiceMock.get(String.format(constants.getStudentOptionalPrograms(), studentID), optionalProgramResponseType,
+                algorithmApiClient)).thenThrow(new RuntimeException());
 
         List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), exception);
         assertNotNull(result);

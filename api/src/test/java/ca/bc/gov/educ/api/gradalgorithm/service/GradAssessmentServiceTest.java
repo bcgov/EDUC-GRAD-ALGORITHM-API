@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import java.time.Instant;
 import java.util.function.Consumer;
 
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
@@ -53,8 +52,6 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
     @Mock WebClient.ResponseSpec responseMock;
-    @Mock WebClient.RequestBodySpec requestBodyMock;
-    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
     public static void setup() {
@@ -90,7 +87,7 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
     }
 
     @Test
-    public void testGetAssessmentDataForAlgorithm_throwsException() throws Exception {
+    public void testGetAssessmentDataForAlgorithm_throwsException() {
         String pen = "1312311231";
         when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
 
