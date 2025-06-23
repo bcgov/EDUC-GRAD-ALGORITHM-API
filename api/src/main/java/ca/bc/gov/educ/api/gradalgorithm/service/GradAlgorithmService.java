@@ -7,11 +7,10 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -31,58 +30,56 @@ import java.util.stream.Collectors;
 import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.DEFAULT_DATE_FORMAT;
 import static ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT;
 
+@Slf4j
 @Service
 public class GradAlgorithmService {
-
-	private static final Logger logger = LoggerFactory.getLogger(GradAlgorithmService.class);
 
 	private static final String NON_GRADUATED = "fromNonGrad";
 	private static final String GRADUATED = "fromGraduated";
 	public static final String MSG_TYPE_GRADUATED = "GRADUATED";
 	public static final String MSG_TYPE_NOT_GRADUATED = "NOT_GRADUATED";
 
-	@Autowired
 	GradStudentService gradStudentService;
-
-    @Autowired
     GradAssessmentService gradAssessmentService;
-
-    @Autowired
     GradCourseService gradCourseService;
-
-    @Autowired
 	GradProgramService gradProgramService;
-
-    @Autowired
     GradGraduationStatusService gradGraduationStatusService;
-
-    @Autowired
     GradRuleProcessorService gradRuleProcessorService;
-
-    @Autowired
 	GradSchoolService gradSchoolService;
-
-	@Autowired
 	ParallelDataFetch parallelDataFetch;
-    
-    @Autowired
 	StudentGraduationService studentGraduationService;
+	JsonTransformer jsonTransformer;
 
 	@Autowired
-	JsonTransformer jsonTransformer;
+	public GradAlgorithmService(GradStudentService gradStudentService, GradAssessmentService gradAssessmentService,
+								GradCourseService gradCourseService, GradProgramService gradProgramService,
+								GradGraduationStatusService gradGraduationStatusService, GradRuleProcessorService gradRuleProcessorService,
+								GradSchoolService gradSchoolService, ParallelDataFetch parallelDataFetch,
+								StudentGraduationService studentGraduationService, JsonTransformer jsonTransformer) {
+		this.gradStudentService = gradStudentService;
+		this.gradAssessmentService = gradAssessmentService;
+		this.gradCourseService = gradCourseService;
+		this.gradProgramService = gradProgramService;
+		this.gradGraduationStatusService = gradGraduationStatusService;
+		this.gradRuleProcessorService = gradRuleProcessorService;
+		this.gradSchoolService = gradSchoolService;
+		this.parallelDataFetch = parallelDataFetch;
+		this.studentGraduationService = studentGraduationService;
+		this.jsonTransformer = jsonTransformer;
+	}
 
 	private static final String SCCP = "SCCP";
 	private static final String NOPROGRAM = "NOPROG";
 
-    public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String hypotheticalGradYear, String accessToken) {
-        logger.debug("\n************* New Graduation Algorithm START  ************ ");
+    public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String hypotheticalGradYear) {
+        log.debug("\n************* New Graduation Algorithm START  ************ ");
         //Get Student Demographics
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
 		GraduationData graduationData = new GraduationData();
 		Map<String, OptionalProgramRuleProcessor> mapOptional = new HashMap<>();
 		ruleProcessorData.setMapOptional(mapOptional);
         ExceptionMessage exception = new ExceptionMessage();
-		GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID,accessToken,exception);
+		GradStudentAlgorithmData gradStudentAlgorithmData = gradStudentService.getGradStudentData(studentID, exception);
         GradAlgorithmGraduationStudentRecord gradStatus = new GradAlgorithmGraduationStudentRecord();
         if(gradStudentAlgorithmData != null) {
 			ruleProcessorData.setCpList(gradStudentAlgorithmData.getStudentCareerProgramList());
@@ -96,8 +93,8 @@ public class GradAlgorithmService {
         ruleProcessorData.setGradStatus(gradStatus);
         String pen=ruleProcessorData.getGradStudent().getPen();
 		String schoolOfRecordId = ruleProcessorData.getGradStudent().getSchoolOfRecordId();
-        logger.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
-		Mono<AlgorithmDataParallelDTO> parallelCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen,accessToken,exception);
+		log.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
+		Mono<AlgorithmDataParallelDTO> parallelCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen, exception);
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
 		if(algorithmDataParallelDTO != null) {
@@ -114,11 +111,11 @@ public class GradAlgorithmService {
 		//Get All Letter Grades,Optional Case and AlgorithmRules
 		setAlgorithmSupportData(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram),ruleProcessorData);
         //Set Optional Program Flag
-		checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, accessToken, exception);
+		checkForOptionalProgram(ruleProcessorData.getGradStudent().getStudentID(), ruleProcessorData, exception);
 		manageProgramRules(gradProgram,ruleProcessorData);
 
 		//Calling Rule Processor
-        ruleProcessorData = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, accessToken, exception);
+        ruleProcessorData = gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, exception);
         if(exception.getExceptionName() != null) {
 			graduationData.setException(exception);
 			return graduationData;
@@ -135,7 +132,7 @@ public class GradAlgorithmService {
 				existingGradMessage = existingData.getGradMessage();
 			}
 		} catch (TransformerException e) {
-			logger.error("JSON processing Error {}",e.getMessage());
+			log.error("JSON processing Error {}",e.getMessage());
 		}
 		gradStatus.setStudentGradData(null);
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null
@@ -174,7 +171,7 @@ public class GradAlgorithmService {
 			graduationData.setException(exception);
 			return graduationData;
         }
-        logger.debug("\n************* Graduation Algorithm END  ************");
+		log.debug("\n************* Graduation Algorithm END  ************");
 
         return graduationData;
     }
@@ -204,7 +201,7 @@ public class GradAlgorithmService {
 				}
 			}
 		} catch (TransformerException e) {
-			logger.debug("JSON processing Error {}",e.getMessage());
+			log.debug("JSON processing Error {}",e.getMessage());
 		}
 
 		if(obj.getOptionalProgramRules().isEmpty()){
@@ -237,8 +234,8 @@ public class GradAlgorithmService {
 		}
 	}
 
-	private void checkForOptionalProgram(String studentID, RuleProcessorData ruleProcessorData, String accessToken,ExceptionMessage exception) {
-		List<StudentOptionalProgram> gradOptionalResponseList = gradGraduationStatusService.getStudentOptionalProgramsById(studentID, accessToken,exception);
+	private void checkForOptionalProgram(String studentID, RuleProcessorData ruleProcessorData, ExceptionMessage exception) {
+		List<StudentOptionalProgram> gradOptionalResponseList = gradGraduationStatusService.getStudentOptionalProgramsById(studentID, exception);
 		if (!gradOptionalResponseList.isEmpty()) {
 			Map<String, OptionalProgramRuleProcessor> mapOpt = ruleProcessorData.getMapOptional();
 			for (StudentOptionalProgram sp : gradOptionalResponseList) {
@@ -356,7 +353,7 @@ public class GradAlgorithmService {
 			int year = currentDate.getYear();
 			return month.getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + year;
 		} catch (Exception e) {
-			logger.error("Unable to parse date {}", gradDate);
+			log.error("Unable to parse date {}", gradDate);
 			return gradDate;
 		}
     }
@@ -385,7 +382,7 @@ public class GradAlgorithmService {
 		try {
 			gradDate = dateFormat.parse("1700/01/01");
 		} catch (ParseException e) {
-			logger.debug(e.getMessage());
+			log.debug(e.getMessage());
 		}
 
 		for (StudentCourse studentCourse : studentCourses) {
@@ -395,7 +392,7 @@ public class GradAlgorithmService {
 					gradDate = dateToCompare;
 				}
 			} catch (ParseException e) {
-				logger.debug(e.getMessage());
+				log.debug(e.getMessage());
 			}
 		}
 
@@ -406,7 +403,7 @@ public class GradAlgorithmService {
 					gradDate = dateToCompare;
 				}
 			} catch (ParseException e) {
-				logger.debug(e.getMessage());
+				log.debug(e.getMessage());
 			}
 		}
 
@@ -445,13 +442,13 @@ public class GradAlgorithmService {
 				}
             }
 			if (StringUtils.equalsIgnoreCase("P", tempGpaMV)) {
-				logger.debug("Temporary FinalLG for Hypothetical passed course: {} / {} => credits for used [{}]", sc.getCourseCode(), sc.getCourseLevel(), sc.getCreditsUsedForGrad());
+				log.debug("Temporary FinalLG for Hypothetical passed course: {} / {} => credits for used [{}]", sc.getCourseCode(), sc.getCourseLevel(), sc.getCreditsUsedForGrad());
 			}
             float gpaMarkValue = Float.parseFloat(tempGpaMV);
 
             acquiredCredits += (gpaMarkValue * sc.getCreditsUsedForGrad());
 
-            logger.debug("[{}/{}] Letter Grade: {} | GPA Mark Value: {} | Credits Used For GRAD: {} | Acquired Credits: {} | Total Credits: {}",
+			log.debug("[{}/{}] Letter Grade: {} | GPA Mark Value: {} | Credits Used For GRAD: {} | Acquired Credits: {} | Total Credits: {}",
 					sc.getCourseCode(), sc.getCourseLevel(), letterGrade,gpaMarkValue,sc.getCreditsUsedForGrad(),acquiredCredits,totalCredits);
         }
 
@@ -502,7 +499,7 @@ public class GradAlgorithmService {
 		try {
 			basisSessionDate = dateFormat.parse(basisSession);
 		} catch (ParseException e) {
-			logger.debug(e.getMessage());
+			log.debug(e.getMessage());
 		}
 
 		if (basisSessionDate != null && !studentCourses.isEmpty()) {
@@ -510,11 +507,11 @@ public class GradAlgorithmService {
 				try {
 					Date dateToCompare = toLastDayOfMonth(dateFormat.parse(studentCourse.getSessionDate() + "/01"));
 					if (dateToCompare.compareTo(basisSessionDate) >= 0) {
-						logger.debug("Student Course [{}/{}] Session Date [{}] - Hypothetically passed", studentCourse.getCourseCode(), studentCourse.getCourseLevel(), studentCourse.getSessionDate());
+						log.debug("Student Course [{}/{}] Session Date [{}] - Hypothetically passed", studentCourse.getCourseCode(), studentCourse.getCourseLevel(), studentCourse.getSessionDate());
 						studentCourse.setCompletedCourseLetterGrade("P");
 					}
 				} catch (ParseException e) {
-					logger.debug(e.getMessage());
+					log.debug(e.getMessage());
 				}
 			}
 		}
@@ -548,7 +545,7 @@ public class GradAlgorithmService {
 					try {
 						temp = toLastDayOfMonth(GradAlgorithmApiUtils.parseDate(courseSessionDate, SECONDARY_DATE_FORMAT));
 					} catch (ParseException e) {
-						logger.debug(e.getMessage());
+						log.debug(e.getMessage());
 					}
 
 					if (adultStartDate != null && temp != null && temp.compareTo(adultStartDate) > 0) {
@@ -577,6 +574,7 @@ public class GradAlgorithmService {
 			}
 			case "1996-EN", "1996-PF", "1986-EN", "1986-PF" -> studentCourses.sort(Comparator.comparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel())));
 			default -> {
+				log.debug(String.format("No sorting order specified for program: %s", program));
 			}
 		}
 	}
@@ -702,8 +700,6 @@ public class GradAlgorithmService {
 					isExempted = true;
 					honourValue = "N";
 				}
-			}
-			default -> {
 			}
 		}
 		return Pair.of(isExempted,honourValue);

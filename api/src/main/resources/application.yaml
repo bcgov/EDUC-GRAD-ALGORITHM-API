@@ -14,6 +14,16 @@ spring:
         jwt:
           issuer-uri: ${TOKEN_ISSUER_URL}
           jwk-set-uri: ${TOKEN_ISSUER_URL}/protocol/openid-connect/certs
+      client:
+        registration:
+          algorithm-api-client:
+            client-id: ${GRAD_ALGORITHM_API_CLIENT_NAME}
+            client-secret: ${GRAD_ALGORITHM_API_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+        provider:
+          algorithm-api-client:
+            issuer-uri: ${TOKEN_ISSUER_URL}
+            token-uri: ${TOKEN_ISSUER_URL}/protocol/openid-connect/token
 
 #Logging properties
 logging:
@@ -70,10 +80,15 @@ server:
       io: 16
   #port: ${HTTP_PORT}
   max-http-request-header-size: 20000
+  compression:
+    enabled: ${ENABLE_COMPRESSION}
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 2048
+    excluded-user-agents: MSIE 6.0,UCBrowser
 
 authorization:
-  user: ${GRAD_CLIENT_NAME}
-  password: ${GRAD_CLIENT_SECRET}
+  user: ${GRAD_ALGORITHM_API_CLIENT_NAME}
+  password: ${GRAD_ALGORITHM_API_CLIENT_SECRET}
 
 #API Documentation
 springdoc:
@@ -103,6 +118,7 @@ endpoint:
     get-course-algorithm-data:
       url: ${GRAD_COURSE_API}api/v1/course/course-algorithm/pen/%s
   grad-assessment-api:
+    # Auth param present but not needed
     get-assessment-algorithm-data:
       url: ${GRAD_ASSESSMENT_API}api/v1/assessment/assessment-algorithm/pen/%s
   grad-student-graduation-api:
@@ -112,13 +128,16 @@ endpoint:
       url: ${GRAD_STUDENT_GRADUATION_API}api/v1/studentgraduation/transcript/gradmessages/pgmCode/%s/msgType/%s
   grad-student-api:
     get-student-by-studentid:
+      #Auth Required
       url: ${GRAD_STUDENT_API}api/v1/student/stdid/%s
     get-graduation-status: 
       url: ${GRAD_STUDENT_API}api/v1/student/studentid/%s/algorithm
-    get-grad-student-algo-data: 
+    get-grad-student-algo-data:
+      #Auth Required
       url: ${GRAD_STUDENT_API}api/v1/student/algorithmdata/%s
     get-graduation-student-record:
       get-optional-programs:
+        #Auth Required
         url: ${GRAD_STUDENT_API}api/v1/student/optionalprogram/studentid/%s
   rule-engine-api:
     run-grad-algorithm-rules:

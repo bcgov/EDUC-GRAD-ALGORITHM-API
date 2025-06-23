@@ -2,14 +2,12 @@ package ca.bc.gov.educ.api.gradalgorithm.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+@Slf4j
 public class APIUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(APIUtils.class);
 
     private APIUtils() {}
 
@@ -36,7 +34,7 @@ public class APIUtils {
         try {
             json = mapper.writeValueAsString(inputObject);
         } catch (JsonProcessingException e) {
-            logger.debug("ERROR {}",e.getLocalizedMessage());
+            log.debug("ERROR {}",e.getLocalizedMessage());
         }
 
         return json;

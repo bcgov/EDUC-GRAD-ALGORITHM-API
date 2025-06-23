@@ -3,9 +3,9 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ResponseObj;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,16 +16,21 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Duration;
 import java.time.Instant;
 
+@Slf4j
 public class GradService {
 
     private Instant start;
-    private static final Logger logger = LoggerFactory.getLogger(GradService.class);
-
-    @Autowired
     protected GradAlgorithmAPIConstants constants;
+    protected WebClient algorithmApiClient;
+    protected RESTService restService;
 
     @Autowired
-    protected WebClient webClient;
+    public GradService(GradAlgorithmAPIConstants constants, @Qualifier("algorithmApiClient") WebClient algorithmApiClient,
+                       RESTService restService) {
+        this.constants = constants;
+        this.algorithmApiClient = algorithmApiClient;
+        this.restService = restService;
+    }
 
     protected void start() {
         start = Instant.now();
@@ -34,7 +39,7 @@ public class GradService {
     protected void end() {
         Instant end = Instant.now();
         Duration timeElapsed = Duration.between(start, end);
-        logger.debug("Time taken: {} milliseconds",timeElapsed.toMillis());
+        log.debug("Time taken: {} milliseconds",timeElapsed.toMillis());
     }
 
     public ResponseObj getTokenResponseObject() {
@@ -42,7 +47,7 @@ public class GradService {
                 constants.getUserName(), constants.getPassword());
         MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
         map.add("grant_type", "client_credentials");
-        return this.webClient.post().uri(constants.getTokenUrl())
+        return this.algorithmApiClient.post().uri(constants.getTokenUrl())
                 .headers(h -> h.addAll(httpHeadersKC))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(map))

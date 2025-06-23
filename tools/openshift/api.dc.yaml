@@ -61,7 +61,7 @@ objects:
                 - configMapRef:
                     name: educ-grad-algorithm-api-config-map
                 - secretRef:
-                    name: grad-client-secret
+                    name: grad-algorithm-api-client-secret
               resources:
                 requests:
                   cpu: "${MIN_CPU}"

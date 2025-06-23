@@ -7,10 +7,15 @@ import io.netty.handler.logging.LogLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.*;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.netty.http.client.HttpClient;
-import reactor.core.publisher.Mono;
+import reactor.netty.resources.ConnectionProvider;
 
 import java.time.Duration;
 
@@ -18,41 +23,54 @@ import java.time.Duration;
 @Profile("!test")
 public class RestWebClient {
 
-    @Autowired
     GradAlgorithmAPIConstants constants;
 
     private final HttpClient httpClient;
 
-    public RestWebClient() {
-        this.httpClient = HttpClient.create().compress(true)
+    LogHelper logHelper;
+
+    @Autowired
+    public RestWebClient(GradAlgorithmAPIConstants constants) {
+        this.constants = constants;
+        this.httpClient = HttpClient.create(ConnectionProvider.create("algorithm-api")).compress(true)
                 .resolver(spec -> spec.queryTimeout(Duration.ofMillis(200)).trace("DNS", LogLevel.TRACE));
         this.httpClient.warmup().block();
     }
 
-    @Bean
-    public WebClient webClient() {
-        return WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()
-                .codecs(configurer -> configurer
-                        .defaultCodecs()
-                        .maxInMemorySize(10 * 1024 * 1024))  // 10MB
-                    .build())
+    @Primary
+    @Bean("algorithmApiClient")
+    public WebClient getAlgorithmApiClientWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
+        ServletOAuth2AuthorizedClientExchangeFilterFunction filter = new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+        filter.setDefaultClientRegistrationId("algorithm-api-client");
+        DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+        defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+        return WebClient.builder()
+                .uriBuilderFactory(defaultUriBuilderFactory)
                 .filter(setRequestHeaders())
+                .exchangeStrategies(ExchangeStrategies
+                        .builder()
+                        .codecs(codecs -> codecs
+                                .defaultCodecs()
+                                .maxInMemorySize(50 * 1024 * 1024))
+                        .build())
+                .apply(filter.oauth2Configuration())
                 .filter(this.log())
                 .build();
     }
 
-    private ExchangeFilterFunction log() {
-        return (clientRequest, next) -> next
-                .exchange(clientRequest)
-                .doOnNext((clientResponse -> LogHelper.logClientHttpReqResponseDetails(
-                        clientRequest.method(),
-                        clientRequest.url().toString(),
-                        //Grad2-1929 Refactoring/Linting replaced rawStatusCode() with statusCode() as it was deprecated
-                        clientResponse.statusCode().value(),
-                        clientRequest.headers().get(GradAlgorithmAPIConstants.CORRELATION_ID),
-                        clientRequest.headers().get(GradAlgorithmAPIConstants.REQUEST_SOURCE),
-                        constants.isSplunkLogHelperEnabled())
-                ));
+    @Bean
+    public OAuth2AuthorizedClientManager authorizedClientManager(
+            ClientRegistrationRepository clientRegistrationRepository,
+            OAuth2AuthorizedClientService clientService) {
+        OAuth2AuthorizedClientProvider authorizedClientProvider =
+                OAuth2AuthorizedClientProviderBuilder.builder()
+                        .clientCredentials()
+                        .build();
+        AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
+                new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, clientService);
+        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+
+        return authorizedClientManager;
     }
 
     private ExchangeFilterFunction setRequestHeaders() {
@@ -64,5 +82,18 @@ public class RestWebClient {
                     .build();
             return next.exchange(modifiedRequest);
         };
+    }
+
+    private ExchangeFilterFunction log() {
+        return (clientRequest, next) -> next
+                .exchange(clientRequest)
+                .doOnNext((clientResponse -> LogHelper.logClientHttpReqResponseDetails(
+                        clientRequest.method(),
+                        clientRequest.url().toString(),
+                        clientResponse.statusCode().value(),
+                        clientRequest.headers().get(GradAlgorithmAPIConstants.CORRELATION_ID),
+                        clientRequest.headers().get(GradAlgorithmAPIConstants.REQUEST_SOURCE),
+                        constants.isSplunkLogHelperEnabled())
+                ));
     }
 }

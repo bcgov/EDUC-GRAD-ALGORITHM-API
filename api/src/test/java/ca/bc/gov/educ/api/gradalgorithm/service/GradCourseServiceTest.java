@@ -1,22 +1,21 @@
 package ca.bc.gov.educ.api.gradalgorithm.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,7 +34,9 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
 
     @Autowired GradCourseService gradCourseService;
     @Autowired ExceptionMessage exception;
-    @MockBean WebClient webClient;
+    @MockBean(name = "algorithmApiClient")
+    @Qualifier("algorithmApiClient")
+    WebClient algorithmApiClient;
     @MockBean GradProgramService gradProgramService;
     @MockBean GradSchoolService gradSchoolService;
     @MockBean StudentGraduationService studentGraduationService;
@@ -43,8 +44,6 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     @Mock WebClient.RequestHeadersSpec requestHeadersMock;
     @Mock WebClient.RequestHeadersUriSpec requestHeadersUriMock;
     @Mock WebClient.ResponseSpec responseMock;
-    @Mock WebClient.RequestBodySpec requestBodyMock;
-    @Mock WebClient.RequestBodyUriSpec requestBodyUriMock;
 
     @BeforeClass
     public static void setup() {
@@ -67,24 +66,56 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
     @Test
     public void testGetCourseDataForAlgorithm() throws Exception {
     	CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
-        String accessToken = "accessToken";
-        String pen = "1312311231";        
+        String pen = "1312311231";
 
-        when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
+        when(this.algorithmApiClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(String.format(constants.getCourseData(), pen))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
+        when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(CourseAlgorithmData.class)).thenReturn(Mono.just(courseAlgorithmData));
-        
 
-        Mono<CourseAlgorithmData> res = gradCourseService.getCourseDataForAlgorithm(pen, accessToken,exception);
+        Mono<CourseAlgorithmData> res = gradCourseService.getCourseDataForAlgorithm(pen, exception);
         assertNotNull(res.block());
     }
 
     @Test
-    public void testprepareCourseDataForAlgorithm() throws Exception {
+    public void testGetCourseDataForAlgorithm_checkThrowException() {
+        String pen = "1312311231";
+        when(this.algorithmApiClient.get()).thenThrow(new RuntimeException(""));
+        Mono<CourseAlgorithmData> courseDataForAlgorithm = gradCourseService.getCourseDataForAlgorithm(pen, exception);
+
+        assertNull(courseDataForAlgorithm);
+    }
+
+    @Test
+    public void testPrepareCourseDataForAlgorithm() throws Exception {
         CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
         CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
         assertNotNull(res);
+    }
+
+    @Test
+    public void testPrepareCourseDataForAlgorithm_withNullRequirementsAndRestrictions() throws Exception {
+        CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+        courseAlgorithmData.setCourseRequirements(null);
+        courseAlgorithmData.setCourseRestrictions(null);
+        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
+        assertNotNull(res);
+    }
+
+    @Test
+    public void testPrepareCourseDataForAlgorithm_withEmptyData() {
+        CourseAlgorithmData courseAlgorithmData = new CourseAlgorithmData(
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+        );
+        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(courseAlgorithmData);
+        assertNotNull(res);
+    }
+
+    @Test
+    public void testPrepareCourseDataForAlgorithm_withNullData() {
+        CourseAlgorithmData res = gradCourseService.prepareCourseDataForAlgorithm(null);
+        assertNull(res);
     }
 }

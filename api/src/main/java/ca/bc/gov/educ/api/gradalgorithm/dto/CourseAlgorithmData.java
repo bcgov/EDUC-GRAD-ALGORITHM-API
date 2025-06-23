@@ -1,11 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 @Component
 public class CourseAlgorithmData {
     List<StudentCourse> studentCourses;
