@@ -104,6 +104,15 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
     }
 
     @Test
+    public void testprepareAssessmentDataForAlgorithm_withNullAssessmentsAndRequirements() throws Exception {
+        AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
+        assessmentAlgorithmData.setAssessmentRequirements(null);
+        assessmentAlgorithmData.setAssessments(null);
+        AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(assessmentAlgorithmData);
+        assertNotNull(res);
+    }
+
+    @Test
     public void testprepareAssessmentDataForAlgorithm_withEmptyData() {
         AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(
                 new AssessmentAlgorithmData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
