@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
@@ -100,5 +101,18 @@ public class GradAssessmentServiceTest extends EducGradAlgorithmTestBase {
         AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
         AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(assessmentAlgorithmData);
         assertNotNull(res);
+    }
+
+    @Test
+    public void testprepareAssessmentDataForAlgorithm_withEmptyData() {
+        AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(
+                new AssessmentAlgorithmData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        assertNotNull(res);
+    }
+
+    @Test
+    public void testprepareAssessmentDataForAlgorithm_withNullData() {
+        AssessmentAlgorithmData res = gradAssessmentService.prepareAssessmentDataForAlgorithm(null);
+        assertNull(res);
     }
 }
