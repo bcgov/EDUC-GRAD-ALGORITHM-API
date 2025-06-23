@@ -137,4 +137,19 @@ public class GradGraduationStatusServiceTests {
         assertNotNull(result);
         log.debug(">getStudentOptionalProgramsByIdTest");
     }
+
+    @Test
+    public void getStudentOptionalProgramsByIdTest_returnNullResponse() {
+        log.debug("<{}.getStudentOptionalProgramsByIdTest at {}", CLASS_NAME, dateFormat.format(new Date()));
+        UUID studentID = UUID.randomUUID();
+        ParameterizedTypeReference<List<StudentOptionalProgram>> optionalProgramResponseType = new ParameterizedTypeReference<>() {
+        };
+
+        when(this.restServiceMock.get(String.format(constants.getStudentOptionalPrograms(), studentID), optionalProgramResponseType,
+                algorithmApiClient)).thenReturn(null);
+
+        List<StudentOptionalProgram> result = gradGraduationStatusService.getStudentOptionalProgramsById(studentID.toString(), exception);
+        assertNotNull(result);
+        log.debug(">getStudentOptionalProgramsByIdTest");
+    }
 }
