@@ -1,19 +1,17 @@
 package ca.bc.gov.educ.api.gradalgorithm.service.caching;
 
-import ca.bc.gov.educ.api.gradalgorithm.dto.ResponseObj;
 import ca.bc.gov.educ.api.gradalgorithm.service.GradService;
-import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
+import ca.bc.gov.educ.api.gradalgorithm.service.RESTService;
+import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import ca.bc.gov.educ.api.gradalgorithm.dto.School;
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
-
 import jakarta.annotation.PostConstruct;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,12 +20,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class GradSchoolService extends GradService {
 
-	private static final Logger logger = LoggerFactory.getLogger(GradSchoolService.class);
 	private final ReadWriteLock schoolClobMapLock = new ReentrantReadWriteLock();
 	private Map<String, School> schoolClobMap;
+
+	public GradSchoolService(GradAlgorithmAPIConstants constants, WebClient algorithmApiClient, RESTService restService) {
+		super(constants, algorithmApiClient, restService);
+	}
 
 	/**
 	 * Search for SchoolEntity by SchoolId
@@ -42,20 +44,16 @@ public class GradSchoolService extends GradService {
 	 */
 	@PostConstruct
 	public void init() {
-		ResponseObj obj = getTokenResponseObject();
-		this.setSchoolData(obj.getAccess_token());
-		logger.debug("loaded school cache..");
+		this.setSchoolData();
+		log.debug("loaded school cache..");
 	}
 
-	private void setSchoolData(String accessToken) {
+	private void setSchoolData() {
 		val writeLock = schoolClobMapLock.writeLock();
 		try {
 			writeLock.lock();
-			List<School> schoolList = webClient.get()
-					.uri(constants.getAllSchools())
-					.headers(h -> h.setBearerAuth(accessToken))
-					.retrieve()
-					.bodyToMono(new ParameterizedTypeReference<List<School>>(){}).block();
+			List<School> schoolList = restService.get(constants.getAllSchools(), new ParameterizedTypeReference<List<School>>(){},
+					algorithmApiClient);
 			if(schoolList != null)
 				this.schoolClobMap = schoolList.stream().collect(Collectors.toConcurrentMap(School::getSchoolId, Function.identity()));
 		} finally {
@@ -68,9 +66,8 @@ public class GradSchoolService extends GradService {
 	 */
 	@Scheduled(cron = "0 0 0 * * *")
 	public void reloadCache() {
-		logger.debug("started reloading cache..");
-		ResponseObj obj = getTokenResponseObject();
-		this.setSchoolData(obj.getAccess_token());
-		logger.debug("reloading cache completed..");
+		log.debug("started reloading cache..");
+		this.setSchoolData();
+		log.debug("reloading cache completed..");
 	}
 }

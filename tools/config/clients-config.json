@@ -1,0 +1,30 @@
+[
+  {
+    "clientId": "grad-algorithm-api-client",
+    "scopes": ["RUN_GRAD_ALGORITHM",
+        "READ_GRAD_SCHOOL_DATA",
+        "READ_GRAD_PROGRAM_RULES_DATA",
+        "READ_GRAD_SPECIAL_PROGRAM_RULES_DATA",
+        "READ_GRAD_SPECIAL_PROGRAM_CODE_DATA",
+        "READ_GRAD_COURSE_DATA",
+        "READ_GRAD_STUDENT_COURSE_DATA",
+        "READ_GRAD_ASSESSMENT_DATA",
+        "READ_GRAD_ASSESSMENT_REQUIREMENT_DATA",
+        "READ_GRAD_ALGORITHM_RULES_DATA",
+        "READ_GRAD_SPECIAL_CASE_DATA",
+        "READ_GRAD_LETTER_GRADE_DATA",
+        "READ_GRAD_MESSAGING_CODE_DATA",
+        "READ_GRAD_STUDENT_DATA",
+        "READ_GRAD_GRADUATION_STATUS",
+        "READ_GRAD_STUDENT_SPECIAL_DATA",
+        "RUN_RULE_ENGINE"],
+    "settings": {
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  }
+]
