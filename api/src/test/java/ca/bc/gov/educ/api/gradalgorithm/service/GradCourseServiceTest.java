@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -73,7 +74,7 @@ public class GradCourseServiceTest extends EducGradAlgorithmTestBase {
         when(this.requestHeadersMock.headers(any(Consumer.class))).thenReturn(this.requestHeadersMock);
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.onStatus(any(), any())).thenReturn(this.responseMock);
-        when(this.responseMock.bodyToMono(CourseAlgorithmData.class)).thenReturn(Mono.just(courseAlgorithmData));
+        when(this.responseMock.bodyToMono(new ParameterizedTypeReference<CourseAlgorithmData>() {})).thenReturn(Mono.just(courseAlgorithmData));
 
         Mono<CourseAlgorithmData> res = gradCourseService.getCourseDataForAlgorithm(pen, exception);
         assertNotNull(res.block());

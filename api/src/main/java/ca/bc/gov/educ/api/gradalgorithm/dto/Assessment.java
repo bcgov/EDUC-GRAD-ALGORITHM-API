@@ -2,11 +2,15 @@ package ca.bc.gov.educ.api.gradalgorithm.dto;
 
 import java.sql.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Component
 public class Assessment {
 
