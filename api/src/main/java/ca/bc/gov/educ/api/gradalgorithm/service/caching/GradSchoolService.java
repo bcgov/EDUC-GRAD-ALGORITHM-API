@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.gradalgorithm.service.RESTService;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class GradSchoolService extends GradService {
 	private final ReadWriteLock schoolClobMapLock = new ReentrantReadWriteLock();
 	private Map<String, School> schoolClobMap;
 
+	@Autowired
 	public GradSchoolService(GradAlgorithmAPIConstants constants, WebClient algorithmApiClient, RESTService restService) {
 		super(constants, algorithmApiClient, restService);
 	}

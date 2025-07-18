@@ -3,6 +3,8 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.CourseAlgorithmData;
@@ -15,6 +17,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class GradCourseService extends GradService {
 
+	@Autowired
 	public GradCourseService(GradAlgorithmAPIConstants constants, WebClient algorithmApiClient, RESTService restService) {
 		super(constants, algorithmApiClient, restService);
 	}
@@ -25,8 +28,8 @@ public class GradCourseService extends GradService {
 		try
 		{
 			start();
-			CourseAlgorithmData result = restService.get(String.format(constants.getCourseData(),pen),
-					CourseAlgorithmData.class, algorithmApiClient);
+			CourseAlgorithmData result = restService.get(String.format(constants.getCourseData(), pen),
+					new ParameterizedTypeReference<CourseAlgorithmData>() {}, algorithmApiClient);
 			end();
 			return Mono.just(result);
 		} catch (Exception e) {

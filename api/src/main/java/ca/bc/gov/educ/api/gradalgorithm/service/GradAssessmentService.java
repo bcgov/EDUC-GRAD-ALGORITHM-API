@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.ExceptionMessage;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class GradAssessmentService extends GradService {
 
+	@Autowired
 	public GradAssessmentService(GradAlgorithmAPIConstants constants, WebClient algorithmApiClient, RESTService restService) {
 		super(constants, algorithmApiClient, restService);
 	}
@@ -25,8 +27,8 @@ public class GradAssessmentService extends GradService {
 		try
 		{
 			start();
-			AssessmentAlgorithmData result = restService.get(String.format(constants.getAssessmentData(),pen),
-					AssessmentAlgorithmData.class, algorithmApiClient);
+			AssessmentAlgorithmData result = restService.get(String.format(constants.getAssessmentData(), pen),
+					new ParameterizedTypeReference<AssessmentAlgorithmData>() {}, algorithmApiClient);
 			end();
 			return Mono.just(result);
 		} catch (Exception e) {
