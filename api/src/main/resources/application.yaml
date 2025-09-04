@@ -114,9 +114,14 @@ endpoint:
       url: ${GRAD_PROGRAM_API}api/v1/program/optionalprograms/%s/%s
     optional_program_name_by_optional_program_id:
       url: ${GRAD_PROGRAM_API}api/v1/program/optionalprograms/id/%s
+    get-assessment-requirements:
+      url: ${GRAD_PROGRAM_API}api/v1/program/assessment-requirements
   grad-course-api:
     get-course-algorithm-data:
       url: ${GRAD_COURSE_API}api/v1/course/course-algorithm/pen/%s
+  student-assessment-api:
+    get-assessment-type-codes:
+      url: ${STUDENT_ASSESSMENT_API}api/v1/student-assessment/assessment-types
   grad-assessment-api:
     # Auth param present but not needed
     get-assessment-algorithm-data:
@@ -147,3 +152,8 @@ endpoint:
 splunk:
   log-helper:
     enabled: ${ENABLE_SPLUNK_LOG_HELPER}
+
+nats:
+  server: ${NATS_URL}
+  maxReconnect: ${NATS_MAX_RECONNECT}
+  connectionName: GRAD-ALGORITHM-API

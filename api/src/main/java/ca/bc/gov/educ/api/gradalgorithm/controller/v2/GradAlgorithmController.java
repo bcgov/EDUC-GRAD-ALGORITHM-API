@@ -1,23 +1,23 @@
-package ca.bc.gov.educ.api.gradalgorithm.controller;
+package ca.bc.gov.educ.api.gradalgorithm.controller.v2;
 
-import java.util.UUID;
-
+import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
+import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
 import ca.bc.gov.educ.api.gradalgorithm.util.PermissionsConstants;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ca.bc.gov.educ.api.gradalgorithm.dto.GraduationData;
-import ca.bc.gov.educ.api.gradalgorithm.service.GradAlgorithmService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+import java.util.UUID;
 
 
 @Slf4j
-@RestController
+@RestController("gradAlgorithmControllerV2")
 @CrossOrigin
-@RequestMapping ("/api/v1")
+@RequestMapping ("/api/v2")
 @OpenAPIDefinition(info = @Info(title = "API for GRAD Algorithm", description = "This API is for running the grad algorithm for one or more students", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"RUN_GRAD_ALGORITHM"})})
 public class GradAlgorithmController {
 
@@ -35,7 +35,7 @@ public class GradAlgorithmController {
                                           @RequestParam(required = false) boolean projected,
                                           @RequestParam(required = false, defaultValue = "") String hypotheticalGradYear) {
         log.debug("**** GRAD ALGORITHM Started ****");
-        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, hypotheticalGradYear, false);
+        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, hypotheticalGradYear, true);
     }
 
 }

@@ -45,12 +45,21 @@ public class GradAlgorithmAPIConstants {
     
     @Value("${endpoint.rule-engine-api.run-grad-algorithm-rules.url}")
     private String runRules;
+
+    @Value("${endpoint.rule-engine-api.run-grad-algorithm-rules-v2.url}")
+    private String runV2Rules;
     
     @Value("${endpoint.grad-trax-api.school-all-school.url}")
     private String allSchools;
     
     @Value("${endpoint.grad-program-api.get-program-algorithm-data.url}")
     private String programData;
+
+    @Value("${endpoint.student-assessment-api.get-assessment-type-codes.url}")
+    private String assessmentTypeCodes;
+
+    @Value("${endpoint.grad-program-api.get-assessment-requirements.url}")
+    private String assessmentRequirements;
     
     @Value("${endpoint.grad-program-api.get-optional-program.url}")
     private String optionalProgram;
@@ -91,6 +100,15 @@ public class GradAlgorithmAPIConstants {
 
     @Value("${endpoint.keycloak.getToken}")
     private String tokenUrl;
+
+    @Value("${nats.server}")
+    private String server;
+
+    @Value("${nats.maxReconnect}")
+    private int maxReconnect;
+
+    @Value("${nats.connectionName}")
+    private String connectionName;
 
 
 //Application Properties Constants

@@ -1,17 +1,16 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import ca.bc.gov.educ.api.gradalgorithm.dto.v2.BaseRequest;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
+@EqualsAndHashCode(callSuper = true)
 @Component
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentCourse {
+public class StudentCourse extends BaseRequest {
 
     private String pen;
     private String courseCode;
@@ -26,13 +25,13 @@ public class StudentCourse {
     private String completedCourseLetterGrade;
     private Double interimPercent;
     private String interimLetterGrade;
-    private Double bestSchoolPercent; 
+    private Double bestSchoolPercent;
     private Double bestExamPercent;
     private Double schoolPercent;
     private Double examPercent;
     private String equivOrChallenge;
-    private String fineArtsAppliedSkills;    
-    private String metLitNumRequirement; 
+    private String fineArtsAppliedSkills;
+    private String metLitNumRequirement;
     private Integer credits;
     private Integer creditsUsedForGrad;
     private String relatedCourse;

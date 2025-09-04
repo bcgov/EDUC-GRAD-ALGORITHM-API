@@ -20,7 +20,7 @@ public class GradRuleProcessorService extends GradService {
 	}
 
 	@Retry(name = "generalgetcall")
-    RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData, ExceptionMessage exception) {
+    public RuleProcessorData processGradAlgorithmRules(RuleProcessorData ruleProcessorData, ExceptionMessage exception) {
 		log.debug("**** Processing Grad Algorithm Rules");
         try
         {
