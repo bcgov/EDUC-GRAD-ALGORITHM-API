@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @Slf4j
 @RestController("gradAlgorithmControllerV2")
-@CrossOrigin
 @RequestMapping ("/api/v2")
 @OpenAPIDefinition(info = @Info(title = "API for GRAD Algorithm", description = "This API is for running the grad algorithm for one or more students", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"RUN_GRAD_ALGORITHM"})})
 public class GradAlgorithmController {
