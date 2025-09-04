@@ -99,9 +99,9 @@ public class GradAlgorithmService {
 		log.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
 			Mono<AlgorithmDataParallelDTO> parallelCollectedData;
 		if(fetchDataUsingV2) {
-			parallelCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen, exception);
+			parallelCollectedData = parallelDataFetchV2.fetchAlgorithmRequiredData(studentID, exception);
 		} else {
-			parallelCollectedData =parallelDataFetchV2.fetchAlgorithmRequiredData(studentID, exception);
+			parallelCollectedData =parallelDataFetch.fetchAlgorithmRequiredData(pen, exception);
 		}
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments

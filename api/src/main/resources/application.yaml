@@ -147,6 +147,8 @@ endpoint:
   rule-engine-api:
     run-grad-algorithm-rules:
       url: ${GRAD_RULE_PROCESSOR_API}api/v1/rule-engine/run-grad-algorithm-rules
+    run-grad-algorithm-rules-v2:
+      url: ${GRAD_RULE_PROCESSOR_API}api/v2/rule-engine/run-grad-algorithm-rules
 
 #Splunk LogHelper
 splunk:
