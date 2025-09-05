@@ -4,7 +4,7 @@ import ca.bc.gov.educ.api.gradalgorithm.constants.*;
 import ca.bc.gov.educ.api.gradalgorithm.dto.*;
 import ca.bc.gov.educ.api.gradalgorithm.dto.AssessmentAlgorithmData;
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.AssessmentStudentListItem;
-import ca.bc.gov.educ.api.gradalgorithm.mapper.AssessmentStudentAlgorithmMapper;
+import ca.bc.gov.educ.api.gradalgorithm.mapper.v1.AssessmentStudentAlgorithmMapper;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentAssessmentCacheService;
 import ca.bc.gov.educ.api.gradalgorithm.util.RestUtils;

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service("GradCourseServiceV2")
+@Service("gradCourseServiceV2")
 @Slf4j
 public class GradCourseService {
 

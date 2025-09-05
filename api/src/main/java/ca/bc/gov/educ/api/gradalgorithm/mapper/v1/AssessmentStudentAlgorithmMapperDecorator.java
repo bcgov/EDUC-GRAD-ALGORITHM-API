@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.gradalgorithm.mapper;
+package ca.bc.gov.educ.api.gradalgorithm.mapper.v1;
 
 import ca.bc.gov.educ.api.gradalgorithm.constants.ProvincialSpecialCaseCodes;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;

@@ -1,7 +1,8 @@
-package ca.bc.gov.educ.api.gradalgorithm.mapper;
+package ca.bc.gov.educ.api.gradalgorithm.mapper.v1;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.AssessmentTypeCode;
+import ca.bc.gov.educ.api.gradalgorithm.mapper.DateStringMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

@@ -13,9 +13,11 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DateStringMapperTest {
 
+    private DateStringMapper dateStringMapper;
+
     @Before
     public void setUp() {
-        // No setup needed for static methods
+        dateStringMapper = new DateStringMapper();
     }
 
     @Test
@@ -24,7 +26,7 @@ public class DateStringMapperTest {
         String validDateTimeString = "2023-01-15T10:30:00";
 
         // When
-        Date result = DateStringMapper.map(validDateTimeString);
+        Date result = dateStringMapper.map(validDateTimeString);
 
         // Then
         assertNotNull(result);
@@ -37,7 +39,7 @@ public class DateStringMapperTest {
         String nullString = null;
 
         // When
-        Date result = DateStringMapper.map(nullString);
+        Date result = dateStringMapper.map(nullString);
 
         // Then
         assertNull(result);
@@ -49,7 +51,7 @@ public class DateStringMapperTest {
         String emptyString = "";
 
         // When
-        Date result = DateStringMapper.map(emptyString);
+        Date result = dateStringMapper.map(emptyString);
 
         // Then
         assertNull(result);
@@ -61,7 +63,7 @@ public class DateStringMapperTest {
         String invalidDateString = "2023-13-45T25:70:80";
 
         // When
-        DateStringMapper.map(invalidDateString);
+        dateStringMapper.map(invalidDateString);
 
         // Then - exception should be thrown
     }
@@ -72,7 +74,7 @@ public class DateStringMapperTest {
         String invalidString = "not-a-date";
 
         // When
-        DateStringMapper.map(invalidString);
+        dateStringMapper.map(invalidString);
 
         // Then - exception should be thrown
     }
@@ -83,7 +85,7 @@ public class DateStringMapperTest {
         String leapYearDateTimeString = "2024-02-29T12:00:00";
 
         // When
-        Date result = DateStringMapper.map(leapYearDateTimeString);
+        Date result = dateStringMapper.map(leapYearDateTimeString);
 
         // Then
         assertNotNull(result);

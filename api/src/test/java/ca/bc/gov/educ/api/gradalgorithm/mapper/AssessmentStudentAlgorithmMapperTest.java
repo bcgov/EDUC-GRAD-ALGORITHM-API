@@ -3,6 +3,8 @@ package ca.bc.gov.educ.api.gradalgorithm.mapper;
 import ca.bc.gov.educ.api.gradalgorithm.constants.ProvincialSpecialCaseCodes;
 import ca.bc.gov.educ.api.gradalgorithm.dto.StudentAssessment;
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.AssessmentStudentListItem;
+import ca.bc.gov.educ.api.gradalgorithm.mapper.v1.AssessmentStudentAlgorithmMapper;
+import ca.bc.gov.educ.api.gradalgorithm.mapper.v1.AssessmentStudentAlgorithmMapperDecorator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

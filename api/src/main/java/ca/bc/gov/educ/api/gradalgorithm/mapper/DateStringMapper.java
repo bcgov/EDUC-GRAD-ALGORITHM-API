@@ -1,15 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.mapper;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Slf4j
-@RequiredArgsConstructor
 public class DateStringMapper {
     
-    public static Date map(String dateString) {
+    public Date map(String dateString) {
         if (dateString == null || dateString.trim().isEmpty()) {
             return null;
         }

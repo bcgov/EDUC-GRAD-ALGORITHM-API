@@ -2,7 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service.caching;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.AssessmentTypeCode;
-import ca.bc.gov.educ.api.gradalgorithm.mapper.AssessmentTypeCodeMapper;
+import ca.bc.gov.educ.api.gradalgorithm.mapper.v1.AssessmentTypeCodeMapper;
 import ca.bc.gov.educ.api.gradalgorithm.service.GradService;
 import ca.bc.gov.educ.api.gradalgorithm.service.RESTService;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
@@ -65,7 +65,8 @@ public class StudentAssessmentCacheService extends GradService {
 		val writeLock = this.assessmentMapLock.writeLock();
 		try {
 			writeLock.lock();
-			List<AssessmentTypeCode> codes = this.restService.get(this.constants.getAssessmentTypeCodes(), new ParameterizedTypeReference<List<AssessmentTypeCode>>() {}, this.algorithmApiClient);
+			List<AssessmentTypeCode> codes = this.restService.get(this.constants.getAssessmentTypeCodes(), new ParameterizedTypeReference<>() {
+      }, this.algorithmApiClient);
 
 			for (val code : codes) {
 				this.assessmentTypeCodesMap.put(code.getAssessmentTypeCode(), code);
