@@ -34,10 +34,10 @@ public class GradAlgorithmControllerTest {
         
         when(gradAlgorithmService.graduateStudent(
             UUID.fromString(STUDENT_ID),
-            eq(GRAD_PROGRAM), 
-            eq(false), 
-            eq(""), 
-            eq(true)
+            GRAD_PROGRAM,
+            false,
+            "",
+            true
         )).thenReturn(expectedGraduationData);
 
         // Act
@@ -68,10 +68,10 @@ public class GradAlgorithmControllerTest {
         
         when(gradAlgorithmService.graduateStudent(
             UUID.fromString(STUDENT_ID),
-            eq(GRAD_PROGRAM), 
-            eq(true), 
-            eq("2024"), 
-            eq(true)
+            GRAD_PROGRAM,
+            true,
+            "2024",
+            true
         )).thenReturn(expectedGraduationData);
 
         // Act
