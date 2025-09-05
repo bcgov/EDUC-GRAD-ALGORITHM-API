@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+@SuppressWarnings("java:S7027")
 @Mapper(uses = {UUIDMapper.class, LocalDateTimeMapper.class})
 @DecoratedWith(AssessmentStudentAlgorithmMapperDecorator.class)
 public interface AssessmentStudentAlgorithmMapper {
