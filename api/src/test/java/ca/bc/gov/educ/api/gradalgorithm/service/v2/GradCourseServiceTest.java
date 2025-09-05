@@ -95,7 +95,7 @@ public class GradCourseServiceTest {
     }
 
     @Test
-    public void testGetCourseDataForAlgorithm_WithEmptyStudentCourses_ShouldReturnEmptyData() throws Exception {
+    public void testGetCourseDataForAlgorithm_WithEmptyStudentCourses_ShouldReturnEmptyData() {
         // Given
         List<StudentCourse> emptyStudentCourses = Collections.emptyList();
         List<CourseRequirement> courseRequirements = createTestCourseRequirements();

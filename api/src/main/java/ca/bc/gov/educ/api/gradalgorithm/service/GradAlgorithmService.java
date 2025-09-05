@@ -304,7 +304,7 @@ public class GradAlgorithmService {
 	}
 
 	private void appendPeriod(StringBuilder strBuilder) {
-		if (strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
+		if (!strBuilder.isEmpty() && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
 			strBuilder.append(". ");
 		} else {
 			strBuilder.append(" ");
@@ -581,9 +581,7 @@ public class GradAlgorithmService {
 				}
 			}
 			case "1996-EN", "1996-PF", "1986-EN", "1986-PF" -> studentCourses.sort(Comparator.comparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel())));
-			default -> {
-				log.debug(String.format("No sorting order specified for program: %s", program));
-			}
+			default -> log.debug("No sorting order specified for program: {}", program);
 		}
 	}
 
@@ -709,6 +707,7 @@ public class GradAlgorithmService {
 					honourValue = "N";
 				}
 			}
+			default -> log.error("Unexpected program: {}",  program);
 		}
 		return Pair.of(isExempted,honourValue);
 	}

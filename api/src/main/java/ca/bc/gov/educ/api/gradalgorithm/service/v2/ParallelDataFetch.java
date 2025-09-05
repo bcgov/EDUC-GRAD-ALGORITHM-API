@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Slf4j
-@Service("ParallelDataFetchV2")
+@Service("parallelDataFetchV2")
 public class ParallelDataFetch {
     private final GradCourseService gradCourseService;
     private final GradAssessmentService gradAssessmentService;

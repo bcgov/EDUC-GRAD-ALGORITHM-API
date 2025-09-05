@@ -33,7 +33,7 @@ public class GradAlgorithmControllerTest {
         expectedGraduationData.setGraduated(true);
         
         when(gradAlgorithmService.graduateStudent(
-            eq(UUID.fromString(STUDENT_ID)), 
+            UUID.fromString(STUDENT_ID),
             eq(GRAD_PROGRAM), 
             eq(false), 
             eq(""), 
@@ -67,7 +67,7 @@ public class GradAlgorithmControllerTest {
         expectedGraduationData.setGraduated(false);
         
         when(gradAlgorithmService.graduateStudent(
-            eq(UUID.fromString(STUDENT_ID)), 
+            UUID.fromString(STUDENT_ID),
             eq(GRAD_PROGRAM), 
             eq(true), 
             eq("2024"), 

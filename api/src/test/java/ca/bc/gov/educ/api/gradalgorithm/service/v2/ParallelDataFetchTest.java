@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,9 +42,9 @@ public class ParallelDataFetchTest {
         CourseAlgorithmData courseData = createTestCourseAlgorithmData();
         AssessmentAlgorithmData assessmentData = createTestAssessmentAlgorithmData();
 
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(courseData));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(assessmentData));
 
         // When
@@ -67,8 +66,8 @@ public class ParallelDataFetchTest {
         assertEquals(1, combinedData.assessmentAlgorithmData().getAssessmentRequirements().size());
         assertEquals(1, combinedData.assessmentAlgorithmData().getAssessments().size());
 
-        verify(gradCourseService).getCourseDataForAlgorithm(eq(testStudentID), eq(testException));
-        verify(gradAssessmentService).getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException));
+        verify(gradCourseService).getCourseDataForAlgorithm(testStudentID, testException);
+        verify(gradAssessmentService).getAssessmentDataForAlgorithm(testStudentID, testException);
     }
 
     @Test
@@ -77,9 +76,9 @@ public class ParallelDataFetchTest {
         CourseAlgorithmData emptyCourseData = createEmptyCourseAlgorithmData();
         AssessmentAlgorithmData assessmentData = createTestAssessmentAlgorithmData();
 
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(emptyCourseData));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(assessmentData));
 
         // When
@@ -106,9 +105,9 @@ public class ParallelDataFetchTest {
         CourseAlgorithmData courseData = createTestCourseAlgorithmData();
         AssessmentAlgorithmData emptyAssessmentData = createEmptyAssessmentAlgorithmData();
 
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(courseData));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(emptyAssessmentData));
 
         // When
@@ -135,9 +134,9 @@ public class ParallelDataFetchTest {
         CourseAlgorithmData emptyCourseData = createEmptyCourseAlgorithmData();
         AssessmentAlgorithmData emptyAssessmentData = createEmptyAssessmentAlgorithmData();
 
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(emptyCourseData));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(emptyAssessmentData));
 
         // When
@@ -157,9 +156,9 @@ public class ParallelDataFetchTest {
     @Test
     public void testFetchAlgorithmRequiredData_WithCourseServiceError_ShouldCompleteWithError() {
         // Given
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.error(new RuntimeException("Course service error")));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(createTestAssessmentAlgorithmData()));
 
         // When
@@ -177,9 +176,9 @@ public class ParallelDataFetchTest {
     @Test
     public void testFetchAlgorithmRequiredData_WithAssessmentServiceError_ShouldCompleteWithError() {
         // Given
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.just(createTestCourseAlgorithmData()));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.error(new RuntimeException("Assessment service error")));
 
         // When
@@ -197,9 +196,9 @@ public class ParallelDataFetchTest {
     @Test
     public void testFetchAlgorithmRequiredData_WithBothServicesError_ShouldCompleteWithError() {
         // Given
-        when(gradCourseService.getCourseDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradCourseService.getCourseDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.error(new RuntimeException("Course service error")));
-        when(gradAssessmentService.getAssessmentDataForAlgorithm(eq(testStudentID), eq(testException)))
+        when(gradAssessmentService.getAssessmentDataForAlgorithm(testStudentID, testException))
             .thenReturn(Mono.error(new RuntimeException("Assessment service error")));
 
         // When

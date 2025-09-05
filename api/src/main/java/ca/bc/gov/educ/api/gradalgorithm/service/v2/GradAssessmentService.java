@@ -21,10 +21,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service("GradAssessmentServiceV2")
+@Service("gradAssessmentServiceV2")
 public class GradAssessmentService {
 
-	private final AssessmentStudentAlgorithmMapper mapper = AssessmentStudentAlgorithmMapper.mapper;
+	private static final AssessmentStudentAlgorithmMapper mapper = AssessmentStudentAlgorithmMapper.mapper;
 	private final StudentAssessmentCacheService studentAssessmentCacheService;
 	private final GradProgramService gradProgramCacheService;
 	private final RestUtils restUtils;

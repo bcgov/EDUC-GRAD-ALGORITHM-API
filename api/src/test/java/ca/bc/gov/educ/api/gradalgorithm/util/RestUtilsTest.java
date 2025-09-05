@@ -87,6 +87,7 @@ public class RestUtilsTest {
         when(completableFuture.get()).thenReturn(null);
 
         // When & Then
+        boolean exceptionThrown = false;
         try {
             restUtils.sendMessageRequest(
                 TopicsEnum.GRAD_STUDENT_API_TOPIC,
@@ -95,11 +96,12 @@ public class RestUtilsTest {
                 new TypeReference<String>() {},
                 null
             );
-            fail("Expected ServiceException to be thrown");
         } catch (ServiceException e) {
+            exceptionThrown = true;
             assertTrue(e.getMessage().contains("NATS request timed out"));
             assertTrue(e.getMessage().contains("GET_STUDENT_COURSES"));
         }
+        assertTrue("Expected ServiceException to be thrown", exceptionThrown);
     }
 
     @Test
@@ -145,6 +147,7 @@ public class RestUtilsTest {
         when(completableFuture.get()).thenReturn(mockMessage);
 
         // When & Then
+        boolean exceptionThrown = false;
         try {
             restUtils.sendMessageRequest(
                 TopicsEnum.GRAD_STUDENT_API_TOPIC,
@@ -153,10 +156,11 @@ public class RestUtilsTest {
                 new TypeReference<String>() {},
                 null
             );
-            fail("Expected EntityNotFoundException to be thrown");
         } catch (EntityNotFoundException e) {
+            exceptionThrown = true;
             assertTrue(e.getMessage().contains("java.lang.String"));
         }
+        assertTrue("Expected EntityNotFoundException to be thrown", exceptionThrown);
     }
 
     @Test
@@ -172,6 +176,7 @@ public class RestUtilsTest {
         when(completableFuture.get()).thenThrow(new RuntimeException(errorMessage));
 
         // When & Then
+        boolean exceptionThrown = false;
         try {
             restUtils.sendMessageRequest(
                 TopicsEnum.GRAD_STUDENT_API_TOPIC,
@@ -180,11 +185,12 @@ public class RestUtilsTest {
                 new TypeReference<String>() {},
                 null
             );
-            fail("Expected ServiceException to be thrown");
         } catch (ServiceException e) {
+            exceptionThrown = true;
             assertTrue(e.getMessage().contains("Failed to retrieve GET_STUDENT_COURSES data"));
             assertTrue(e.getMessage().contains(errorMessage));
         }
+        assertTrue("Expected ServiceException to be thrown", exceptionThrown);
     }
 
     @Test

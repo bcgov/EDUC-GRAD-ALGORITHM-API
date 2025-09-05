@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class AssessmentTypeCodeMapperTest {
 
-    final static private AssessmentTypeCodeMapper mapper = AssessmentTypeCodeMapper.mapper;
+    private final static AssessmentTypeCodeMapper mapper = AssessmentTypeCodeMapper.mapper;
 
     private AssessmentTypeCode testAssessmentTypeCode;
 
