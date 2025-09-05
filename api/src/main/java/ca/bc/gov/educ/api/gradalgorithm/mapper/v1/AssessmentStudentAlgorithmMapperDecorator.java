@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 @Slf4j
+@SuppressWarnings("java:S7027")
 public abstract class AssessmentStudentAlgorithmMapperDecorator implements AssessmentStudentAlgorithmMapper {
     private final AssessmentStudentAlgorithmMapper delegate;
 
