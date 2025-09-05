@@ -2,6 +2,7 @@ package ca.bc.gov.educ.api.gradalgorithm.mapper;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.Assessment;
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.AssessmentTypeCode;
+import ca.bc.gov.educ.api.gradalgorithm.mapper.v1.AssessmentTypeCodeMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +18,7 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class AssessmentTypeCodeMapperTest {
 
-    private final static AssessmentTypeCodeMapper mapper = AssessmentTypeCodeMapper.mapper;
+    private static final AssessmentTypeCodeMapper mapper = AssessmentTypeCodeMapper.mapper;
 
     private AssessmentTypeCode testAssessmentTypeCode;
 
