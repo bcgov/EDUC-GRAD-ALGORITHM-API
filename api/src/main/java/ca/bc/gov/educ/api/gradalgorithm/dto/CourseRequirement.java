@@ -2,23 +2,29 @@ package ca.bc.gov.educ.api.gradalgorithm.dto;
 
 import java.util.UUID;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.v2.BaseRequest;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class CourseRequirement {
+public class CourseRequirement extends BaseRequest {
 
 	private UUID courseRequirementId;
 	private String courseCode;
     private String courseLevel;
     private CourseRequirementCodeDTO ruleCode;
     private String courseName;
+    private String startDate;
+    private String endDate;
+    private String completionEndDate;
 
     public String getCourseCode() {
         if (courseCode != null)

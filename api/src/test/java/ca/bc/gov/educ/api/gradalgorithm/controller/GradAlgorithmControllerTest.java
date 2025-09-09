@@ -8,6 +8,7 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 @Slf4j
@@ -69,8 +69,8 @@ class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
 
         RuleProcessorData ruleProcessorData = createRuleProcessorData("json/ruleProcessorData.json");
 
-        assertNotNull(ruleProcessorData);
-        assertNotNull(ruleProcessorData.getGradStudent());
+        Assertions.assertNotNull(ruleProcessorData);
+        Assertions.assertNotNull(ruleProcessorData.getGradStudent());
 
         String studentID = ruleProcessorData.getGradStudent().getStudentID();
         String gradProgram = ruleProcessorData.getGradStudent().getProgram();
@@ -81,9 +81,9 @@ class GradAlgorithmControllerTest extends EducGradAlgorithmTestBase {
         entity.setSchool(ruleProcessorData.getSchool());
 
 
-        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, null)).thenReturn(entity);
+        Mockito.when(gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, false, null, false)).thenReturn(entity);
         gradAlgorithmController.graduateStudent(studentID, gradProgram, false, null);
-        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, null);
+        Mockito.verify(gradAlgorithmService).graduateStudent(UUID.fromString(studentID), gradProgram, false, null, false);
 
         log.debug(">graduateStudentTest");
     }

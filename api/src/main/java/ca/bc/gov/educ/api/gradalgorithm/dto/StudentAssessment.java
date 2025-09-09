@@ -1,16 +1,19 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
+import ca.bc.gov.educ.api.gradalgorithm.dto.v2.BaseRequest;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class StudentAssessment {
+public class StudentAssessment extends BaseRequest {
 
     private String pen;
     private String assessmentCode;

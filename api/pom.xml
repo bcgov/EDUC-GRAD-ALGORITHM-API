@@ -20,6 +20,7 @@
 			src/main/resources/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/config/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/exception/**,
+			src/main/java/ca/bc/gov/educ/assessment/api/mappers/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/dto/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/service/caching/**,
@@ -41,6 +42,9 @@
 		<resilience4j.version>1.7.1</resilience4j.version>
 		<maven.test.skip>false</maven.test.skip>
 		<log4j.version>2.18.0</log4j.version>
+		<nats.version>2.11.0</nats.version>
+		<guava.version>33.2.1-jre</guava.version>
+		<org.mapstruct.version>1.6.2</org.mapstruct.version>
 	</properties>
 
 	<dependencies>
@@ -159,6 +163,25 @@
 			<artifactId>log4j-to-slf4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.nats</groupId>
+			<artifactId>jnats</artifactId>
+			<version>${nats.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -208,9 +231,19 @@
 							<target>${java.version}</target>
 							<annotationProcessorPaths>
 								<path>
+									<groupId>org.mapstruct</groupId>
+									<artifactId>mapstruct-processor</artifactId>
+									<version>${org.mapstruct.version}</version>
+								</path>
+								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
 									<version>${lombok.version}</version>
+								</path>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok-mapstruct-binding</artifactId>
+									<version>0.2.0</version>
 								</path>
 								<path>
 									<groupId>org.springframework</groupId>

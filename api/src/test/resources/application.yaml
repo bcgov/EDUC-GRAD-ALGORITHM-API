@@ -1,5 +1,7 @@
 #DB Properties
 spring:
+  main:
+    allow-bean-definition-overriding: true
   jmx:
     enabled: false
   datasource:
@@ -92,9 +94,14 @@ endpoint:
       url: https://educ-grad-program-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program/optionalprograms/%s/%s
     optional_program_name_by_optional_program_id:
       url: https://educ-grad-program-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/program/optionalprograms/id/%s
+    get-assessment-requirements:
+      url: http://url
   grad-course-api:
     get-course-algorithm-data:
       url: https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-algorithm/pen/%s
+  student-assessment-api:
+    get-assessment-type-codes:
+      url: http://url
   grad-assessment-api:
     get-assessment-algorithm-data:
       url: https://grad-assessment-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/assessment/assessment-algorithm/pen/%s
@@ -116,8 +123,14 @@ endpoint:
   rule-engine-api:
     run-grad-algorithm-rules:
       url: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca/run-grad-algorithm-rules
+    run-grad-algorithm-rules-v2:
+      url: http://url
 
 #Splunk LogHelper
 splunk:
   log-helper:
     enabled: false
+nats:
+  server: nats://localhost:4220
+  maxReconnect: 60
+  connectionName: GRAD-ALGORITHM-API

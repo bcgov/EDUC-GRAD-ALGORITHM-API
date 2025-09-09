@@ -8,6 +8,7 @@ COMMON_NAMESPACE=$4
 BUSINESS_NAMESPACE=$5
 SPLUNK_TOKEN=$6
 APP_LOG_LEVEL=$7
+STUDENT_ASSESSMENT_NAMESPACE=$8
 
 SPLUNK_URL="gww.splunk.educ.gov.bc.ca"
 FLB_CONFIG="[SERVICE]
@@ -63,6 +64,9 @@ oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map 
   --from-literal=GRAD_RULE_PROCESSOR_API="http://educ-rule-engine-api.$BUSINESS_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=KEYCLOAK_TOKEN_URL="https://soam-$envValue.apps.silver.devops.gov.bc.ca/" \
   --from-literal=GRAD_STUDENT_GRADUATION_API="http://educ-grad-student-graduation-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
+  --from-literal=STUDENT_ASSESSMENT_API="http://student-assessment-api-master.$STUDENT_ASSESSMENT_NAMESPACE-$envValue.svc.cluster.local:8080" \
+  --from-literal=NATS_MAX_RECONNECT=60 \
+  --from-literal=NATS_URL="nats://nats.${COMMON_NAMESPACE}-${envValue}.svc.cluster.local:4222" \
   --dry-run=client -o yaml | oc apply -f -
 
 echo Creating config map "$APP_NAME"-flb-sc-config-map

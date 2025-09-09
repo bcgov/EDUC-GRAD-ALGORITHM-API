@@ -47,6 +47,7 @@ public class GradAlgorithmService {
     GradRuleProcessorService gradRuleProcessorService;
 	GradSchoolService gradSchoolService;
 	ParallelDataFetch parallelDataFetch;
+	ca.bc.gov.educ.api.gradalgorithm.service.v2.ParallelDataFetch parallelDataFetchV2;
 	StudentGraduationService studentGraduationService;
 	JsonTransformer jsonTransformer;
 
@@ -55,7 +56,8 @@ public class GradAlgorithmService {
 								GradCourseService gradCourseService, GradProgramService gradProgramService,
 								GradGraduationStatusService gradGraduationStatusService, GradRuleProcessorService gradRuleProcessorService,
 								GradSchoolService gradSchoolService, ParallelDataFetch parallelDataFetch,
-								StudentGraduationService studentGraduationService, JsonTransformer jsonTransformer) {
+								StudentGraduationService studentGraduationService, JsonTransformer jsonTransformer,
+								ca.bc.gov.educ.api.gradalgorithm.service.v2.ParallelDataFetch parallelDataFetchV2) {
 		this.gradStudentService = gradStudentService;
 		this.gradAssessmentService = gradAssessmentService;
 		this.gradCourseService = gradCourseService;
@@ -66,12 +68,13 @@ public class GradAlgorithmService {
 		this.parallelDataFetch = parallelDataFetch;
 		this.studentGraduationService = studentGraduationService;
 		this.jsonTransformer = jsonTransformer;
+		this.parallelDataFetchV2 = parallelDataFetchV2;
 	}
 
 	private static final String SCCP = "SCCP";
 	private static final String NOPROGRAM = "NOPROG";
 
-    public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String hypotheticalGradYear) {
+    public GraduationData graduateStudent(UUID studentID, String gradProgram, boolean projected, String hypotheticalGradYear, boolean fetchDataUsingV2) {
         log.debug("\n************* New Graduation Algorithm START  ************ ");
         //Get Student Demographics
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
@@ -94,7 +97,12 @@ public class GradAlgorithmService {
         String pen=ruleProcessorData.getGradStudent().getPen();
 		String schoolOfRecordId = ruleProcessorData.getGradStudent().getSchoolOfRecordId();
 		log.info("**** PEN: **** {}",pen != null ? pen.substring(5):"Not Found");
-		Mono<AlgorithmDataParallelDTO> parallelCollectedData = parallelDataFetch.fetchAlgorithmRequiredData(pen, exception);
+			Mono<AlgorithmDataParallelDTO> parallelCollectedData;
+		if(fetchDataUsingV2) {
+			parallelCollectedData = parallelDataFetchV2.fetchAlgorithmRequiredData(studentID, exception);
+		} else {
+			parallelCollectedData =parallelDataFetch.fetchAlgorithmRequiredData(pen, exception);
+		}
 		AlgorithmDataParallelDTO algorithmDataParallelDTO = parallelCollectedData.block();
 		//Get All Assessment Requirements, assessments, student assessments
 		if(algorithmDataParallelDTO != null) {
@@ -296,7 +304,7 @@ public class GradAlgorithmService {
 	}
 
 	private void appendPeriod(StringBuilder strBuilder) {
-		if (strBuilder.length() > 0 && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
+		if (!strBuilder.isEmpty() && '.' != (strBuilder.charAt(strBuilder.length() - 1 ))) {
 			strBuilder.append(". ");
 		} else {
 			strBuilder.append(" ");
@@ -573,9 +581,7 @@ public class GradAlgorithmService {
 				}
 			}
 			case "1996-EN", "1996-PF", "1986-EN", "1986-PF" -> studentCourses.sort(Comparator.comparingInt(sc -> APIUtils.getNumericCourseLevel(sc.getCourseLevel())));
-			default -> {
-				log.debug(String.format("No sorting order specified for program: %s", program));
-			}
+			default -> log.debug("No sorting order specified for program: {}", program);
 		}
 	}
 
@@ -701,6 +707,7 @@ public class GradAlgorithmService {
 					honourValue = "N";
 				}
 			}
+			default -> log.error("Unexpected program: {}",  program);
 		}
 		return Pair.of(isExempted,honourValue);
 	}

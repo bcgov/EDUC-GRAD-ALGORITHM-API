@@ -127,7 +127,8 @@
       "READ_GRAD_BATCH_JOB_CODE_DATA",
       "CREATE_GRAD_REPORT_CODE_DATA",
       "RUN_DELETE_STUDENT_REPORTS",
-      "UPDATE_GRAD_STUDENT_STATUS_CODE_DATA"],
+      "UPDATE_GRAD_STUDENT_STATUS_CODE_DATA",
+      "READ_ASSESSMENT_SESSIONS"],
     "settings": {
       "enabled": true,
       "protocol": "openid-connect",

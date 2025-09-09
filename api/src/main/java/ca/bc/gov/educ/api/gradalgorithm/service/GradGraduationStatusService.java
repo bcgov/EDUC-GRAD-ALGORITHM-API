@@ -39,7 +39,7 @@ public class GradGraduationStatusService extends GradService {
     }
 
 	@Retry(name = "generalgetcall")
-    List<StudentOptionalProgram> getStudentOptionalProgramsById(String studentID, ExceptionMessage exception) {
+    public List<StudentOptionalProgram> getStudentOptionalProgramsById(String studentID, ExceptionMessage exception) {
 		exception = new ExceptionMessage();
 		try
     	{

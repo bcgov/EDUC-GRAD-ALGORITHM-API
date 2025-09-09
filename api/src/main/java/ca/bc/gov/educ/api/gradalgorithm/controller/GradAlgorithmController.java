@@ -35,7 +35,7 @@ public class GradAlgorithmController {
                                           @RequestParam(required = false) boolean projected,
                                           @RequestParam(required = false, defaultValue = "") String hypotheticalGradYear) {
         log.debug("**** GRAD ALGORITHM Started ****");
-        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, hypotheticalGradYear);
+        return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, hypotheticalGradYear, false);
     }
 
 }
