@@ -3,6 +3,7 @@ package ca.bc.gov.educ.api.gradalgorithm.service;
 import ca.bc.gov.educ.api.gradalgorithm.exception.ServiceException;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
 import ca.bc.gov.educ.api.gradalgorithm.util.ThreadLocalStateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,6 +20,7 @@ import reactor.util.retry.Retry;
 import java.io.IOException;
 import java.time.Duration;
 
+@Slf4j
 @Service
 public class RESTService {
 
@@ -87,6 +89,7 @@ public class RESTService {
                             }))
                     .block();
         } catch (Exception e) {
+            log.error(e.getMessage());
             // catches IOExceptions and the like
             throw new ServiceException(
                     getErrorMessage(url, e.getLocalizedMessage()),

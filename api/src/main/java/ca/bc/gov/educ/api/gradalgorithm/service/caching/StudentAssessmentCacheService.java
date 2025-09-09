@@ -72,7 +72,7 @@ public class StudentAssessmentCacheService extends GradService {
 				this.assessmentTypeCodesMap.put(code.getAssessmentTypeCode(), code);
 			}
 		} catch (Exception ex) {
-      log.error("Unable to load map cache assessment types {}", String.valueOf(ex));
+      log.error("Unable to load map cache assessment types {}", ex.getLocalizedMessage());
 		} finally {
 			writeLock.unlock();
 			log.info("Loaded  {} assessment types to memory", this.assessmentTypeCodesMap.size());
