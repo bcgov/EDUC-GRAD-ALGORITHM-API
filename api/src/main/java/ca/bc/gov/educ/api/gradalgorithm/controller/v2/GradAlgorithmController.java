@@ -31,7 +31,7 @@ public class GradAlgorithmController {
     @PreAuthorize(PermissionsConstants.RUN_GRAD_ALGORITHM)
     public GraduationData graduateStudent(@RequestParam(name = "studentID") String studentID,
                                           @RequestParam(name = "gradProgram") String gradProgram,
-                                          @RequestParam(required = false) Boolean projected,
+                                          @RequestParam(required = false) boolean projected,
                                           @RequestParam(required = false, defaultValue = "") String hypotheticalGradYear) {
         log.debug("**** GRAD ALGORITHM Started ****");
         return gradAlgorithmService.graduateStudent(UUID.fromString(studentID), gradProgram, projected, hypotheticalGradYear, true);

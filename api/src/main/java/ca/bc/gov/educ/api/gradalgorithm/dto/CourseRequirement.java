@@ -1,6 +1,5 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
-import java.sql.Date;
 import java.util.UUID;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.BaseRequest;
@@ -23,8 +22,8 @@ public class CourseRequirement extends BaseRequest {
     private String courseLevel;
     private CourseRequirementCodeDTO ruleCode;
     private String courseName;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private String completionEndDate;
 
     public String getCourseCode() {
