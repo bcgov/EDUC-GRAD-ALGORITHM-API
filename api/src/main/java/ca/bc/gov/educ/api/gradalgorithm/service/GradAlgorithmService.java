@@ -567,7 +567,7 @@ public class GradAlgorithmService {
 					coursesAfterStartDate.sort(
 							Comparator.comparing(StudentCourse::getCourseLevel)
 									.thenComparing(StudentCourse::getCompletedCourseLetterGrade, Comparator.nullsLast(String::compareTo))
-									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
+									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.nullsLast(Double::compareTo).reversed())
 					);
 					studentCourses.addAll(coursesAfterStartDate);
 				}
@@ -575,7 +575,7 @@ public class GradAlgorithmService {
 					coursesOnOrBeforeStartDate.sort(
 							Comparator.comparing(StudentCourse::getCourseLevel)
 									.thenComparing(StudentCourse::getCompletedCourseLetterGrade, Comparator.nullsLast(String::compareTo))
-									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.reverseOrder())
+									.thenComparing(StudentCourse::getCompletedCoursePercentage, Comparator.nullsLast(Double::compareTo).reversed())
 					);
 					studentCourses.addAll(coursesOnOrBeforeStartDate);
 				}
