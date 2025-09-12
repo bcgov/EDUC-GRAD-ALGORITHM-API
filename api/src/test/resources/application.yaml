@@ -100,6 +100,7 @@ endpoint:
     get-course-algorithm-data:
       url: https://grad-course-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/course/course-algorithm/pen/%s
   student-assessment-api:
+    enabled: true
     get-assessment-type-codes:
       url: http://url
   grad-assessment-api:
