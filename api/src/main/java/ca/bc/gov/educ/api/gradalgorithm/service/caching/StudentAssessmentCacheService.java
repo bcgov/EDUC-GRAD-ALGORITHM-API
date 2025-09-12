@@ -58,8 +58,10 @@ public class StudentAssessmentCacheService extends GradService {
 
 	@PostConstruct
 	public void init() {
-		log.info("loading assessment type codes..");
-		this.setAssessmentTypeCodesMap();
+		if(constants.isEnableStudentAssessment()) {
+			log.info("loading assessment type codes..");
+			this.setAssessmentTypeCodesMap();
+		}
 	}
 	private void setAssessmentTypeCodesMap() {
 		val writeLock = this.assessmentMapLock.writeLock();

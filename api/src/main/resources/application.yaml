@@ -120,6 +120,7 @@ endpoint:
     get-course-algorithm-data:
       url: ${GRAD_COURSE_API}api/v1/course/course-algorithm/pen/%s
   student-assessment-api:
+    enabled: ${ENABLE_STUDENT_ASSESSMENTS}
     get-assessment-type-codes:
       url: ${STUDENT_ASSESSMENT_API}api/v1/student-assessment/assessment-types
   grad-assessment-api:
