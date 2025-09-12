@@ -110,6 +110,9 @@ public class GradAlgorithmAPIConstants {
     @Value("${nats.connectionName}")
     private String connectionName;
 
+    @Value("${endpoint.student-assessment-api.enabled}")
+    private boolean enableStudentAssessment;
+
 
 //Application Properties Constants
 

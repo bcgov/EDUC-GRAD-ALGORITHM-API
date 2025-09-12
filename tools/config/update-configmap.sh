@@ -51,6 +51,14 @@ PARSER_CONFIG="
 ###########################################################
 #Setup for config-maps
 ###########################################################
+
+if [ "$envValue" != "prod" ]
+then
+  ENABLE_STUDENT_ASSESSMENTS="true"
+else
+  ENABLE_STUDENT_ASSESSMENTS="false"
+fi
+
 echo Creating config map "$APP_NAME"-config-map
 oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map \
   --from-literal=GRAD_TRAX_API="http://educ-grad-trax-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
@@ -67,6 +75,7 @@ oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map 
   --from-literal=STUDENT_ASSESSMENT_API="http://student-assessment-api-master.$STUDENT_ASSESSMENT_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=NATS_MAX_RECONNECT=60 \
   --from-literal=NATS_URL="nats://nats.${COMMON_NAMESPACE}-${envValue}.svc.cluster.local:4222" \
+  --from-literal=ENABLE_STUDENT_ASSESSMENTS=$ENABLE_STUDENT_ASSESSMENTS \
   --dry-run=client -o yaml | oc apply -f -
 
 echo Creating config map "$APP_NAME"-flb-sc-config-map
