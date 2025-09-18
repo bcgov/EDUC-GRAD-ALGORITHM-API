@@ -88,6 +88,12 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.grad-student-api.get-grad-student-algo-data.url}")
     private String gradStudentAlgorithmData;
 
+    @Value("${endpoint.institute-api.get-all-schools.url}")
+    private String allSchoolsFromInstituteApiUrl;
+
+    @Value("${endpoint.grad-school-api.get-grad-details.url}")
+    public String schoolGradDetailsFromGradSchoolApiUrl;
+
     // Splunk LogHelper Enabled
     @Value("${splunk.log-helper.enabled}")
     private boolean splunkLogHelperEnabled;

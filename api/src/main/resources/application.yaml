@@ -150,6 +150,12 @@ endpoint:
       url: ${GRAD_RULE_PROCESSOR_API}api/v1/rule-engine/run-grad-algorithm-rules
     run-grad-algorithm-rules-v2:
       url: ${GRAD_RULE_PROCESSOR_API}api/v2/rule-engine/run-grad-algorithm-rules
+  institute-api:
+    get-all-schools:
+      url: ${INSTITUTE_API_URL_ROOT}api/v1/institute/school
+  grad-school-api:
+    get-grad-details:
+      url: ${GRAD_SCHOOL_API_URL_ROOT}api/v1/grad-school
 
 #Splunk LogHelper
 splunk:
