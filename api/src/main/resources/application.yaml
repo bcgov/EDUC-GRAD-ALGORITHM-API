@@ -153,8 +153,12 @@ endpoint:
   institute-api:
     get-all-schools:
       url: ${INSTITUTE_API_URL_ROOT}api/v1/institute/school
+    get-school:
+      url: ${INSTITUTE_API_URL_ROOT}/api/v1/institute/school/%s
     get-all-districts:
       url: ${INSTITUTE_API_URL_ROOT}api/v1/institute/district
+    get-district:
+      url: ${INSTITUTE_API_URL_ROOT}api/v1/institute/district/%s
     get-schools-paginated:
       url: ${INSTITUTE_API_URL_ROOT}api/v1/institute/school/paginated
     get-category-codes:
@@ -162,6 +166,8 @@ endpoint:
   grad-school-api:
     get-grad-details:
       url: ${GRAD_SCHOOL_API_URL_ROOT}api/v1/grad-school
+    get-grad-school:
+      url: ${GRAD_SCHOOL_API_URL_ROOT}/api/v1/grad-school/search/%s
 
 #Splunk LogHelper
 splunk:

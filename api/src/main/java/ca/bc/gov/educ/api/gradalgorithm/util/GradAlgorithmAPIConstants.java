@@ -91,6 +91,15 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.institute-api.get-all-schools.url}")
     private String allSchoolsFromInstituteApiUrl;
 
+    @Value("${endpoint.institute-api.get-school.url}")
+    private String schoolFromInstituteApiUrl;
+
+    @Value("${endpoint.institute-api.get-district.url}")
+    private String districtFromInstituteApiUrl;
+
+    @Value("${endpoint.grad-school-api.get-grad-school.url}")
+    private String gradSchoolFromGradSchoolApiUrl;
+
     @Value("${endpoint.institute-api.get-all-districts.url}")
     private String allDistrictsFromInstituteApiUrl;
 
