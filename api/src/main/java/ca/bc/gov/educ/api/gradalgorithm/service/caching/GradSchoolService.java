@@ -64,7 +64,7 @@ public class GradSchoolService extends GradService {
 		try {
 			// get schools from institute
 			List<SchoolDetail> schoolDetails = getSchoolDetailsFromInstituteApi();
-			// get grad school detials
+			// get grad school details
 			List<GradSchool> gradSchoolList = getSchoolGradDetailsFromSchoolApi();
 			// get district info
 			List<District> districts = getDistrictsFromInstituteApi();
