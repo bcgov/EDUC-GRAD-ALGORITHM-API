@@ -91,8 +91,17 @@ public class GradAlgorithmAPIConstants {
     @Value("${endpoint.institute-api.get-all-schools.url}")
     private String allSchoolsFromInstituteApiUrl;
 
+    @Value("${endpoint.institute-api.get-all-districts.url}")
+    private String allDistrictsFromInstituteApiUrl;
+
+    @Value("${endpoint.institute-api.get-category-codes.url}")
+    private String allCategoryCodesFromInstituteApiUrl;
+
     @Value("${endpoint.grad-school-api.get-grad-details.url}")
     public String schoolGradDetailsFromGradSchoolApiUrl;
+
+    @Value("${endpoint.institute-api.get-schools-paginated.url}")
+    private String schoolsPaginatedFromInstituteApiUrl;
 
     // Splunk LogHelper Enabled
     @Value("${splunk.log-helper.enabled}")

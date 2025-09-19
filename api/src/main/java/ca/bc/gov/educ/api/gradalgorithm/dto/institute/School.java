@@ -1,16 +1,16 @@
-package ca.bc.gov.educ.api.gradalgorithm.dto;
+package ca.bc.gov.educ.api.gradalgorithm.dto.institute;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.BaseRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
-
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
+@Component("instituteSchool")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SchoolTombstone extends BaseRequest implements Serializable {
+public class School extends BaseRequest {
 
     private String schoolId;
     private String districtId;
@@ -24,13 +24,12 @@ public class SchoolTombstone extends BaseRequest implements Serializable {
     private String displayName;
     private String displayNameNoSpecialChars;
     private String schoolReportingRequirementCode;
-    private String vendorSourceSystemCode;
     private String schoolOrganizationCode;
     private String schoolCategoryCode;
     private String facilityTypeCode;
     private String openedDate;
     private String closedDate;
-    private Boolean canIssueTranscripts;
-    private Boolean canIssueCertificates;
+    private boolean canIssueTranscripts;
+    private boolean canIssueCertificates;
 
 }

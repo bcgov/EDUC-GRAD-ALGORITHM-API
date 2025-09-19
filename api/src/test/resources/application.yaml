@@ -129,6 +129,12 @@ endpoint:
   institute-api:
     get-all-schools:
       url: http://url
+    get-all-districts:
+      url: http://url
+    get-category-codes:
+      url: http://url
+  get-schools-paginated:
+    url: http://url
   grad-school-api:
     get-grad-details:
       url: http://url
