@@ -53,7 +53,7 @@ public class GradCourseServiceTest {
             eq(EventType.GET_STUDENT_COURSES),
             eq(String.valueOf(testStudentID)),
             any(TypeReference.class),
-            isNull()
+            eq(Collections.emptyList())
         )).thenReturn(studentCourses);
 
         when(restUtils.sendMessageRequest(
@@ -98,32 +98,14 @@ public class GradCourseServiceTest {
     public void testGetCourseDataForAlgorithm_WithEmptyStudentCourses_ShouldReturnEmptyData() {
         // Given
         List<StudentCourse> emptyStudentCourses = Collections.emptyList();
-        List<CourseRequirement> courseRequirements = createTestCourseRequirements();
-        List<CourseRestriction> courseRestrictions = createTestCourseRestrictions();
 
         when(restUtils.sendMessageRequest(
             eq(TopicsEnum.GRAD_STUDENT_API_TOPIC),
             eq(EventType.GET_STUDENT_COURSES),
             eq(String.valueOf(testStudentID)),
             any(TypeReference.class),
-            isNull()
+            eq(Collections.emptyList())
         )).thenReturn(emptyStudentCourses);
-
-        when(restUtils.sendMessageRequest(
-            eq(TopicsEnum.GRAD_COURSE_API_TOPIC),
-            eq(EventType.GET_COURSE_REQUIREMENTS),
-            eq("[]"),
-            any(TypeReference.class),
-            isNull()
-        )).thenReturn(courseRequirements);
-
-        when(restUtils.sendMessageRequest(
-            eq(TopicsEnum.GRAD_COURSE_API_TOPIC),
-            eq(EventType.GET_COURSE_RESTRICTIONS),
-            eq("[]"),
-            any(TypeReference.class),
-            isNull()
-        )).thenReturn(courseRestrictions);
 
         // When
         Mono<CourseAlgorithmData> result = gradCourseService.getCourseDataForAlgorithm(testStudentID, testException);
@@ -132,8 +114,11 @@ public class GradCourseServiceTest {
         CourseAlgorithmData courseData = result.block();
         assertNotNull(courseData);
         assertTrue(courseData.getStudentCourses().isEmpty());
-        assertEquals(1, courseData.getCourseRequirements().size());
-        assertEquals(1, courseData.getCourseRestrictions().size());
+        assertTrue(courseData.getCourseRequirements().isEmpty());
+        assertTrue(courseData.getCourseRestrictions().isEmpty());
+        
+        // Verify only one API call was made (for student courses)
+        verify(restUtils, times(1)).sendMessageRequest(any(), any(), any(), any(), any());
     }
 
     @Test
@@ -149,7 +134,7 @@ public class GradCourseServiceTest {
             eq(EventType.GET_STUDENT_COURSES),
             eq(String.valueOf(testStudentID)),
             any(TypeReference.class),
-            isNull()
+            eq(Collections.emptyList())
         )).thenReturn(studentCoursesWithDuplicates);
 
         when(restUtils.sendMessageRequest(
@@ -185,7 +170,7 @@ public class GradCourseServiceTest {
             eq(EventType.GET_STUDENT_COURSES),
             eq(String.valueOf(testStudentID)),
             any(TypeReference.class),
-            isNull()
+            eq(Collections.emptyList())
         )).thenThrow(new RuntimeException("Service unavailable"));
 
         // When
