@@ -49,7 +49,7 @@ public interface SchoolMapper {
                 .collect(Collectors.toMap(
                         School::getSchoolId,
                         Function.identity(),
-                        (first, dup) -> dup,          // choose your merge policy (dup wins here)
+                        (first, dup) -> dup,
                         ConcurrentHashMap::new
                 ));
     }

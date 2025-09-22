@@ -11,6 +11,7 @@ env:
   COMMON_NAMESPACE: ${{ vars.COMMON_NAMESPACE }}
   BUSINESS_NAMESPACE: ${{ vars.GRAD_BUSINESS_NAMESPACE }}
   STUDENT_ASSESSMENT_NAMESPACE: ${{ vars.STUDENT_ASSESSMENT_NAMESPACE }}
+  GRAD_SCHOOL_API_NAMESPACE: ${{vars.GRAD_SCHOOL_API_NAMESPACE}}
   KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL }}
   KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
   TARGET_ENV: test
@@ -101,7 +102,8 @@ jobs:
           ${{ env.BUSINESS_NAMESPACE }} \
           ${{ secrets.SPLUNK_TOKEN }} \
           ${{ vars.APP_LOG_LEVEL }} \
-          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }}
+          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }} \
+          ${{ env.GRAD_SCHOOL_API_NAMESPACE }}
           
           # Start rollout (if necessary) and follow it
           oc rollout restart deployment/${{ env.SPRING_BOOT_IMAGE_NAME }}

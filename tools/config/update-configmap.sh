@@ -9,6 +9,7 @@ BUSINESS_NAMESPACE=$5
 SPLUNK_TOKEN=$6
 APP_LOG_LEVEL=$7
 STUDENT_ASSESSMENT_NAMESPACE=$8
+GRAD_SCHOOL_API_NAMESPACE=$9
 
 SPLUNK_URL="gww.splunk.educ.gov.bc.ca"
 FLB_CONFIG="[SERVICE]
@@ -74,6 +75,7 @@ oc create -n "$BUSINESS_NAMESPACE"-"$envValue" configmap "$APP_NAME"-config-map 
   --from-literal=GRAD_STUDENT_GRADUATION_API="http://educ-grad-student-graduation-api.$GRAD_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=STUDENT_ASSESSMENT_API="http://student-assessment-api-master.$STUDENT_ASSESSMENT_NAMESPACE-$envValue.svc.cluster.local:8080/" \
   --from-literal=INSTITUTE_API_URL_ROOT="http://institute-api-master.$COMMON_NAMESPACE-$envValue.svc.cluster.local:8080/" \
+  --from-literal=GRAD_SCHOOL_API_URL_ROOT="http://grad-school-api-master.$GRAD_SCHOOL_API_NAMESPACE-$envValue.svc.cluster.local:8080/"
   --from-literal=NATS_MAX_RECONNECT=60 \
   --from-literal=NATS_URL="nats://nats.${COMMON_NAMESPACE}-${envValue}.svc.cluster.local:4222" \
   --from-literal=ENABLE_STUDENT_ASSESSMENTS=$ENABLE_STUDENT_ASSESSMENTS \
