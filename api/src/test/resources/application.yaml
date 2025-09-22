@@ -126,6 +126,24 @@ endpoint:
       url: https://rule-engine-api-77c02f-dev.apps.silver.devops.gov.bc.ca/run-grad-algorithm-rules
     run-grad-algorithm-rules-v2:
       url: http://url
+  institute-api:
+    get-all-schools:
+      url: http://url
+    get-school:
+      url: http://url
+    get-all-districts:
+      url: http://url
+    get-district:
+      url: http://url/%s
+    get-schools-paginated:
+      url: http://url
+    get-category-codes:
+      url: http://url
+  grad-school-api:
+    get-grad-details:
+      url: http://url
+    get-grad-school:
+      url: http://url/%s
 
 #Splunk LogHelper
 splunk:
