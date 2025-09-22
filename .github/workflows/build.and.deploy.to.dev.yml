@@ -9,6 +9,7 @@ env:
   OPENSHIFT_NAMESPACE: ${{ vars.GRAD_BUSINESS_NAMESPACE }}-dev
   COMMON_NAMESPACE: ${{ vars.COMMON_NAMESPACE }}
   GRAD_NAMESPACE: ${{ vars.GRAD_NAMESPACE }}
+  GRAD_SCHOOL_API_NAMESPACE: ${{vars.GRAD_SCHOOL_API_NAMESPACE}}
   BUSINESS_NAMESPACE: ${{ vars.GRAD_BUSINESS_NAMESPACE }}
   STUDENT_ASSESSMENT_NAMESPACE: ${{ vars.STUDENT_ASSESSMENT_NAMESPACE }}
   KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL }}
@@ -141,7 +142,8 @@ jobs:
           ${{ env.BUSINESS_NAMESPACE }} \
           ${{ secrets.SPLUNK_TOKEN }} \
           ${{ vars.APP_LOG_LEVEL }} \
-          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }}
+          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }} \
+          ${{ env.GRAD_SCHOOL_API_NAMESPACE }}
           
           # OVERRIDE Configmaps
           curl -s https://raw.githubusercontent.com/bcgov/${{ env.REPO_NAME }}/${{ env.BRANCH }}/tools/config/override-configmap-dev.sh \

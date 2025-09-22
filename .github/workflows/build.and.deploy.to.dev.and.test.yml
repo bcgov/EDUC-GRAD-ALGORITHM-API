@@ -4,6 +4,7 @@ env:
   OPENSHIFT_SERVER: ${{ vars.OPENSHIFT_SERVER }}
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   COMMON_NAMESPACE: ${{ vars.COMMON_NAMESPACE }}
+  GRAD_SCHOOL_API_NAMESPACE: ${{vars.GRAD_SCHOOL_API_NAMESPACE}}
   GRAD_NAMESPACE: ${{ vars.GRAD_NAMESPACE }}
   BUSINESS_NAMESPACE: ${{ vars.GRAD_BUSINESS_NAMESPACE }}
   STUDENT_ASSESSMENT_NAMESPACE: ${{ vars.STUDENT_ASSESSMENT_NAMESPACE }}
@@ -139,7 +140,8 @@ jobs:
           ${{ env.BUSINESS_NAMESPACE }} \
           ${{ secrets.SPLUNK_TOKEN }} \
           ${{ vars.APP_LOG_LEVEL }} \
-          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }}
+          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }} \
+          ${{ env.GRAD_SCHOOL_API_NAMESPACE }}
           
           # OVERRIDE Configmaps
           curl -s https://raw.githubusercontent.com/bcgov/${{ env.REPO_NAME }}/${{ github.ref }}/tools/config/override-configmap-dev.sh \
@@ -237,7 +239,8 @@ jobs:
           ${{ env.BUSINESS_NAMESPACE }} \
           ${{ secrets.SPLUNK_TOKEN }} \
           ${{ vars.APP_LOG_LEVEL }} \
-          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }}
+          ${{ env.STUDENT_ASSESSMENT_NAMESPACE }} \
+          ${{ env.GRAD_SCHOOL_API_NAMESPACE }}
 
           # Start rollout (if necessary) and follow it
           oc rollout restart deployment/${{ env.SPRING_BOOT_IMAGE_NAME }}

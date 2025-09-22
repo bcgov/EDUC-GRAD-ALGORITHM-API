@@ -128,7 +128,10 @@
       "CREATE_GRAD_REPORT_CODE_DATA",
       "RUN_DELETE_STUDENT_REPORTS",
       "UPDATE_GRAD_STUDENT_STATUS_CODE_DATA",
-      "READ_ASSESSMENT_SESSIONS"],
+      "READ_ASSESSMENT_SESSIONS",
+      "READ_GRAD_SCHOOL",
+      "READ_DISTRICT",
+      "READ_INSTITUTE_CODES"],
     "settings": {
       "enabled": true,
       "protocol": "openid-connect",
