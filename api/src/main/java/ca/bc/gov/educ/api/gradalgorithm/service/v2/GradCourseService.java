@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -41,34 +42,40 @@ public class GradCourseService {
           String.valueOf(studentID),
           new TypeReference<>() {
           },
-          null
+          Collections.emptyList()
       );
 
-      List<String> courseCodes = studentCourses.stream()
-          .map(StudentCourse::getCourseCode)
-          .distinct()
-          .collect(Collectors.toCollection(ArrayList::new));
+      if (!studentCourses.isEmpty()) {
+        List<String> courseCodes = studentCourses.stream()
+            .map(StudentCourse::getCourseCode)
+            .distinct()
+            .collect(Collectors.toCollection(ArrayList::new));
 
-      List<CourseRequirement> courseRequirements = restUtils.sendMessageRequest(
-          TopicsEnum.GRAD_COURSE_API_TOPIC,
-          EventType.GET_COURSE_REQUIREMENTS,
-          objectMapper.writeValueAsString(courseCodes), // Pass course codes as payload
-          new TypeReference<>() {
-          },
-          null
-      );
+        List<CourseRequirement> courseRequirements = restUtils.sendMessageRequest(
+            TopicsEnum.GRAD_COURSE_API_TOPIC,
+            EventType.GET_COURSE_REQUIREMENTS,
+            objectMapper.writeValueAsString(courseCodes), // Pass course codes as payload
+            new TypeReference<>() {
+            },
+            null
+        );
 
-      List<CourseRestriction> courseRestrictions = restUtils.sendMessageRequest(
-          TopicsEnum.GRAD_COURSE_API_TOPIC,
-          EventType.GET_COURSE_RESTRICTIONS,
-          objectMapper.writeValueAsString(courseCodes), // Pass course codes as payload
-          new TypeReference<>() {
-          },
-          null
-      );
+        List<CourseRestriction> courseRestrictions = restUtils.sendMessageRequest(
+            TopicsEnum.GRAD_COURSE_API_TOPIC,
+            EventType.GET_COURSE_RESTRICTIONS,
+            objectMapper.writeValueAsString(courseCodes), // Pass course codes as payload
+            new TypeReference<>() {
+            },
+            null
+        );
 
-      CourseAlgorithmData result = new CourseAlgorithmData(studentCourses, courseRequirements, courseRestrictions);
-      return Mono.just(prepareCourseDataForAlgorithm(result));
+        CourseAlgorithmData result = new CourseAlgorithmData(studentCourses, courseRequirements, courseRestrictions);
+        return Mono.just(prepareCourseDataForAlgorithm(result));
+      } else {
+        CourseAlgorithmData result = new CourseAlgorithmData(studentCourses, Collections.emptyList(), Collections.emptyList());
+        return Mono.just(prepareCourseDataForAlgorithm(result));
+      }
+
 
     } catch (Exception e) { //Left error handling at this level the same as V1 so algorithm functions the same
       exception.setExceptionName("Could not fetch algorithm courses data");
