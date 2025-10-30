@@ -11,6 +11,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.threads.EnhancedQueueExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ca.bc.gov.educ.api.gradalgorithm.util.LogHelper;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
@@ -20,6 +21,7 @@ import java.util.concurrent.Executor;
 
 @Component
 @Slf4j
+@Profile("!test")
 public class SchoolSubscriber {
 
     private final Connection connection;
