@@ -1,11 +1,13 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
 @Data
 @Component
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class School {
 
 	private String minCode;
