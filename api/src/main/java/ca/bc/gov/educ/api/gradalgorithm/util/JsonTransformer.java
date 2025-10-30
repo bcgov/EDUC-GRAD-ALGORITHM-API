@@ -41,6 +41,10 @@ public class JsonTransformer implements Transformer {
         return OBJECT_MAPPER.readValue(payload, clazz);
     }
 
+    public static String getJsonStringFromObject(Object payload) throws JsonProcessingException {
+        return OBJECT_MAPPER.writeValueAsString(payload);
+    }
+
     @Override
     public Object unmarshall(byte[] input, Class<?> clazz) throws TransformerException {
         Object result = null;
