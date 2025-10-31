@@ -24,8 +24,8 @@
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/dto/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/util/**,
 			src/main/java/ca/bc/gov/educ/api/gradalgorithm/service/caching/**,
-			src/main/java/ca/bc/gov/educ/api/gradalgorithm/controller/APIMetadataController.java
-
+			src/main/java/ca/bc/gov/educ/api/gradalgorithm/controller/APIMetadataController.java,
+			src/main/java/ca/bc/gov/educ/api/gradalgorithm/messaging/**
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>
 			src/main/resources/**,

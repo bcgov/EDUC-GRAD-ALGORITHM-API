@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,14 @@ public class JsonTransformer implements Transformer {
                 .setTimeZone(TimeZone.getDefault())
         //        .enable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS)
         ;
+    }
+
+    public static <T> T getJsonObjectFromString(Class<T> clazz, String payload) throws JsonProcessingException {
+        return OBJECT_MAPPER.readValue(payload, clazz);
+    }
+
+    public static String getJsonStringFromObject(Object payload) throws JsonProcessingException {
+        return OBJECT_MAPPER.writeValueAsString(payload);
     }
 
     @Override
