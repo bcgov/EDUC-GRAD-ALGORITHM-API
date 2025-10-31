@@ -5,6 +5,13 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+/**
+ * This is a legacy object which does not conform to the newest
+ * attribute set from the institute api. For a condensed version
+ * use {@link ca.bc.gov.educ.api.gradalgorithm.dto.institute.School}
+ * or for a more detailed object use {@link ca.bc.gov.educ.api.gradalgorithm.dto.institute.SchoolDetail}
+ * This should be deprecated.
+ */
 @Data
 @Component
 @JsonIgnoreProperties(ignoreUnknown = true)
