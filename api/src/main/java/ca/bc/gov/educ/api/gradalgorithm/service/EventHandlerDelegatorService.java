@@ -21,15 +21,15 @@ public class EventHandlerDelegatorService {
             log.trace("Handling event {}, in try block", event.getEventType());
             switch (event.getEventType()) {
                 case CREATE_SCHOOL, UPDATE_SCHOOL:
-                    traceEventLog(event);
+                    debugEventLog(event);
                     this.eventHandlerService.handleSchoolEvent(event);
                     break;
                 case MOVE_SCHOOL:
-                    traceEventLog(event);
+                    debugEventLog(event);
                     this.eventHandlerService.handleMoveSchoolEvent(event);
                     break;
                 case UPDATE_GRAD_SCHOOL, CREATE_GRAD_SCHOOL:
-                    traceEventLog(event);
+                    debugEventLog(event);
                     this.eventHandlerService.handleGradSchoolEvent(event);
                     break;
                 default:
@@ -41,7 +41,7 @@ public class EventHandlerDelegatorService {
         }
     }
 
-    private void traceEventLog(Event event) {
-        log.trace("Processing {} eventEntity record :: {} ", event.getEventType(), event);
+    private void debugEventLog(Event event) {
+        log.debug("Processing {} eventEntity record :: {} ", event.getEventType(), event);
     }
 }
