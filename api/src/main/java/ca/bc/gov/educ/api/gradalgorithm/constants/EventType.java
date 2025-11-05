@@ -30,5 +30,17 @@ public enum EventType {
   UPDATE_AUTHORITY_CONTACT,
   DELETE_AUTHORITY_CONTACT,
   CREATE_GRAD_SCHOOL,
-  UPDATE_GRAD_SCHOOL
+  UPDATE_GRAD_SCHOOL;
+
+  public static boolean isValid(String value) {
+    if (value == null) {
+      return false;
+    }
+    try {
+      EventType.valueOf(value);
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
 }
