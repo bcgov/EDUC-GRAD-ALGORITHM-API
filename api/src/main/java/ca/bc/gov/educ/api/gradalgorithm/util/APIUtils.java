@@ -41,28 +41,21 @@ public class APIUtils {
     }
 
     /**
-     * Remove characters from the CourseLevel if any (Example: 12A -> 12, 12B -> 12, etc..)
+     * Remove characters from the CourseLevel if any (Example: 12A -> 12, 1B -> 1, etc..)
      * and Convert Course level into an integer
      *
      * @param courseLevel
      * @return Integer - Course Level
      */
     public static Integer getNumericCourseLevel(String courseLevel) {
-
         if (isBlankString(courseLevel))
             return 0;
 
-        Integer cl = 0;
-        Integer l = courseLevel.length();
-
-        if (l > 2)
-            cl = Integer.valueOf(
-                    courseLevel.substring(0, l - 1)
-            );
-        else
-            cl = Integer.valueOf(courseLevel);
-
-        return cl;
+        String numericPart = courseLevel.replaceAll("[^0-9].*", "");
+        if (numericPart.isEmpty())
+            return 0;
+        
+        return Integer.valueOf(numericPart);
     }
 
     /**
