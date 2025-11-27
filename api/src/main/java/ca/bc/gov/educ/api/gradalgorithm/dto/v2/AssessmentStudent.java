@@ -35,4 +35,5 @@ public class AssessmentStudent extends BaseRequest {
   private String courseStatusCode;
   private String downloadDate;
   private Boolean wroteFlag;
+  private Boolean didNotAttemptFlag;
 }

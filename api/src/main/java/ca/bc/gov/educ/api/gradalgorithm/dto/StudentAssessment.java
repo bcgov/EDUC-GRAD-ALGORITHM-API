@@ -33,6 +33,7 @@ public class StudentAssessment extends BaseRequest {
     private boolean isUsed;
     private boolean isProjected;
     private boolean isNotCompleted;
+    private boolean didNotAttemptFlag;
     
 	@Override
 	public String toString() {
