@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
 import ca.bc.gov.educ.api.gradalgorithm.dto.v2.BaseRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentCourse extends BaseRequest {
 
     private String pen;
