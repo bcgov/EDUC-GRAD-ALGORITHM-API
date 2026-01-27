@@ -58,3 +58,6 @@ build/
 ### Local dev ###
 **/application-local.yaml
 **/generate-local-env.sh
+
+# Contributor guide (generated)
+AGENTS.md
