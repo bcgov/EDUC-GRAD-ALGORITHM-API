@@ -57,7 +57,7 @@ if [ "$envValue" != "prod" ]
 then
   ENABLE_STUDENT_ASSESSMENTS="true"
 else
-  ENABLE_STUDENT_ASSESSMENTS="false"
+  ENABLE_STUDENT_ASSESSMENTS="true"
 fi
 
 echo Creating config map "$APP_NAME"-config-map
