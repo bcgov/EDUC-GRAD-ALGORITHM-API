@@ -879,6 +879,59 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 	}
 
 	@Test
+	public void testGraduateStudent_SCCP_withFutureCompletionDate_shouldNotGraduate() throws Exception {
+		UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
+		String pen = "127951309";
+		String gradProgram = "SCCP";
+		RuleProcessorData ruleProcessorDatas = createRuleProcessorData("json/ruleProcessorData_projected.json");
+		ruleProcessorDatas.setProjected(false);
+		GradStudentAlgorithmData gradStudentAlgorithmData = createGradStudentAlgorithmData("json/gradstatus_studentrecord.json");
+		CourseAlgorithmData courseAlgorithmData = createCourseAlgorithmData("json/course.json");
+		AssessmentAlgorithmData assessmentAlgorithmData = createAssessmentAlgorithmData("json/assessment.json");
+		StudentGraduationAlgorithmData studentGraduationAlgorithmData = createStudentGraduationAlgorithmData("json/studentgraduation.json");
+		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
+		School school = createSchoolData("json/school.json");
+
+		gradStudentAlgorithmData.getGraduationStudentRecord().setProgramCompletionDate("2900-06-30 00:00:00.000");
+
+		RuleProcessorData ruleProcessorData = new RuleProcessorData();
+		ruleProcessorData.setProjected(false);
+		ruleProcessorData.setMapOptional(new HashMap<>());
+		ruleProcessorData.setGradStudent(gradStudentAlgorithmData.getGradStudent());
+		ruleProcessorData.setGradStatus(gradStudentAlgorithmData.getGraduationStudentRecord());
+		ruleProcessorData.setSchool(school);
+		ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
+		ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
+		ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());
+		ruleProcessorData.setStudentCourses(courseAlgorithmData.getStudentCourses());
+		ruleProcessorData.setCourseRestrictions(courseAlgorithmData.getCourseRestrictions() != null ? courseAlgorithmData.getCourseRestrictions() : null);
+		ruleProcessorData.setCourseRequirements(courseAlgorithmData.getCourseRequirements() != null ? courseAlgorithmData.getCourseRequirements() : null);
+		ruleProcessorData.setGradProgramRules(programAlgorithmData.getProgramRules());
+		ruleProcessorData.setGradProgram(programAlgorithmData.getGradProgram());
+		ruleProcessorData.setLetterGradeList(studentGraduationAlgorithmData.getLetterGrade());
+		ruleProcessorData.setSpecialCaseList(studentGraduationAlgorithmData.getSpecialCase());
+		ruleProcessorData.setAlgorithmRules(studentGraduationAlgorithmData.getProgramAlgorithmRules());
+		ruleProcessorData.setStudentAssessments(assessmentAlgorithmData.getStudentAssessments());
+		ruleProcessorData.setAssessmentRequirements(assessmentAlgorithmData.getAssessmentRequirements() != null ? assessmentAlgorithmData.getAssessmentRequirements() : null);
+		ruleProcessorData.setAssessmentList(assessmentAlgorithmData.getAssessments() != null ? assessmentAlgorithmData.getAssessments() : null);
+		Mockito.when(gradStudentService.getGradStudentData(studentID, exception)).thenReturn(gradStudentAlgorithmData);
+		Mockito.when(gradRuleProcessorService.processGradAlgorithmRules(ruleProcessorData, exception)).thenReturn(ruleProcessorDatas);
+		AlgorithmDataParallelDTO parallelDTO = new AlgorithmDataParallelDTO(courseAlgorithmData, assessmentAlgorithmData);
+		String schoolOfRecordId = ruleProcessorDatas.getGradStudent().getSchoolOfRecordId();
+		Mockito.when(parallelDataFetch.fetchAlgorithmRequiredData(pen, exception)).thenReturn(Mono.just(parallelDTO));
+		Mockito.when(gradCourseService.prepareCourseDataForAlgorithm(parallelDTO.courseAlgorithmData())).thenReturn(parallelDTO.courseAlgorithmData());
+		Mockito.when(gradAssessmentService.prepareAssessmentDataForAlgorithm(parallelDTO.assessmentAlgorithmData())).thenReturn(parallelDTO.assessmentAlgorithmData());
+		Mockito.when(gradSchoolService.retrieveSchoolBySchoolId(schoolOfRecordId)).thenReturn(school);
+		Mockito.when(gradProgramService.retrieveProgramDataByProgramCode(gradProgram, "")).thenReturn(programAlgorithmData);
+		Mockito.when(studentGraduationService.retrieveStudentGraduationDataByProgramCode(gradProgram)).thenReturn(studentGraduationAlgorithmData);
+
+		GraduationData gradData = gradAlgorithmService.graduateStudent(studentID, gradProgram, false, null, false);
+
+		assertNotNull(gradData);
+		assertFalse(gradData.isGraduated());
+	}
+
+	@Test
 	public void testHypotheticalGraduateStudent() throws Exception {
 		UUID studentID = UUID.fromString("ac339d70-7649-1a2e-8176-4a336de91d4f");
 		String pen = "127951309";

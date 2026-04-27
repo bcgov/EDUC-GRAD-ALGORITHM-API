@@ -5,6 +5,7 @@ import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradProgramService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.GradSchoolService;
 import ca.bc.gov.educ.api.gradalgorithm.service.caching.StudentGraduationService;
 import ca.bc.gov.educ.api.gradalgorithm.util.APIUtils;
+import ca.bc.gov.educ.api.gradalgorithm.util.DateUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmApiUtils;
 import ca.bc.gov.educ.api.gradalgorithm.util.JsonTransformer;
 import lombok.extern.slf4j.Slf4j;
@@ -143,6 +144,10 @@ public class GradAlgorithmService {
 			log.error("JSON processing Error {}",e.getMessage());
 		}
 		gradStatus.setStudentGradData(null);
+		if (shouldDelaySccpCompletion(gradProgram, ruleProcessorData.isProjected(), ruleProcessorData.isGraduated(), existingProgramCompletionDate)) {
+			log.info("SCCP completion date {} is still in the future. Delaying graduation completion until the completion month has arrived.", existingProgramCompletionDate);
+			ruleProcessorData.setGraduated(false);
+		}
 		boolean checkSCCPNOPROG = existingProgramCompletionDate != null
 				&& (gradProgram.equalsIgnoreCase(SCCP) || gradProgram.equalsIgnoreCase(NOPROGRAM));
 		if(ruleProcessorData.isGraduated()) {
@@ -774,6 +779,17 @@ public class GradAlgorithmService {
 				}
 			}
 		}
+	}
+
+	private boolean shouldDelaySccpCompletion(String gradProgram, boolean projected, boolean graduated, String programCompletionDate) {
+		if (!graduated || projected || !gradProgram.equalsIgnoreCase(SCCP)) {
+			return false;
+		}
+		LocalDate completionMonthEnd = DateUtils.toProgramCompletionMonthEnd(programCompletionDate);
+		if (completionMonthEnd == null) {
+			return true;
+		}
+		return completionMonthEnd.isAfter(LocalDate.now());
 	}
 
 	private void processGradMessages(boolean checkSCCPNOPROG, ExistingDataSupport existingDataSupport,Map<String, OptionalProgramRuleProcessor> mapOption,RuleProcessorData ruleProcessorData,GraduationData graduationData) {
