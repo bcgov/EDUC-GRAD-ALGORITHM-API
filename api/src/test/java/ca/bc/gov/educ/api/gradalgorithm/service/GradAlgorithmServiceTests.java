@@ -892,7 +892,7 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 		GradProgramAlgorithmData programAlgorithmData = createProgramAlgorithmData("json/program.json");
 		School school = createSchoolData("json/school.json");
 
-		gradStudentAlgorithmData.getGraduationStudentRecord().setProgramCompletionDate("2900-06-30 00:00:00.000");
+		gradStudentAlgorithmData.getGraduationStudentRecord().setProgramCompletionDate("2900/06");
 
 		RuleProcessorData ruleProcessorData = new RuleProcessorData();
 		ruleProcessorData.setProjected(false);
