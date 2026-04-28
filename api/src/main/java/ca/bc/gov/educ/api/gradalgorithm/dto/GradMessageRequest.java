@@ -1,15 +1,12 @@
 package ca.bc.gov.educ.api.gradalgorithm.dto;
 
-import ca.bc.gov.educ.api.gradalgorithm.util.GradAlgorithmAPIConstants;
+import ca.bc.gov.educ.api.gradalgorithm.util.DateUtils;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Slf4j
 @Data
@@ -51,24 +48,12 @@ public class GradMessageRequest {
             return true;
         }
         // Only for SCCP to check the grad_date is future dated or not to determine graduation
-        if (StringUtils.isBlank(gradDate)) {
+        LocalDate gradCompletionDate = DateUtils.toProgramCompletionMonthEnd(gradDate);
+        if (gradCompletionDate == null) {
+            log.error("Date Parse Exception: gradDate = {}. Supported formats: yyyy/MM, yyyy-MM, yyyy/MM/dd, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss(.fraction)", gradDate);
             return false;
         }
-        String gradDateStr = gradDate.length() < 10 ? gradDate + "/01" : gradDate;
-        log.debug("GradMessageRequest: Grad Date = {}", gradDateStr);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(gradDate.length() < 10? GradAlgorithmAPIConstants.SECONDARY_DATE_FORMAT : GradAlgorithmAPIConstants.DEFAULT_DATE_FORMAT);
-        try {
-            Date dt = dateFormat.parse(gradDateStr);
-            Calendar calGradDate = Calendar.getInstance();
-            calGradDate.setTime(dt);
-            calGradDate.set(Calendar.DAY_OF_MONTH, calGradDate.getActualMaximum(Calendar.DAY_OF_MONTH));
-            Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
-            return calGradDate.before(now);
-        } catch (ParseException e) {
-            log.error("Date Parse Exception: gradDate = {}. format = {}", gradDateStr, dateFormat.toPattern());
-            return false;
-        }
+        return !gradCompletionDate.isAfter(LocalDate.now());
     }
 
 }
