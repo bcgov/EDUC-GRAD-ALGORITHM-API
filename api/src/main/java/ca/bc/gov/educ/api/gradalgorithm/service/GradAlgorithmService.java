@@ -782,6 +782,10 @@ public class GradAlgorithmService {
 	}
 
 	private boolean shouldDelaySccpCompletion(String gradProgram, boolean projected, boolean graduated, String programCompletionDate) {
+		return shouldDelaySccpCompletion(gradProgram, projected, graduated, programCompletionDate, LocalDate.now());
+	}
+
+	boolean shouldDelaySccpCompletion(String gradProgram, boolean projected, boolean graduated, String programCompletionDate, LocalDate currentDate) {
 		if (!graduated || projected || !gradProgram.equalsIgnoreCase(SCCP)) {
 			return false;
 		}
@@ -789,7 +793,7 @@ public class GradAlgorithmService {
 		if (completionMonthEnd == null) {
 			return true;
 		}
-		return completionMonthEnd.isAfter(LocalDate.now());
+		return completionMonthEnd.isAfter(currentDate);
 	}
 
 	private void processGradMessages(boolean checkSCCPNOPROG, ExistingDataSupport existingDataSupport,Map<String, OptionalProgramRuleProcessor> mapOption,RuleProcessorData ruleProcessorData,GraduationData graduationData) {

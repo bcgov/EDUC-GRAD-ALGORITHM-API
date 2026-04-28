@@ -50,7 +50,7 @@ public class GradMessageRequest {
         // Only for SCCP to check the grad_date is future dated or not to determine graduation
         LocalDate gradCompletionDate = DateUtils.toProgramCompletionMonthEnd(gradDate);
         if (gradCompletionDate == null) {
-            log.error("Date Parse Exception: gradDate = {}. Supported format: yyyy/MM", gradDate);
+            log.error("Date Parse Exception: gradDate = {}. Supported formats: yyyy/MM, yyyy-MM, yyyy/MM/dd, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss(.fraction)", gradDate);
             return false;
         }
         return !gradCompletionDate.isAfter(LocalDate.now());

@@ -19,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -929,6 +930,21 @@ public class GradAlgorithmServiceTests extends EducGradAlgorithmTestBase {
 
 		assertNotNull(gradData);
 		assertFalse(gradData.isGraduated());
+	}
+
+	@Test
+	public void testShouldDelaySccpCompletion_WhenMonthEndIsTomorrow_ShouldDelay() {
+		assertTrue(gradAlgorithmService.shouldDelaySccpCompletion("SCCP", false, true, "2026/06", LocalDate.of(2026, 6, 29)));
+	}
+
+	@Test
+	public void testShouldDelaySccpCompletion_WhenMonthEndIsToday_ShouldAllowCompletion() {
+		assertFalse(gradAlgorithmService.shouldDelaySccpCompletion("SCCP", false, true, "2026/06", LocalDate.of(2026, 6, 30)));
+	}
+
+	@Test
+	public void testShouldDelaySccpCompletion_WhenCompletionYearIsNextYear_ShouldDelay() {
+		assertTrue(gradAlgorithmService.shouldDelaySccpCompletion("SCCP", false, true, "2027/06", LocalDate.of(2026, 6, 30)));
 	}
 
 	@Test
