@@ -17,6 +17,8 @@ public class StudentCoursesComparator implements Comparator<StudentCourse> {
         switch (program) {
             case "2018-EN":
             case "2018-PF":
+            case "2023-EN":
+            case "2023-PF":
                 res= new CompareToBuilder()
                         .append(o2.getCompletedCoursePercentage(), o1.getCompletedCoursePercentage())
                         .append(o2.getCredits(), o1.getCredits())
